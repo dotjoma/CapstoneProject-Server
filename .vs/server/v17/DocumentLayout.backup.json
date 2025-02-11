@@ -3,6 +3,50 @@
   "WorkspaceRootPath": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{53A1D91F-49CD-4E44-9DA8-E38D969FBE1B}|server\\server.csproj|e:\\visual studio 2022\\projects\\capstoneproject\\server\\server\\forms\\mainmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{53A1D91F-49CD-4E44-9DA8-E38D969FBE1B}|server\\server.csproj|solutionrelative:server\\forms\\mainmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{53A1D91F-49CD-4E44-9DA8-E38D969FBE1B}|server\\server.csproj|e:\\visual studio 2022\\projects\\capstoneproject\\server\\server\\forms\\mainmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{53A1D91F-49CD-4E44-9DA8-E38D969FBE1B}|server\\server.csproj|solutionrelative:server\\forms\\mainmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{53A1D91F-49CD-4E44-9DA8-E38D969FBE1B}|server\\server.csproj|e:\\visual studio 2022\\projects\\capstoneproject\\server\\server\\core\\network\\packet.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{53A1D91F-49CD-4E44-9DA8-E38D969FBE1B}|server\\server.csproj|solutionrelative:server\\core\\network\\packet.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{53A1D91F-49CD-4E44-9DA8-E38D969FBE1B}|server\\server.csproj|e:\\visual studio 2022\\projects\\capstoneproject\\server\\server\\core\\network\\packettype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{53A1D91F-49CD-4E44-9DA8-E38D969FBE1B}|server\\server.csproj|solutionrelative:server\\core\\network\\packettype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{53A1D91F-49CD-4E44-9DA8-E38D969FBE1B}|server\\server.csproj|e:\\visual studio 2022\\projects\\capstoneproject\\server\\server\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{53A1D91F-49CD-4E44-9DA8-E38D969FBE1B}|server\\server.csproj|solutionrelative:server\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{53A1D91F-49CD-4E44-9DA8-E38D969FBE1B}|server\\server.csproj|e:\\visual studio 2022\\projects\\capstoneproject\\server\\server\\core\\network\\server.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{53A1D91F-49CD-4E44-9DA8-E38D969FBE1B}|server\\server.csproj|solutionrelative:server\\core\\network\\server.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{53A1D91F-49CD-4E44-9DA8-E38D969FBE1B}|server\\server.csproj|e:\\visual studio 2022\\projects\\capstoneproject\\server\\server\\forms\\loadingform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{53A1D91F-49CD-4E44-9DA8-E38D969FBE1B}|server\\server.csproj|solutionrelative:server\\forms\\loadingform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{53A1D91F-49CD-4E44-9DA8-E38D969FBE1B}|server\\server.csproj|e:\\visual studio 2022\\projects\\capstoneproject\\server\\server\\forms\\loadingform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{53A1D91F-49CD-4E44-9DA8-E38D969FBE1B}|server\\server.csproj|solutionrelative:server\\forms\\loadingform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{53A1D91F-49CD-4E44-9DA8-E38D969FBE1B}|server\\server.csproj|e:\\visual studio 2022\\projects\\capstoneproject\\server\\server\\database\\databasemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{53A1D91F-49CD-4E44-9DA8-E38D969FBE1B}|server\\server.csproj|solutionrelative:server\\database\\databasemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{53A1D91F-49CD-4E44-9DA8-E38D969FBE1B}|server\\server.csproj|e:\\visual studio 2022\\projects\\capstoneproject\\server\\server\\database\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{53A1D91F-49CD-4E44-9DA8-E38D969FBE1B}|server\\server.csproj|solutionrelative:server\\database\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{53A1D91F-49CD-4E44-9DA8-E38D969FBE1B}|server\\server.csproj|e:\\visual studio 2022\\projects\\capstoneproject\\server\\server\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{53A1D91F-49CD-4E44-9DA8-E38D969FBE1B}|server\\server.csproj|solutionrelative:server\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{53A1D91F-49CD-4E44-9DA8-E38D969FBE1B}|server\\server.csproj|e:\\visual studio 2022\\projects\\capstoneproject\\server\\server\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{53A1D91F-49CD-4E44-9DA8-E38D969FBE1B}|server\\server.csproj|solutionrelative:server\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     }
@@ -14,11 +58,164 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 3,
           "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "MainMenu.cs",
+              "DocumentMoniker": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Forms\\MainMenu.cs",
+              "RelativeDocumentMoniker": "server\\Forms\\MainMenu.cs",
+              "ToolTip": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Forms\\MainMenu.cs",
+              "RelativeToolTip": "server\\Forms\\MainMenu.cs",
+              "ViewState": "AgIAAK0AAAAAAAAAAAAgwMUAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-10T13:14:49.17Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "MainMenu.cs [Design]",
+              "DocumentMoniker": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Forms\\MainMenu.cs",
+              "RelativeDocumentMoniker": "server\\Forms\\MainMenu.cs",
+              "ToolTip": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Forms\\MainMenu.cs [Design]",
+              "RelativeToolTip": "server\\Forms\\MainMenu.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-10T13:13:43.181Z",
+              "EditorCaption": " [Design]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Server.cs",
+              "DocumentMoniker": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Core\\Network\\Server.cs",
+              "RelativeDocumentMoniker": "server\\Core\\Network\\Server.cs",
+              "ToolTip": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Core\\Network\\Server.cs",
+              "RelativeToolTip": "server\\Core\\Network\\Server.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAA8AAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-10T13:19:11.512Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Program.cs",
+              "DocumentMoniker": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Program.cs",
+              "RelativeDocumentMoniker": "server\\Program.cs",
+              "ToolTip": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Program.cs",
+              "RelativeToolTip": "server\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAyAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-10T13:32:33.921Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Packet.cs",
+              "DocumentMoniker": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Core\\Network\\Packet.cs",
+              "RelativeDocumentMoniker": "server\\Core\\Network\\Packet.cs",
+              "ToolTip": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Core\\Network\\Packet.cs",
+              "RelativeToolTip": "server\\Core\\Network\\Packet.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-10T13:19:23.999Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "PacketType.cs",
+              "DocumentMoniker": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Core\\Network\\PacketType.cs",
+              "RelativeDocumentMoniker": "server\\Core\\Network\\PacketType.cs",
+              "ToolTip": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Core\\Network\\PacketType.cs",
+              "RelativeToolTip": "server\\Core\\Network\\PacketType.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-10T13:19:31.882Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "LoadingForm.cs",
+              "DocumentMoniker": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Forms\\LoadingForm.cs",
+              "RelativeDocumentMoniker": "server\\Forms\\LoadingForm.cs",
+              "ToolTip": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Forms\\LoadingForm.cs",
+              "RelativeToolTip": "server\\Forms\\LoadingForm.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAA6wDwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-10T16:12:46.488Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "LoadingForm.cs [Design]",
+              "DocumentMoniker": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Forms\\LoadingForm.cs",
+              "RelativeDocumentMoniker": "server\\Forms\\LoadingForm.cs",
+              "ToolTip": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Forms\\LoadingForm.cs [Design]",
+              "RelativeToolTip": "server\\Forms\\LoadingForm.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-10T16:12:42.746Z",
+              "EditorCaption": " [Design]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "DatabaseManager.cs",
+              "DocumentMoniker": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Database\\DatabaseManager.cs",
+              "RelativeDocumentMoniker": "server\\Database\\DatabaseManager.cs",
+              "ToolTip": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Database\\DatabaseManager.cs",
+              "RelativeToolTip": "server\\Database\\DatabaseManager.cs",
+              "ViewState": "AgIAACQAAAAAAAAAAAAowEQAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-10T13:19:54.423Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "User.cs",
+              "DocumentMoniker": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Database\\Models\\User.cs",
+              "RelativeDocumentMoniker": "server\\Database\\Models\\User.cs",
+              "ToolTip": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Database\\Models\\User.cs",
+              "RelativeToolTip": "server\\Database\\Models\\User.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-10T13:20:20.755Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Form1.cs",
+              "DocumentMoniker": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Form1.cs",
+              "RelativeDocumentMoniker": "server\\Form1.cs",
+              "ToolTip": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Form1.cs",
+              "RelativeToolTip": "server\\Form1.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-10T12:46:06.541Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
               "Title": "Form1.cs [Design]",
               "DocumentMoniker": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Form1.cs",
               "RelativeDocumentMoniker": "server\\Form1.cs",
@@ -27,10 +224,6 @@
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-24T03:59:45.126Z",
               "EditorCaption": " [Design]"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
             }
           ]
         }

@@ -1,3 +1,8 @@
+using server.Core.Network;
+using server.Database;
+using server.Forms;
+using System.Diagnostics;
+
 namespace server
 {
     internal static class Program
@@ -8,10 +13,8 @@ namespace server
         [STAThread]
         static void Main()
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
-            ApplicationConfiguration.Initialize();
-            Application.Run(new Form1());
+            ApplicationConfiguration.Initialize();        
+            Application.Run(new MainMenu());
         }
     }
 }
