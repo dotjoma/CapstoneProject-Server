@@ -16,6 +16,11 @@ using Newtonsoft.Json;
 using Org.BouncyCastle.Asn1.Cmp;
 using MySql.Data.MySqlClient;
 using System.Security.Cryptography;
+using client.Helpers;
+using System.Collections;
+using Org.BouncyCastle.Asn1.Ocsp;
+using System.Net.Http;
+using Org.BouncyCastle.Tls;
 
 namespace server.Forms
 {
@@ -23,7 +28,6 @@ namespace server.Forms
     {
         private TcpListener? listener;
         private bool isServerRunning;
-        private Dictionary<string, string> users = new Dictionary<string, string>();
         private int serverPort = 8888;
 
         private Point dragOffset;
@@ -44,10 +48,6 @@ namespace server.Forms
             rtbLogs.ReadOnly = true;
             UpdateStatus("Server stopped");
         }
-
-
-
-
 
         private async void btnStartServer_Click(object? sender, EventArgs e)
         {
@@ -283,6 +283,7 @@ namespace server.Forms
             {
                 var endpoint = client.Client.RemoteEndPoint as IPEndPoint;
                 string clientAddress = endpoint?.Address.ToString() ?? "Unknown";
+                string clientIp = GetClientIpAddress(client);
                 LogMessage($"Client connected from: {clientAddress}");
 
                 using (client)
@@ -301,7 +302,7 @@ namespace server.Forms
                         return;
                     }
 
-                    var response = ProcessRequest(request);
+                    var response = ProcessRequest(request, client);
                     string jsonResponse = JsonConvert.SerializeObject(response);
                     byte[] responseData = Encoding.UTF8.GetBytes(jsonResponse);
                     await stream.WriteAsync(responseData, 0, responseData.Length);
@@ -315,9 +316,10 @@ namespace server.Forms
             }
         }
 
-        private Packet ProcessRequest(Packet request)
+        private Packet ProcessRequest(Packet request, TcpClient tcpClient)
         {
             LogMessage($"Processing request type: {request.Type}");
+            Logger.Write("CLIENT REQUEST", $"Processing request type: {request.Type}");
 
             switch (request.Type)
             {
@@ -325,9 +327,19 @@ namespace server.Forms
                     return HandleRegistration(request);
                 case PacketType.RegisterResponse:
                     LogMessage("Received RegisterResponse packet type");
+                    Logger.Write("REGISTER PACKET", "Received RegisterResponse packet type");
                     return HandleRegistration(request);
+
+                case PacketType.Login:
+                    return HandleLogin(request, tcpClient);
+                case PacketType.LoginResponse:
+                    LogMessage("Received LoginResponse packet type");
+                    Logger.Write("LOGIN PACKET", "Received LoginResponse packet type");
+                    return HandleLogin(request, tcpClient);
+
                 default:
                     LogMessage($"Unknown packet type: {request.Type}");
+                    Logger.Write("UNKNOWN PACKET", $"Unknown packet type: {request.Type}");
                     return new Packet
                     {
                         Type = PacketType.RegisterResponse,
@@ -340,15 +352,179 @@ namespace server.Forms
             }
         }
 
+        private Packet? LoginValidation(Packet request, string username, string password)
+        {
+            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+            {
+                LogMessage("Login failed: Missing username or password");
+                Logger.Write("LOGIN", "Login failed: Missing username or password");
+
+                return new Packet
+                {
+                    Type = PacketType.LoginResponse,
+                    Success = false,
+                    Message = "Username and password are required",
+                    Data = new Dictionary<string, string>
+                    {
+                        { "success", "false" },
+                        { "message", "Username and password are required" }
+                    }
+                };
+            }
+
+            return null; 
+        }
+
+
+        private Packet HandleLogin(Packet request, TcpClient tcpClient)
+        {
+            var connection = new MySqlConnection(connectionString);
+
+            try
+            {
+                connection.Open();
+
+                LogMessage($"Processing login for username: {request.Data["username"]}");
+                Logger.Write("LOGIN", $"Processing login for username: {request.Data["username"]}");
+
+                string username = request.Data["username"];
+                string password = request.Data["password"];
+
+                Packet? validationResult = LoginValidation(request, username, password);
+
+                if (IsAccountLocked(username))
+                {
+                    Logger.Write("ACCOUNT", $"Account is locked for {username}.");
+
+                    return new Packet
+                    {
+                        Type = PacketType.LoginResponse,
+                        Success = false,
+                        Message = "Account is locked. Please try again later or contact admin.",
+                        Data = new Dictionary<string, string>
+                        {
+                            { "success", "false" },
+                            { "message", "Account is locked. Please try again later or contact admin." }
+                        }
+                    };
+                }
+
+                string query = @"SELECT id, username, role FROM users 
+                    WHERE username = @username AND password = @password";
+
+                using (var command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@username", username);
+                    command.Parameters.AddWithValue("@password", HashPassword(password));
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (!reader.Read())
+                        {
+                            int user_id = GetUserId(username);
+                            string ipAddress = GetClientIpAddress(tcpClient);
+
+                            IncrementFailedLoginAttempts(username);
+
+                            RecordLoginAttempt(user_id, false, ipAddress);
+
+                            int failedAttempts = GetFailedLoginAttempts(username);
+
+                            if (failedAttempts >= 5)
+                            {
+                                // Lock the account
+                                LockAccount(username);
+
+                                LogMessage($"Account locked: Too many failed attempts for username: {username}");
+                                Logger.Write("LOGIN", $"Account locked: Too many failed attempts for username: {username}");
+                                Logger.Write("LOGIN", $"Failed attempts for {username}: {failedAttempts}");
+
+                                return new Packet
+                                {
+                                    Type = PacketType.LoginResponse,
+                                    Success = false,
+                                    Message = "Account temporarily locked. Please try again later or contact admin.",
+                                    Data = new Dictionary<string, string>
+                                    {
+                                        { "success", "false" },
+                                        { "message", "Account temporarily locked. Please try again later or contact admin." }
+                                    }
+                                };
+                            }
+
+                            LogMessage($"Login failed: Invalid credentials for username: {username}");
+                            Logger.Write("LOGIN", $"Failed login attempt for {username} from IP: {ipAddress}");
+
+                            return new Packet
+                            {
+                                Type = PacketType.LoginResponse,
+                                Success = false,
+                                Message = "Invalid username or password",
+                                Data = new Dictionary<string, string>
+                                {
+                                    { "success", "false" },
+                                    { "message", "Invalid username or password" }
+                                }
+                            };
+                        }
+
+                        int userId = reader.GetInt32("id");
+                        string userRole = reader.GetString("role");
+
+                        ResetFailedAttempts(username);
+                        ResetAccountLocked(username);
+
+                        RecordLoginAttempt(userId, true, GetClientIpAddress(tcpClient));
+                        Logger.Write("LOGIN", $"Successful login for {username} with role: {userRole}");
+
+                        return new Packet
+                        {
+                            Type = PacketType.LoginResponse,
+                            Success = true,
+                            Message = "Login successful",
+                            Data = new Dictionary<string, string>
+                                {
+                                    { "success", "true" },
+                                    { "message", "Login successful" },
+                                    { "userId", userId.ToString() },
+                                    { "username", username },
+                                    { "role", userRole }
+                                }
+                        };
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LogMessage($"Login error: {ex.Message}");
+                Logger.Write("LOGIN", $"Login error: {ex.Message}");
+
+                return new Packet
+                {
+                    Type = PacketType.LoginResponse,
+                    Success = false,
+                    Message = "Internal server error",
+                    Data = new Dictionary<string, string>
+                    {
+                        { "success", "false" },
+                        { "message", "Internal server error" }
+                    }
+                };
+            }
+        }
+
         private Packet HandleRegistration(Packet request)
         {
             try
             {
                 LogMessage($"Processing registration for username: {request.Data["username"]}");
+                Logger.Write("REGISTRATION", $"Processing registration for username: {request.Data["username"]}");
 
                 if (!request.Data.ContainsKey("username") || !request.Data.ContainsKey("password"))
                 {
                     LogMessage("Registration failed: Missing username or password");
+                    Logger.Write("REGISTRATION", "Registration failed: Missing username or password");
+
                     return new Packet
                     {
                         Type = PacketType.RegisterResponse,
@@ -369,6 +545,7 @@ namespace server.Forms
                 {
                     connection.Open();
                     LogMessage("Database connection opened");
+                    Logger.Write("REGISTRATION", "Database connection opened");
 
                     // Check if username exists
                     string checkQuery = "SELECT COUNT(*) FROM users WHERE username = @username";
@@ -396,8 +573,8 @@ namespace server.Forms
 
                     // Insert new user
                     string insertQuery = @"
-                INSERT INTO users (username, password, created_at) 
-                VALUES (@username, @password, @created_at)";
+                        INSERT INTO users (username, password, created_at) 
+                        VALUES (@username, @password, @created_at)";
 
                     using (var insertCommand = new MySqlCommand(insertQuery, connection))
                     {
@@ -409,6 +586,8 @@ namespace server.Forms
                     }
 
                     LogMessage($"Successfully registered new user: {username}");
+                    Logger.Write("REGISTRATION", "$\"Successfully registered new user: {username}\"");
+
                     return new Packet
                     {
                         Type = PacketType.RegisterResponse,
@@ -425,6 +604,8 @@ namespace server.Forms
             catch (Exception ex)
             {
                 LogMessage($"Registration error: {ex.Message}");
+                Logger.Write("REGISTRATION", $"Registration error: {ex.Message}");
+
                 return new Packet
                 {
                     Type = PacketType.RegisterResponse,
@@ -439,7 +620,247 @@ namespace server.Forms
             }
         }
 
-        // Add this helper method for password hashing
+        private string GetClientIpAddress(TcpClient tcpClient)
+        {
+            try
+            {
+                var endpoint = tcpClient?.Client?.RemoteEndPoint as IPEndPoint;
+                return endpoint?.Address.ToString() ?? "Unknown";
+            }
+            catch (Exception ex)
+            {
+                Logger.Write("ERROR", $"Failed to get client IP: {ex.Message}");
+                return "Unknown";
+            }
+        }
+
+        private int GetUserId(string username)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string query = "SELECT id FROM users WHERE username = @username";
+                    using (var command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@username", username);
+                        var result = command.ExecuteScalar();
+                        return result != null ? Convert.ToInt32(result) : -1;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Write("ERROR", $"Failed to get user ID: {ex.Message}");
+                return -1;
+            }
+        }
+
+        private bool IsAccountLocked(string username)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
+                    var query = @"
+                        SELECT locked_time, unlock_time
+                        FROM account_locks 
+                        WHERE user_id = @userId
+                        AND unlock_time > NOW()";
+
+                    using (var command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@userId", GetUserId(username));
+
+                        using (var reader = command.ExecuteReader())
+                        {
+                            return reader.HasRows;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Write("ERROR", $"Error checking account lock status: {ex.Message}");
+                return false;
+            }
+        }
+
+        private void IncrementFailedLoginAttempts(string username)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string query = @"UPDATE users 
+                           SET failed_attempts = failed_attempts + 1 
+                           WHERE username = @username";
+
+                    using (var command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@username", username);
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Write("ERROR", $"Failed to increment login attempts: {ex.Message}");
+            }
+        }
+
+        private void ResetAccountLocked(string username)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string query = @"UPDATE users
+                           SET account_locked = 0, lockout_time = NULL
+                           WHERE username = @username";
+
+                    using (var command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@username", username);
+                        command.ExecuteNonQuery();
+                    }
+
+                    string deleteQuery = @"DELETE FROM account_locks
+                                 WHERE user_id = @userId";
+
+                    using (var deleteCommand = new MySqlCommand(deleteQuery, connection))
+                    {
+                        deleteCommand.Parameters.AddWithValue("@userId", GetUserId(username));
+                        deleteCommand.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Write("ERROR", $"Failed to reset login attempts: {ex.Message}");
+            }
+        }
+
+        private void ResetFailedAttempts(string username)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string query = @"UPDATE users 
+                           SET failed_attempts = 0 
+                           WHERE username = @username";
+
+                    using (var command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@username", username);
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Write("ERROR", $"Failed to reset login attempts: {ex.Message}");
+            }
+        }
+
+        private void RecordLoginAttempt(int userId, bool isSuccessful, string ipAddress)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string query = @"INSERT INTO login_attempts 
+                           (user_id, attempt_time, is_successful, ip_address) 
+                           VALUES (@userId, @attemptTime, @isSuccessful, @ipAddress)";
+
+                    using (var command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@userId", userId);
+                        command.Parameters.AddWithValue("@attemptTime", DateTime.Now);
+                        command.Parameters.AddWithValue("@isSuccessful", isSuccessful);
+                        command.Parameters.AddWithValue("@ipAddress", ipAddress);
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Write("ERROR", $"Failed to record login attempt: {ex.Message}");
+            }
+        }
+
+        private void LockAccount(string username)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    string lockQuery = @"INSERT INTO account_locks 
+                               (user_id, locked_time, unlock_time, reason)
+                               SELECT id, NOW(), DATE_ADD(NOW(), INTERVAL 10 MINUTE), @reason
+                               FROM users WHERE username = @username";
+
+                    using (var lockCommand = new MySqlCommand(lockQuery, connection))
+                    {
+                        lockCommand.Parameters.AddWithValue("@username", username);
+                        lockCommand.Parameters.AddWithValue("@reason", "Too many failed login attempts");
+                        lockCommand.ExecuteNonQuery();
+                    }
+
+                    string updateQuery = @"UPDATE users 
+                                 SET account_locked = 1, 
+                                     lockout_time = DATE_ADD(NOW(), INTERVAL 10 MINUTE) 
+                                 WHERE username = @username";
+
+                    using (var updateCommand = new MySqlCommand(updateQuery, connection))
+                    {
+                        updateCommand.Parameters.AddWithValue("@username", username);
+                        updateCommand.ExecuteNonQuery();
+                    }
+
+                    Logger.Write("SECURITY", $"Account locked for user: {username} for 10 minutes");
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Write("ERROR", $"Failed to lock account: {ex.Message}");
+            }
+        }
+
+        private int GetFailedLoginAttempts(string username)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string query = @"SELECT failed_attempts 
+                           FROM users
+                           WHERE username = @username";
+
+                    using (var command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@username", username);
+                        return Convert.ToInt32(command.ExecuteScalar());
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Write("ERROR", $"Failed to get failed login attempts: {ex.Message}");
+                return 0;
+            }
+        }
+
         private string HashPassword(string password)
         {
             using (var sha256 = SHA256.Create())

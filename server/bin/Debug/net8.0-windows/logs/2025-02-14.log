@@ -1,0 +1,78 @@
+2025-02-14 01:52:09 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-14 01:52:09 [ LOGIN ] : Processing login for username: joma
+2025-02-14 01:52:09 [ LOGIN ] : Failed login attempt for joma from IP: 127.0.0.1
+2025-02-14 01:52:13 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-14 01:52:13 [ LOGIN ] : Processing login for username: joma
+2025-02-14 01:52:13 [ LOGIN ] : Failed login attempt for joma from IP: 127.0.0.1
+2025-02-14 01:52:16 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-14 01:52:16 [ LOGIN ] : Processing login for username: joma
+2025-02-14 01:52:16 [ LOGIN ] : Failed login attempt for joma from IP: 127.0.0.1
+2025-02-14 01:52:19 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-14 01:52:19 [ LOGIN ] : Processing login for username: joma
+2025-02-14 01:52:19 [ LOGIN ] : Failed login attempt for joma from IP: 127.0.0.1
+2025-02-14 01:52:22 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-14 01:52:22 [ LOGIN ] : Processing login for username: joma
+2025-02-14 01:52:22 [ SECURITY ] : Account locked for user: joma for 10 minutes
+2025-02-14 01:52:22 [ LOGIN ] : Account locked: Too many failed attempts for username: joma
+2025-02-14 01:52:22 [ LOGIN ] : Failed attempts for joma: 5
+2025-02-14 01:52:31 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-14 01:52:31 [ LOGIN ] : Processing login for username: joma
+2025-02-14 01:53:09 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-14 01:53:09 [ LOGIN ] : Processing login for username: joma
+2025-02-14 01:53:14 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-14 01:53:14 [ LOGIN ] : Processing login for username: joma
+2025-02-14 01:53:15 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-14 01:53:15 [ LOGIN ] : Processing login for username: joma
+2025-02-14 01:54:22 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-14 01:54:22 [ LOGIN ] : Processing login for username: joma
+2025-02-14 01:54:24 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-14 01:54:24 [ LOGIN ] : Processing login for username: joma
+2025-02-14 01:55:17 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-14 01:55:17 [ LOGIN ] : Processing login for username: joma
+2025-02-14 01:55:31 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-14 01:55:31 [ LOGIN ] : Processing login for username: joma
+2025-02-14 01:55:41 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-14 01:55:41 [ LOGIN ] : Processing login for username: joma
+2025-02-14 01:56:58 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-14 01:56:58 [ LOGIN ] : Processing login for username: joma
+2025-02-14 01:57:01 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-14 01:57:01 [ LOGIN ] : Processing login for username: joma
+2025-02-14 01:59:14 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-14 01:59:14 [ LOGIN ] : Processing login for username: joma
+2025-02-14 01:59:14 [ ACCOUNT ] : Account is locked for joma.
+2025-02-14 01:59:32 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-14 01:59:32 [ LOGIN ] : Processing login for username: joma
+2025-02-14 01:59:32 [ ACCOUNT ] : Account is locked for joma.
+2025-02-14 02:00:06 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-14 02:00:06 [ LOGIN ] : Processing login for username: joma
+2025-02-14 02:00:06 [ ACCOUNT ] : Account is locked for joma.
+2025-02-14 02:00:47 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-14 02:00:47 [ LOGIN ] : Processing login for username: joma
+2025-02-14 02:00:47 [ ACCOUNT ] : Account is locked for joma.
+2025-02-14 02:01:45 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-14 02:01:45 [ LOGIN ] : Processing login for username: joma
+2025-02-14 02:01:45 [ ACCOUNT ] : Account is locked for joma.
+2025-02-14 02:01:54 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-14 02:01:54 [ LOGIN ] : Processing login for username: joma
+2025-02-14 02:01:54 [ ACCOUNT ] : Account is locked for joma.
+2025-02-14 02:02:01 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-14 02:02:01 [ LOGIN ] : Processing login for username: joma
+2025-02-14 02:02:01 [ ACCOUNT ] : Account is locked for joma.
+2025-02-14 02:02:02 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-14 02:02:02 [ LOGIN ] : Processing login for username: joma
+2025-02-14 02:02:02 [ ACCOUNT ] : Account is locked for joma.
+2025-02-14 02:02:05 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-14 02:02:05 [ LOGIN ] : Processing login for username: joma
+2025-02-14 02:02:05 [ ACCOUNT ] : Account is locked for joma.
+2025-02-14 02:02:06 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-14 02:02:06 [ LOGIN ] : Processing login for username: joma
+2025-02-14 02:02:06 [ ACCOUNT ] : Account is locked for joma.
+2025-02-14 02:02:07 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-14 02:02:07 [ LOGIN ] : Processing login for username: joma
+2025-02-14 02:02:07 [ ACCOUNT ] : Account is locked for joma.
+2025-02-14 02:02:09 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-14 02:02:09 [ LOGIN ] : Processing login for username: joma
+2025-02-14 02:02:09 [ ACCOUNT ] : Account is locked for joma.
+2025-02-14 02:02:24 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-14 02:02:24 [ LOGIN ] : Processing login for username: joma
+2025-02-14 02:02:24 [ LOGIN ] : Successful login for joma with role: staff

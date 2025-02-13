@@ -22,7 +22,6 @@ E:\Visual Studio 2022\Projects\CapstoneProject\server\server\bin\Debug\net8.0-wi
 E:\Visual Studio 2022\Projects\CapstoneProject\server\server\bin\Debug\net8.0-windows\runtimes\browser\lib\net8.0\System.Text.Encodings.Web.dll
 E:\Visual Studio 2022\Projects\CapstoneProject\server\server\obj\Debug\net8.0-windows\server.csproj.AssemblyReference.cache
 E:\Visual Studio 2022\Projects\CapstoneProject\server\server\obj\Debug\net8.0-windows\server.Form1.resources
-E:\Visual Studio 2022\Projects\CapstoneProject\server\server\obj\Debug\net8.0-windows\server.Forms.LoadingForm.resources
 E:\Visual Studio 2022\Projects\CapstoneProject\server\server\obj\Debug\net8.0-windows\server.Forms.MainMenu.resources
 E:\Visual Studio 2022\Projects\CapstoneProject\server\server\obj\Debug\net8.0-windows\server.csproj.GenerateResource.cache
 E:\Visual Studio 2022\Projects\CapstoneProject\server\server\obj\Debug\net8.0-windows\server.GeneratedMSBuildEditorConfig.editorconfig
