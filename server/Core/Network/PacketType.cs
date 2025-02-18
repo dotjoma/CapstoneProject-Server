@@ -13,6 +13,12 @@ namespace server.Core.Network
         RegisterResponse = 2,
         Login = 3,
         LoginResponse = 4,
-        Logout = 5
+        Logout = 5,
+        CreateProduct = 6,
+        CreateProductResponse = 7,
+        UpdateProduct = 8,
+        UpdateProductResponse = 9,
+        DeleteProduct = 10,
+        DeleteProductResponse = 11
     }
 }

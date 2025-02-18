@@ -1,0 +1,5 @@
+2025-02-18 00:27:49 [ CLIENT REQUEST ] : Processing request type: CreateProduct
+2025-02-18 00:27:49 [ PRODUCT CREATION ] : Processing product creation: Test
+2025-02-18 00:27:49 [ REGISTRATION ] : Database connection opened
+2025-02-18 00:27:50 [ PRODUCT CREATION ] : "Successfully created new product: Test"
+2025-02-18 00:27:50 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":7,"Data":{"success":"true","message":"Create product successful"},"Success":true,"Message":"New product created"}

@@ -36,6 +36,7 @@
             richTextBox1 = new RichTextBox();
             rtbLogs = new RichTextBox();
             lblStatus = new Label();
+            button1 = new Button();
             SuspendLayout();
             // 
             // btnStartServer
@@ -111,11 +112,22 @@
             lblStatus.TabIndex = 9;
             lblStatus.Text = "status";
             // 
+            // button1
+            // 
+            button1.Location = new Point(713, 475);
+            button1.Name = "button1";
+            button1.Size = new Size(75, 23);
+            button1.TabIndex = 10;
+            button1.Text = "button1";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
+            // 
             // MainMenu
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 639);
+            Controls.Add(button1);
             Controls.Add(lblStatus);
             Controls.Add(rtbLogs);
             Controls.Add(richTextBox1);
@@ -144,5 +156,6 @@
         private RichTextBox richTextBox1;
         private RichTextBox rtbLogs;
         private Label lblStatus;
+        private Button button1;
     }
 }
