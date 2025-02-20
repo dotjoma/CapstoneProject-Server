@@ -1,0 +1,381 @@
+2025-02-20 19:02:00 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 19:02:00 [ LOGIN ] : Processing login for username: joma
+2025-02-20 19:02:00 [ LOGIN ] : Successful login for joma with role: admin
+2025-02-20 19:02:00 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"true","message":"Login successful","userId":"4","username":"joma","role":"admin"},"Success":true,"Message":"Login successful"}
+2025-02-20 19:02:23 [ CLIENT REQUEST ] : Processing request type: GetCategory
+2025-02-20 19:02:23 [ CATEGORY ] : Categories retrieved successfully
+2025-02-20 19:02:23 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":15,"Data":{"success":"true","message":"Categories retrieved successfully","categories":"[{\"Id\":33,\"Name\":\"awaw\"},{\"Id\":31,\"Name\":\"Beverage\"},{\"Id\":34,\"Name\":\"Karla\"},{\"Id\":32,\"Name\":\"Main Course\"}]"},"Success":true,"Message":"Categories retrieved successfully"}
+2025-02-20 19:02:24 [ CLIENT REQUEST ] : Processing request type: GetCategory
+2025-02-20 19:02:24 [ CATEGORY ] : Categories retrieved successfully
+2025-02-20 19:02:24 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":15,"Data":{"success":"true","message":"Categories retrieved successfully","categories":"[{\"Id\":33,\"Name\":\"awaw\"},{\"Id\":31,\"Name\":\"Beverage\"},{\"Id\":34,\"Name\":\"Karla\"},{\"Id\":32,\"Name\":\"Main Course\"}]"},"Success":true,"Message":"Categories retrieved successfully"}
+2025-02-20 19:02:26 [ CLIENT REQUEST ] : Processing request type: GetCategory
+2025-02-20 19:02:26 [ CATEGORY ] : Categories retrieved successfully
+2025-02-20 19:02:26 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":15,"Data":{"success":"true","message":"Categories retrieved successfully","categories":"[{\"Id\":33,\"Name\":\"awaw\"},{\"Id\":31,\"Name\":\"Beverage\"},{\"Id\":34,\"Name\":\"Karla\"},{\"Id\":32,\"Name\":\"Main Course\"}]"},"Success":true,"Message":"Categories retrieved successfully"}
+2025-02-20 19:11:01 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 19:11:01 [ LOGIN ] : Processing login for username: joma
+2025-02-20 19:11:02 [ LOGIN ] : Successful login for joma with role: admin
+2025-02-20 19:11:02 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"true","message":"Login successful","userId":"4","username":"joma","role":"admin"},"Success":true,"Message":"Login successful"}
+2025-02-20 19:11:42 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 19:11:42 [ LOGIN ] : Processing login for username: joma
+2025-02-20 19:11:42 [ LOGIN ] : Successful login for joma with role: admin
+2025-02-20 19:11:42 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"true","message":"Login successful","userId":"4","username":"joma","role":"admin"},"Success":true,"Message":"Login successful"}
+2025-02-20 19:14:50 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 19:14:50 [ LOGIN ] : Processing login for username: karla
+2025-02-20 19:14:50 [ LOGIN ] : Failed login attempt for karla from IP: 127.0.0.1
+2025-02-20 19:14:50 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"false","message":"Invalid username or password"},"Success":false,"Message":"Invalid username or password"}
+2025-02-20 19:15:07 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 19:15:07 [ LOGIN ] : Processing login for username: karla
+2025-02-20 19:15:07 [ LOGIN ] : Failed login attempt for karla from IP: 127.0.0.1
+2025-02-20 19:15:07 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"false","message":"Invalid username or password"},"Success":false,"Message":"Invalid username or password"}
+2025-02-20 19:15:15 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 19:15:15 [ LOGIN ] : Processing login for username: karla
+2025-02-20 19:15:15 [ LOGIN ] : Failed login attempt for karla from IP: 127.0.0.1
+2025-02-20 19:15:15 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"false","message":"Invalid username or password"},"Success":false,"Message":"Invalid username or password"}
+2025-02-20 19:15:37 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 19:15:37 [ LOGIN ] : Processing login for username: karla
+2025-02-20 19:15:37 [ LOGIN ] : Failed login attempt for karla from IP: 127.0.0.1
+2025-02-20 19:15:37 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"false","message":"Invalid username or password"},"Success":false,"Message":"Invalid username or password"}
+2025-02-20 19:15:42 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 19:15:42 [ LOGIN ] : Processing login for username: karla
+2025-02-20 19:15:42 [ SECURITY ] : Account locked for user: karla for 10 minutes
+2025-02-20 19:15:42 [ LOGIN ] : Account locked: Too many failed attempts for username: karla
+2025-02-20 19:15:42 [ LOGIN ] : Failed attempts for karla: 5
+2025-02-20 19:15:42 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"false","message":"Account temporarily locked. Please try again later or contact admin."},"Success":false,"Message":"Account temporarily locked. Please try again later or contact admin."}
+2025-02-20 19:16:37 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 19:16:37 [ LOGIN ] : Processing login for username: karla
+2025-02-20 19:16:37 [ SECURITY ] : Account locked for user: karla for 10 minutes
+2025-02-20 19:16:37 [ LOGIN ] : Account locked: Too many failed attempts for username: karla
+2025-02-20 19:16:37 [ LOGIN ] : Failed attempts for karla: 6
+2025-02-20 19:16:37 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"false","message":"Account temporarily locked. Please try again later or contact admin."},"Success":false,"Message":"Account temporarily locked. Please try again later or contact admin."}
+2025-02-20 19:17:26 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 19:17:26 [ LOGIN ] : Processing login for username: karla
+2025-02-20 19:17:26 [ ACCOUNT ] : Account is locked for karla.
+2025-02-20 19:17:26 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"false","message":"Account is locked. Please try again later or contact admin."},"Success":false,"Message":"Account is locked. Please try again later or contact admin."}
+2025-02-20 19:17:36 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 19:17:36 [ LOGIN ] : Processing login for username: karla
+2025-02-20 19:17:36 [ ACCOUNT ] : Account is locked for karla.
+2025-02-20 19:17:36 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"false","message":"Account is locked. Please try again later or contact admin."},"Success":false,"Message":"Account is locked. Please try again later or contact admin."}
+2025-02-20 19:18:04 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 19:18:04 [ LOGIN ] : Processing login for username: karla
+2025-02-20 19:18:04 [ SECURITY ] : Account locked for user: karla for 10 minutes
+2025-02-20 19:18:04 [ LOGIN ] : Account locked: Too many failed attempts for username: karla
+2025-02-20 19:18:04 [ LOGIN ] : Failed attempts for karla: 7
+2025-02-20 19:18:04 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"false","message":"Account temporarily locked. Please try again later or contact admin."},"Success":false,"Message":"Account temporarily locked. Please try again later or contact admin."}
+2025-02-20 19:18:07 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 19:18:07 [ LOGIN ] : Processing login for username: karla
+2025-02-20 19:18:07 [ ACCOUNT ] : Account is locked for karla.
+2025-02-20 19:18:07 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"false","message":"Account is locked. Please try again later or contact admin."},"Success":false,"Message":"Account is locked. Please try again later or contact admin."}
+2025-02-20 19:19:15 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 19:19:15 [ LOGIN ] : Processing login for username: karla
+2025-02-20 19:19:15 [ LOGIN ] : Successful login for karla with role: staff
+2025-02-20 19:19:15 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"true","message":"Login successful","userId":"5","username":"karla","role":"staff"},"Success":true,"Message":"Login successful"}
+2025-02-20 21:25:55 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 21:25:55 [ LOGIN ] : Processing login for username: joma
+2025-02-20 21:25:55 [ LOGIN ] : Successful login for joma with role: admin
+2025-02-20 21:25:55 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"true","message":"Login successful","userId":"4","username":"joma","role":"admin"},"Success":true,"Message":"Login successful"}
+2025-02-20 21:26:04 [ CLIENT REQUEST ] : Processing request type: GetCategory
+2025-02-20 21:26:04 [ CATEGORY ] : Categories retrieved successfully
+2025-02-20 21:26:04 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":15,"Data":{"success":"true","message":"Categories retrieved successfully","categories":"[{\"Id\":33,\"Name\":\"awaw\"},{\"Id\":31,\"Name\":\"Beverage\"},{\"Id\":34,\"Name\":\"Karla\"},{\"Id\":32,\"Name\":\"Main Course\"}]"},"Success":true,"Message":"Categories retrieved successfully"}
+2025-02-20 21:26:05 [ CLIENT REQUEST ] : Processing request type: GetSubCategory
+2025-02-20 21:26:05 [ SUBCATEGORY ] : No subcategories found for category 33
+2025-02-20 21:26:05 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":17,"Data":{"success":"true","message":"No subcategories found","subcategories":"[]"},"Success":true,"Message":"No subcategories found"}
+2025-02-20 21:26:07 [ CLIENT REQUEST ] : Processing request type: GetSubCategory
+2025-02-20 21:26:07 [ SUBCATEGORY ] : No subcategories found for category 33
+2025-02-20 21:26:07 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":17,"Data":{"success":"true","message":"No subcategories found","subcategories":"[]"},"Success":true,"Message":"No subcategories found"}
+2025-02-20 21:30:08 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 21:30:08 [ LOGIN ] : Processing login for username: joma
+2025-02-20 21:30:08 [ LOGIN ] : Successful login for joma with role: admin
+2025-02-20 21:30:08 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"true","message":"Login successful","userId":"4","username":"joma","role":"admin"},"Success":true,"Message":"Login successful"}
+2025-02-20 21:32:30 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 21:32:30 [ LOGIN ] : Processing login for username: joma
+2025-02-20 21:32:30 [ LOGIN ] : Successful login for joma with role: admin
+2025-02-20 21:32:30 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"true","message":"Login successful","userId":"4","username":"joma","role":"admin"},"Success":true,"Message":"Login successful"}
+2025-02-20 21:33:08 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 21:33:08 [ LOGIN ] : Processing login for username: joma
+2025-02-20 21:33:08 [ LOGIN ] : Successful login for joma with role: admin
+2025-02-20 21:33:08 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"true","message":"Login successful","userId":"4","username":"joma","role":"admin"},"Success":true,"Message":"Login successful"}
+2025-02-20 21:35:47 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 21:35:47 [ LOGIN ] : Processing login for username: joma
+2025-02-20 21:35:47 [ LOGIN ] : Successful login for joma with role: admin
+2025-02-20 21:35:47 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"true","message":"Login successful","userId":"4","username":"joma","role":"admin"},"Success":true,"Message":"Login successful"}
+2025-02-20 21:42:53 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 21:42:53 [ LOGIN ] : Processing login for username: joma
+2025-02-20 21:42:53 [ LOGIN ] : Successful login for joma with role: admin
+2025-02-20 21:42:53 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"true","message":"Login successful","userId":"4","username":"joma","role":"admin"},"Success":true,"Message":"Login successful"}
+2025-02-20 21:52:05 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 21:52:05 [ LOGIN ] : Processing login for username: joma
+2025-02-20 21:52:06 [ LOGIN ] : Successful login for joma with role: admin
+2025-02-20 21:52:06 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"true","message":"Login successful","userId":"4","username":"joma","role":"admin"},"Success":true,"Message":"Login successful"}
+2025-02-20 22:04:42 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 22:04:42 [ LOGIN ] : Processing login for username: joma
+2025-02-20 22:04:42 [ LOGIN ] : Successful login for joma with role: admin
+2025-02-20 22:04:42 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"true","message":"Login successful","userId":"4","username":"joma","role":"admin"},"Success":true,"Message":"Login successful"}
+2025-02-20 22:17:51 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 22:17:51 [ LOGIN ] : Processing login for username: Joma
+2025-02-20 22:17:51 [ LOGIN ] : Successful login for Joma with role: admin
+2025-02-20 22:17:51 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"true","message":"Login successful","userId":"4","username":"Joma","role":"admin"},"Success":true,"Message":"Login successful"}
+2025-02-20 22:20:22 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 22:20:22 [ LOGIN ] : Processing login for username: joma
+2025-02-20 22:20:22 [ LOGIN ] : Successful login for joma with role: admin
+2025-02-20 22:20:22 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"true","message":"Login successful","userId":"4","username":"joma","role":"admin"},"Success":true,"Message":"Login successful"}
+2025-02-20 22:20:38 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 22:20:38 [ LOGIN ] : Processing login for username: joma
+2025-02-20 22:20:38 [ LOGIN ] : Successful login for joma with role: admin
+2025-02-20 22:20:38 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"true","message":"Login successful","userId":"4","username":"joma","role":"admin"},"Success":true,"Message":"Login successful"}
+2025-02-20 22:20:46 [ CLIENT REQUEST ] : Processing request type: GetCategory
+2025-02-20 22:20:46 [ CATEGORY ] : Categories retrieved successfully
+2025-02-20 22:20:46 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":15,"Data":{"success":"true","message":"Categories retrieved successfully","categories":"[{\"Id\":33,\"Name\":\"awaw\"},{\"Id\":31,\"Name\":\"Beverage\"},{\"Id\":34,\"Name\":\"Karla\"},{\"Id\":32,\"Name\":\"Main Course\"}]"},"Success":true,"Message":"Categories retrieved successfully"}
+2025-02-20 22:33:01 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 22:33:01 [ LOGIN ] : Processing login for username: joma
+2025-02-20 22:33:01 [ LOGIN ] : Successful login for joma with role: admin
+2025-02-20 22:33:01 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"true","message":"Login successful","userId":"4","username":"joma","role":"admin"},"Success":true,"Message":"Login successful"}
+2025-02-20 22:33:08 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 22:33:08 [ LOGIN ] : Processing login for username: joma
+2025-02-20 22:33:08 [ LOGIN ] : Successful login for joma with role: admin
+2025-02-20 22:33:08 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"true","message":"Login successful","userId":"4","username":"joma","role":"admin"},"Success":true,"Message":"Login successful"}
+2025-02-20 22:33:13 [ CLIENT REQUEST ] : Processing request type: GetCategory
+2025-02-20 22:33:13 [ CATEGORY ] : Categories retrieved successfully
+2025-02-20 22:33:13 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":15,"Data":{"success":"true","message":"Categories retrieved successfully","categories":"[{\"Id\":33,\"Name\":\"awaw\"},{\"Id\":31,\"Name\":\"Beverage\"},{\"Id\":34,\"Name\":\"Karla\"},{\"Id\":32,\"Name\":\"Main Course\"}]"},"Success":true,"Message":"Categories retrieved successfully"}
+2025-02-20 22:37:42 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 22:37:42 [ LOGIN ] : Processing login for username: joma
+2025-02-20 22:37:42 [ LOGIN ] : Successful login for joma with role: admin
+2025-02-20 22:37:42 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"true","message":"Login successful","userId":"4","username":"joma","role":"admin"},"Success":true,"Message":"Login successful"}
+2025-02-20 22:37:43 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 22:37:43 [ LOGIN ] : Processing login for username: joma
+2025-02-20 22:37:43 [ LOGIN ] : Successful login for joma with role: admin
+2025-02-20 22:37:43 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"true","message":"Login successful","userId":"4","username":"joma","role":"admin"},"Success":true,"Message":"Login successful"}
+2025-02-20 22:37:49 [ CLIENT REQUEST ] : Processing request type: GetCategory
+2025-02-20 22:37:49 [ CATEGORY ] : Categories retrieved successfully
+2025-02-20 22:37:49 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":15,"Data":{"success":"true","message":"Categories retrieved successfully","categories":"[{\"Id\":33,\"Name\":\"awaw\"},{\"Id\":31,\"Name\":\"Beverage\"},{\"Id\":34,\"Name\":\"Karla\"},{\"Id\":32,\"Name\":\"Main Course\"}]"},"Success":true,"Message":"Categories retrieved successfully"}
+2025-02-20 22:38:01 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 22:38:01 [ LOGIN ] : Processing login for username: joma
+2025-02-20 22:38:01 [ LOGIN ] : Successful login for joma with role: admin
+2025-02-20 22:38:01 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"true","message":"Login successful","userId":"4","username":"joma","role":"admin"},"Success":true,"Message":"Login successful"}
+2025-02-20 22:38:10 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 22:38:10 [ LOGIN ] : Processing login for username: joma
+2025-02-20 22:38:10 [ LOGIN ] : Successful login for joma with role: admin
+2025-02-20 22:38:10 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"true","message":"Login successful","userId":"4","username":"joma","role":"admin"},"Success":true,"Message":"Login successful"}
+2025-02-20 22:38:14 [ CLIENT REQUEST ] : Processing request type: GetCategory
+2025-02-20 22:38:14 [ CATEGORY ] : Categories retrieved successfully
+2025-02-20 22:38:14 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":15,"Data":{"success":"true","message":"Categories retrieved successfully","categories":"[{\"Id\":33,\"Name\":\"awaw\"},{\"Id\":31,\"Name\":\"Beverage\"},{\"Id\":34,\"Name\":\"Karla\"},{\"Id\":32,\"Name\":\"Main Course\"}]"},"Success":true,"Message":"Categories retrieved successfully"}
+2025-02-20 22:42:55 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 22:42:55 [ LOGIN ] : Processing login for username: joma
+2025-02-20 22:42:55 [ LOGIN ] : Successful login for joma with role: admin
+2025-02-20 22:42:55 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"true","message":"Login successful","userId":"4","username":"joma","role":"admin"},"Success":true,"Message":"Login successful"}
+2025-02-20 22:43:03 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 22:43:03 [ LOGIN ] : Processing login for username: joma
+2025-02-20 22:43:03 [ LOGIN ] : Successful login for joma with role: admin
+2025-02-20 22:43:03 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"true","message":"Login successful","userId":"4","username":"joma","role":"admin"},"Success":true,"Message":"Login successful"}
+2025-02-20 22:43:06 [ CLIENT REQUEST ] : Processing request type: GetCategory
+2025-02-20 22:43:06 [ CATEGORY ] : Categories retrieved successfully
+2025-02-20 22:43:06 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":15,"Data":{"success":"true","message":"Categories retrieved successfully","categories":"[{\"Id\":33,\"Name\":\"awaw\"},{\"Id\":31,\"Name\":\"Beverage\"},{\"Id\":34,\"Name\":\"Karla\"},{\"Id\":32,\"Name\":\"Main Course\"}]"},"Success":true,"Message":"Categories retrieved successfully"}
+2025-02-20 22:43:25 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 22:43:25 [ LOGIN ] : Processing login for username: joma
+2025-02-20 22:43:25 [ LOGIN ] : Successful login for joma with role: admin
+2025-02-20 22:43:25 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"true","message":"Login successful","userId":"4","username":"joma","role":"admin"},"Success":true,"Message":"Login successful"}
+2025-02-20 22:43:29 [ CLIENT REQUEST ] : Processing request type: GetCategory
+2025-02-20 22:43:29 [ CATEGORY ] : Categories retrieved successfully
+2025-02-20 22:43:29 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":15,"Data":{"success":"true","message":"Categories retrieved successfully","categories":"[{\"Id\":33,\"Name\":\"awaw\"},{\"Id\":31,\"Name\":\"Beverage\"},{\"Id\":34,\"Name\":\"Karla\"},{\"Id\":32,\"Name\":\"Main Course\"}]"},"Success":true,"Message":"Categories retrieved successfully"}
+2025-02-20 22:43:48 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 22:43:48 [ LOGIN ] : Processing login for username: joma
+2025-02-20 22:43:48 [ LOGIN ] : Successful login for joma with role: admin
+2025-02-20 22:43:48 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"true","message":"Login successful","userId":"4","username":"joma","role":"admin"},"Success":true,"Message":"Login successful"}
+2025-02-20 22:43:52 [ CLIENT REQUEST ] : Processing request type: GetCategory
+2025-02-20 22:43:52 [ CATEGORY ] : Categories retrieved successfully
+2025-02-20 22:43:52 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":15,"Data":{"success":"true","message":"Categories retrieved successfully","categories":"[{\"Id\":33,\"Name\":\"awaw\"},{\"Id\":31,\"Name\":\"Beverage\"},{\"Id\":34,\"Name\":\"Karla\"},{\"Id\":32,\"Name\":\"Main Course\"}]"},"Success":true,"Message":"Categories retrieved successfully"}
+2025-02-20 22:45:29 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 22:45:29 [ LOGIN ] : Processing login for username: joma
+2025-02-20 22:45:29 [ LOGIN ] : Successful login for joma with role: admin
+2025-02-20 22:45:29 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"true","message":"Login successful","userId":"4","username":"joma","role":"admin"},"Success":true,"Message":"Login successful"}
+2025-02-20 22:45:34 [ CLIENT REQUEST ] : Processing request type: GetCategory
+2025-02-20 22:45:34 [ CATEGORY ] : Categories retrieved successfully
+2025-02-20 22:45:34 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":15,"Data":{"success":"true","message":"Categories retrieved successfully","categories":"[{\"Id\":33,\"Name\":\"awaw\"},{\"Id\":31,\"Name\":\"Beverage\"},{\"Id\":34,\"Name\":\"Karla\"},{\"Id\":32,\"Name\":\"Main Course\"}]"},"Success":true,"Message":"Categories retrieved successfully"}
+2025-02-20 22:48:22 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 22:48:22 [ LOGIN ] : Processing login for username: joma
+2025-02-20 22:48:22 [ LOGIN ] : Successful login for joma with role: admin
+2025-02-20 22:48:22 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"true","message":"Login successful","userId":"4","username":"joma","role":"admin"},"Success":true,"Message":"Login successful"}
+2025-02-20 22:48:26 [ CLIENT REQUEST ] : Processing request type: GetCategory
+2025-02-20 22:48:26 [ CATEGORY ] : Categories retrieved successfully
+2025-02-20 22:48:26 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":15,"Data":{"success":"true","message":"Categories retrieved successfully","categories":"[{\"Id\":33,\"Name\":\"awaw\"},{\"Id\":31,\"Name\":\"Beverage\"},{\"Id\":34,\"Name\":\"Karla\"},{\"Id\":32,\"Name\":\"Main Course\"}]"},"Success":true,"Message":"Categories retrieved successfully"}
+2025-02-20 22:50:05 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 22:50:05 [ LOGIN ] : Processing login for username: joma
+2025-02-20 22:50:05 [ LOGIN ] : Successful login for joma with role: admin
+2025-02-20 22:50:05 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"true","message":"Login successful","userId":"4","username":"joma","role":"admin"},"Success":true,"Message":"Login successful"}
+2025-02-20 22:50:08 [ CLIENT REQUEST ] : Processing request type: GetCategory
+2025-02-20 22:50:08 [ CATEGORY ] : Categories retrieved successfully
+2025-02-20 22:50:08 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":15,"Data":{"success":"true","message":"Categories retrieved successfully","categories":"[{\"Id\":33,\"Name\":\"awaw\"},{\"Id\":31,\"Name\":\"Beverage\"},{\"Id\":34,\"Name\":\"Karla\"},{\"Id\":32,\"Name\":\"Main Course\"}]"},"Success":true,"Message":"Categories retrieved successfully"}
+2025-02-20 22:52:16 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 22:52:16 [ LOGIN ] : Processing login for username: joma
+2025-02-20 22:52:16 [ LOGIN ] : Successful login for joma with role: admin
+2025-02-20 22:52:16 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"true","message":"Login successful","userId":"4","username":"joma","role":"admin"},"Success":true,"Message":"Login successful"}
+2025-02-20 22:52:19 [ CLIENT REQUEST ] : Processing request type: GetCategory
+2025-02-20 22:52:19 [ CATEGORY ] : Categories retrieved successfully
+2025-02-20 22:52:19 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":15,"Data":{"success":"true","message":"Categories retrieved successfully","categories":"[{\"Id\":33,\"Name\":\"awaw\"},{\"Id\":31,\"Name\":\"Beverage\"},{\"Id\":34,\"Name\":\"Karla\"},{\"Id\":32,\"Name\":\"Main Course\"}]"},"Success":true,"Message":"Categories retrieved successfully"}
+2025-02-20 22:52:21 [ CLIENT REQUEST ] : Processing request type: GetSubCategory
+2025-02-20 22:52:21 [ SUBCATEGORY ] : No subcategories found for category 33
+2025-02-20 22:52:21 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":17,"Data":{"success":"true","message":"No subcategories found","subcategories":"[]"},"Success":true,"Message":"No subcategories found"}
+2025-02-20 22:52:23 [ CLIENT REQUEST ] : Processing request type: GetSubCategory
+2025-02-20 22:52:23 [ SUBCATEGORY ] : No subcategories found for category 33
+2025-02-20 22:52:23 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":17,"Data":{"success":"true","message":"No subcategories found","subcategories":"[]"},"Success":true,"Message":"No subcategories found"}
+2025-02-20 22:53:15 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 22:53:15 [ LOGIN ] : Processing login for username: joma
+2025-02-20 22:53:15 [ LOGIN ] : Successful login for joma with role: admin
+2025-02-20 22:53:15 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"true","message":"Login successful","userId":"4","username":"joma","role":"admin"},"Success":true,"Message":"Login successful"}
+2025-02-20 22:53:19 [ CLIENT REQUEST ] : Processing request type: GetCategory
+2025-02-20 22:53:19 [ CATEGORY ] : Categories retrieved successfully
+2025-02-20 22:53:19 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":15,"Data":{"success":"true","message":"Categories retrieved successfully","categories":"[{\"Id\":33,\"Name\":\"awaw\"},{\"Id\":31,\"Name\":\"Beverage\"},{\"Id\":34,\"Name\":\"Karla\"},{\"Id\":32,\"Name\":\"Main Course\"}]"},"Success":true,"Message":"Categories retrieved successfully"}
+2025-02-20 22:53:20 [ CLIENT REQUEST ] : Processing request type: GetSubCategory
+2025-02-20 22:53:20 [ SUBCATEGORY ] : No subcategories found for category 33
+2025-02-20 22:53:20 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":17,"Data":{"success":"true","message":"No subcategories found","subcategories":"[]"},"Success":true,"Message":"No subcategories found"}
+2025-02-20 22:53:22 [ CLIENT REQUEST ] : Processing request type: GetSubCategory
+2025-02-20 22:53:22 [ SUBCATEGORY ] : No subcategories found for category 33
+2025-02-20 22:53:22 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":17,"Data":{"success":"true","message":"No subcategories found","subcategories":"[]"},"Success":true,"Message":"No subcategories found"}
+2025-02-20 22:53:28 [ CLIENT REQUEST ] : Processing request type: GetSubCategory
+2025-02-20 22:53:28 [ SUBCATEGORY ] : No subcategories found for category 33
+2025-02-20 22:53:28 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":17,"Data":{"success":"true","message":"No subcategories found","subcategories":"[]"},"Success":true,"Message":"No subcategories found"}
+2025-02-20 22:53:30 [ CLIENT REQUEST ] : Processing request type: GetSubCategory
+2025-02-20 22:53:30 [ SUBCATEGORY ] : No subcategories found for category 33
+2025-02-20 22:53:30 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":17,"Data":{"success":"true","message":"No subcategories found","subcategories":"[]"},"Success":true,"Message":"No subcategories found"}
+2025-02-20 22:55:12 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 22:55:12 [ LOGIN ] : Processing login for username: joma
+2025-02-20 22:55:12 [ LOGIN ] : Successful login for joma with role: admin
+2025-02-20 22:55:12 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"true","message":"Login successful","userId":"4","username":"joma","role":"admin"},"Success":true,"Message":"Login successful"}
+2025-02-20 22:55:16 [ CLIENT REQUEST ] : Processing request type: GetCategory
+2025-02-20 22:55:16 [ CATEGORY ] : Categories retrieved successfully
+2025-02-20 22:55:16 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":15,"Data":{"success":"true","message":"Categories retrieved successfully","categories":"[{\"Id\":33,\"Name\":\"awaw\"},{\"Id\":31,\"Name\":\"Beverage\"},{\"Id\":34,\"Name\":\"Karla\"},{\"Id\":32,\"Name\":\"Main Course\"}]"},"Success":true,"Message":"Categories retrieved successfully"}
+2025-02-20 22:55:25 [ CLIENT REQUEST ] : Processing request type: GetSubCategory
+2025-02-20 22:55:25 [ SUBCATEGORY ] : No subcategories found for category 33
+2025-02-20 22:55:25 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":17,"Data":{"success":"true","message":"No subcategories found","subcategories":"[]"},"Success":true,"Message":"No subcategories found"}
+2025-02-20 22:55:27 [ CLIENT REQUEST ] : Processing request type: GetSubCategory
+2025-02-20 22:55:27 [ SUBCATEGORY ] : No subcategories found for category 33
+2025-02-20 22:55:27 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":17,"Data":{"success":"true","message":"No subcategories found","subcategories":"[]"},"Success":true,"Message":"No subcategories found"}
+2025-02-20 22:55:30 [ CLIENT REQUEST ] : Processing request type: GetSubCategory
+2025-02-20 22:55:30 [ SUBCATEGORY ] : Found 2 subcategories for category 31
+2025-02-20 22:55:30 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":17,"Data":{"success":"true","message":"Subcategories retrieved successfully","subcategories":"[{\"scId\":32,\"catId\":31,\"scName\":\"Coffee\"},{\"scId\":31,\"catId\":31,\"scName\":\"Milk Tea\"}]"},"Success":true,"Message":"Subcategories retrieved successfully"}
+2025-02-20 22:55:32 [ CLIENT REQUEST ] : Processing request type: GetSubCategory
+2025-02-20 22:55:32 [ SUBCATEGORY ] : Found 2 subcategories for category 31
+2025-02-20 22:55:32 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":17,"Data":{"success":"true","message":"Subcategories retrieved successfully","subcategories":"[{\"scId\":32,\"catId\":31,\"scName\":\"Coffee\"},{\"scId\":31,\"catId\":31,\"scName\":\"Milk Tea\"}]"},"Success":true,"Message":"Subcategories retrieved successfully"}
+2025-02-20 22:55:35 [ CLIENT REQUEST ] : Processing request type: GetSubCategory
+2025-02-20 22:55:35 [ SUBCATEGORY ] : Found 2 subcategories for category 31
+2025-02-20 22:55:35 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":17,"Data":{"success":"true","message":"Subcategories retrieved successfully","subcategories":"[{\"scId\":32,\"catId\":31,\"scName\":\"Coffee\"},{\"scId\":31,\"catId\":31,\"scName\":\"Milk Tea\"}]"},"Success":true,"Message":"Subcategories retrieved successfully"}
+2025-02-20 22:55:37 [ CLIENT REQUEST ] : Processing request type: GetSubCategory
+2025-02-20 22:55:37 [ SUBCATEGORY ] : Found 2 subcategories for category 31
+2025-02-20 22:55:37 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":17,"Data":{"success":"true","message":"Subcategories retrieved successfully","subcategories":"[{\"scId\":32,\"catId\":31,\"scName\":\"Coffee\"},{\"scId\":31,\"catId\":31,\"scName\":\"Milk Tea\"}]"},"Success":true,"Message":"Subcategories retrieved successfully"}
+2025-02-20 22:57:50 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 22:57:50 [ LOGIN ] : Processing login for username: joma
+2025-02-20 22:57:50 [ LOGIN ] : Successful login for joma with role: admin
+2025-02-20 22:57:50 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"true","message":"Login successful","userId":"4","username":"joma","role":"admin"},"Success":true,"Message":"Login successful"}
+2025-02-20 22:57:53 [ CLIENT REQUEST ] : Processing request type: GetCategory
+2025-02-20 22:57:53 [ CATEGORY ] : Categories retrieved successfully
+2025-02-20 22:57:53 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":15,"Data":{"success":"true","message":"Categories retrieved successfully","categories":"[{\"Id\":33,\"Name\":\"awaw\"},{\"Id\":31,\"Name\":\"Beverage\"},{\"Id\":34,\"Name\":\"Karla\"},{\"Id\":32,\"Name\":\"Main Course\"}]"},"Success":true,"Message":"Categories retrieved successfully"}
+2025-02-20 22:58:03 [ CLIENT REQUEST ] : Processing request type: GetSubCategory
+2025-02-20 22:58:03 [ SUBCATEGORY ] : Found 2 subcategories for category 31
+2025-02-20 22:58:03 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":17,"Data":{"success":"true","message":"Subcategories retrieved successfully","subcategories":"[{\"scId\":32,\"catId\":31,\"scName\":\"Coffee\"},{\"scId\":31,\"catId\":31,\"scName\":\"Milk Tea\"}]"},"Success":true,"Message":"Subcategories retrieved successfully"}
+2025-02-20 22:58:05 [ CLIENT REQUEST ] : Processing request type: GetSubCategory
+2025-02-20 22:58:05 [ SUBCATEGORY ] : Found 2 subcategories for category 31
+2025-02-20 22:58:05 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":17,"Data":{"success":"true","message":"Subcategories retrieved successfully","subcategories":"[{\"scId\":32,\"catId\":31,\"scName\":\"Coffee\"},{\"scId\":31,\"catId\":31,\"scName\":\"Milk Tea\"}]"},"Success":true,"Message":"Subcategories retrieved successfully"}
+2025-02-20 22:59:05 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 22:59:05 [ LOGIN ] : Processing login for username: joma
+2025-02-20 22:59:05 [ LOGIN ] : Successful login for joma with role: admin
+2025-02-20 22:59:05 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"true","message":"Login successful","userId":"4","username":"joma","role":"admin"},"Success":true,"Message":"Login successful"}
+2025-02-20 22:59:08 [ CLIENT REQUEST ] : Processing request type: GetCategory
+2025-02-20 22:59:08 [ CATEGORY ] : Categories retrieved successfully
+2025-02-20 22:59:08 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":15,"Data":{"success":"true","message":"Categories retrieved successfully","categories":"[{\"Id\":33,\"Name\":\"awaw\"},{\"Id\":31,\"Name\":\"Beverage\"},{\"Id\":34,\"Name\":\"Karla\"},{\"Id\":32,\"Name\":\"Main Course\"}]"},"Success":true,"Message":"Categories retrieved successfully"}
+2025-02-20 22:59:12 [ CLIENT REQUEST ] : Processing request type: GetSubCategory
+2025-02-20 22:59:12 [ SUBCATEGORY ] : Found 2 subcategories for category 31
+2025-02-20 22:59:12 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":17,"Data":{"success":"true","message":"Subcategories retrieved successfully","subcategories":"[{\"scId\":32,\"catId\":31,\"scName\":\"Coffee\"},{\"scId\":31,\"catId\":31,\"scName\":\"Milk Tea\"}]"},"Success":true,"Message":"Subcategories retrieved successfully"}
+2025-02-20 22:59:14 [ CLIENT REQUEST ] : Processing request type: GetSubCategory
+2025-02-20 22:59:14 [ SUBCATEGORY ] : Found 2 subcategories for category 31
+2025-02-20 22:59:14 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":17,"Data":{"success":"true","message":"Subcategories retrieved successfully","subcategories":"[{\"scId\":32,\"catId\":31,\"scName\":\"Coffee\"},{\"scId\":31,\"catId\":31,\"scName\":\"Milk Tea\"}]"},"Success":true,"Message":"Subcategories retrieved successfully"}
+2025-02-20 23:00:16 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 23:00:16 [ LOGIN ] : Processing login for username: joma
+2025-02-20 23:00:16 [ LOGIN ] : Successful login for joma with role: admin
+2025-02-20 23:00:16 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"true","message":"Login successful","userId":"4","username":"joma","role":"admin"},"Success":true,"Message":"Login successful"}
+2025-02-20 23:00:20 [ CLIENT REQUEST ] : Processing request type: GetCategory
+2025-02-20 23:00:20 [ CATEGORY ] : Categories retrieved successfully
+2025-02-20 23:00:20 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":15,"Data":{"success":"true","message":"Categories retrieved successfully","categories":"[{\"Id\":33,\"Name\":\"awaw\"},{\"Id\":31,\"Name\":\"Beverage\"},{\"Id\":34,\"Name\":\"Karla\"},{\"Id\":32,\"Name\":\"Main Course\"}]"},"Success":true,"Message":"Categories retrieved successfully"}
+2025-02-20 23:00:57 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 23:00:58 [ LOGIN ] : Processing login for username: joma
+2025-02-20 23:00:58 [ LOGIN ] : Successful login for joma with role: admin
+2025-02-20 23:00:58 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"true","message":"Login successful","userId":"4","username":"joma","role":"admin"},"Success":true,"Message":"Login successful"}
+2025-02-20 23:01:01 [ CLIENT REQUEST ] : Processing request type: GetCategory
+2025-02-20 23:01:01 [ CATEGORY ] : Categories retrieved successfully
+2025-02-20 23:01:01 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":15,"Data":{"success":"true","message":"Categories retrieved successfully","categories":"[{\"Id\":33,\"Name\":\"awaw\"},{\"Id\":31,\"Name\":\"Beverage\"},{\"Id\":34,\"Name\":\"Karla\"},{\"Id\":32,\"Name\":\"Main Course\"}]"},"Success":true,"Message":"Categories retrieved successfully"}
+2025-02-20 23:01:57 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 23:01:57 [ LOGIN ] : Processing login for username: joma
+2025-02-20 23:01:57 [ LOGIN ] : Successful login for joma with role: admin
+2025-02-20 23:01:57 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"true","message":"Login successful","userId":"4","username":"joma","role":"admin"},"Success":true,"Message":"Login successful"}
+2025-02-20 23:02:01 [ CLIENT REQUEST ] : Processing request type: GetCategory
+2025-02-20 23:02:01 [ CATEGORY ] : Categories retrieved successfully
+2025-02-20 23:02:01 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":15,"Data":{"success":"true","message":"Categories retrieved successfully","categories":"[{\"Id\":33,\"Name\":\"awaw\"},{\"Id\":31,\"Name\":\"Beverage\"},{\"Id\":34,\"Name\":\"Karla\"},{\"Id\":32,\"Name\":\"Main Course\"}]"},"Success":true,"Message":"Categories retrieved successfully"}
+2025-02-20 23:05:46 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 23:05:46 [ LOGIN ] : Processing login for username: joma
+2025-02-20 23:05:46 [ LOGIN ] : Successful login for joma with role: admin
+2025-02-20 23:05:46 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"true","message":"Login successful","userId":"4","username":"joma","role":"admin"},"Success":true,"Message":"Login successful"}
+2025-02-20 23:05:49 [ CLIENT REQUEST ] : Processing request type: GetCategory
+2025-02-20 23:05:49 [ CATEGORY ] : Categories retrieved successfully
+2025-02-20 23:05:49 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":15,"Data":{"success":"true","message":"Categories retrieved successfully","categories":"[{\"Id\":33,\"Name\":\"awaw\"},{\"Id\":31,\"Name\":\"Beverage\"},{\"Id\":34,\"Name\":\"Karla\"},{\"Id\":32,\"Name\":\"Main Course\"}]"},"Success":true,"Message":"Categories retrieved successfully"}
+2025-02-20 23:10:49 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 23:10:49 [ LOGIN ] : Processing login for username: joma
+2025-02-20 23:10:49 [ LOGIN ] : Successful login for joma with role: admin
+2025-02-20 23:10:49 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"true","message":"Login successful","userId":"4","username":"joma","role":"admin"},"Success":true,"Message":"Login successful"}
+2025-02-20 23:10:52 [ CLIENT REQUEST ] : Processing request type: GetCategory
+2025-02-20 23:10:52 [ CATEGORY ] : Categories retrieved successfully
+2025-02-20 23:10:52 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":15,"Data":{"success":"true","message":"Categories retrieved successfully","categories":"[{\"Id\":33,\"Name\":\"awaw\"},{\"Id\":31,\"Name\":\"Beverage\"},{\"Id\":34,\"Name\":\"Karla\"},{\"Id\":32,\"Name\":\"Main Course\"}]"},"Success":true,"Message":"Categories retrieved successfully"}
+2025-02-20 23:25:54 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 23:25:54 [ LOGIN ] : Processing login for username: joma
+2025-02-20 23:25:54 [ LOGIN ] : Successful login for joma with role: admin
+2025-02-20 23:25:54 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"true","message":"Login successful","userId":"4","username":"joma","role":"admin"},"Success":true,"Message":"Login successful"}
+2025-02-20 23:25:59 [ CLIENT REQUEST ] : Processing request type: GetCategory
+2025-02-20 23:25:59 [ CATEGORY ] : Categories retrieved successfully
+2025-02-20 23:25:59 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":15,"Data":{"success":"true","message":"Categories retrieved successfully","categories":"[{\"Id\":33,\"Name\":\"awaw\"},{\"Id\":31,\"Name\":\"Beverage\"},{\"Id\":34,\"Name\":\"Karla\"},{\"Id\":32,\"Name\":\"Main Course\"}]"},"Success":true,"Message":"Categories retrieved successfully"}
+2025-02-20 23:26:18 [ CLIENT REQUEST ] : Processing request type: GetSubCategory
+2025-02-20 23:26:18 [ SUBCATEGORY ] : Found 2 subcategories for category 31
+2025-02-20 23:26:18 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":17,"Data":{"success":"true","message":"Subcategories retrieved successfully","subcategories":"[{\"scId\":32,\"catId\":31,\"scName\":\"Coffee\"},{\"scId\":31,\"catId\":31,\"scName\":\"Milk Tea\"}]"},"Success":true,"Message":"Subcategories retrieved successfully"}
+2025-02-20 23:26:20 [ CLIENT REQUEST ] : Processing request type: GetSubCategory
+2025-02-20 23:26:20 [ SUBCATEGORY ] : Found 2 subcategories for category 31
+2025-02-20 23:26:20 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":17,"Data":{"success":"true","message":"Subcategories retrieved successfully","subcategories":"[{\"scId\":32,\"catId\":31,\"scName\":\"Coffee\"},{\"scId\":31,\"catId\":31,\"scName\":\"Milk Tea\"}]"},"Success":true,"Message":"Subcategories retrieved successfully"}
+2025-02-20 23:27:21 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 23:27:21 [ LOGIN ] : Processing login for username: joma
+2025-02-20 23:27:21 [ LOGIN ] : Successful login for joma with role: admin
+2025-02-20 23:27:21 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"true","message":"Login successful","userId":"4","username":"joma","role":"admin"},"Success":true,"Message":"Login successful"}
+2025-02-20 23:27:25 [ CLIENT REQUEST ] : Processing request type: GetCategory
+2025-02-20 23:27:25 [ CATEGORY ] : Categories retrieved successfully
+2025-02-20 23:27:25 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":15,"Data":{"success":"true","message":"Categories retrieved successfully","categories":"[{\"Id\":33,\"Name\":\"awaw\"},{\"Id\":31,\"Name\":\"Beverage\"},{\"Id\":34,\"Name\":\"Karla\"},{\"Id\":32,\"Name\":\"Main Course\"}]"},"Success":true,"Message":"Categories retrieved successfully"}
+2025-02-20 23:29:35 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 23:29:35 [ LOGIN ] : Processing login for username: joma
+2025-02-20 23:29:35 [ LOGIN ] : Successful login for joma with role: admin
+2025-02-20 23:29:35 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"true","message":"Login successful","userId":"4","username":"joma","role":"admin"},"Success":true,"Message":"Login successful"}
+2025-02-20 23:29:38 [ CLIENT REQUEST ] : Processing request type: GetCategory
+2025-02-20 23:29:38 [ CATEGORY ] : Categories retrieved successfully
+2025-02-20 23:29:38 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":15,"Data":{"success":"true","message":"Categories retrieved successfully","categories":"[{\"Id\":33,\"Name\":\"awaw\"},{\"Id\":31,\"Name\":\"Beverage\"},{\"Id\":34,\"Name\":\"Karla\"},{\"Id\":32,\"Name\":\"Main Course\"}]"},"Success":true,"Message":"Categories retrieved successfully"}
+2025-02-20 23:29:47 [ CLIENT REQUEST ] : Processing request type: GetSubCategory
+2025-02-20 23:29:47 [ SUBCATEGORY ] : Found 2 subcategories for category 31
+2025-02-20 23:29:47 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":17,"Data":{"success":"true","message":"Subcategories retrieved successfully","subcategories":"[{\"scId\":32,\"catId\":31,\"scName\":\"Coffee\"},{\"scId\":31,\"catId\":31,\"scName\":\"Milk Tea\"}]"},"Success":true,"Message":"Subcategories retrieved successfully"}
+2025-02-20 23:29:49 [ CLIENT REQUEST ] : Processing request type: GetSubCategory
+2025-02-20 23:29:49 [ SUBCATEGORY ] : Found 2 subcategories for category 31
+2025-02-20 23:29:49 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":17,"Data":{"success":"true","message":"Subcategories retrieved successfully","subcategories":"[{\"scId\":32,\"catId\":31,\"scName\":\"Coffee\"},{\"scId\":31,\"catId\":31,\"scName\":\"Milk Tea\"}]"},"Success":true,"Message":"Subcategories retrieved successfully"}
+2025-02-20 23:29:57 [ CLIENT REQUEST ] : Processing request type: GetSubCategory
+2025-02-20 23:29:57 [ SUBCATEGORY ] : No subcategories found for category 34
+2025-02-20 23:29:57 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":17,"Data":{"success":"true","message":"No subcategories found","subcategories":"[]"},"Success":true,"Message":"No subcategories found"}
+2025-02-20 23:30:00 [ CLIENT REQUEST ] : Processing request type: GetSubCategory
+2025-02-20 23:30:00 [ SUBCATEGORY ] : No subcategories found for category 34
+2025-02-20 23:30:00 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":17,"Data":{"success":"true","message":"No subcategories found","subcategories":"[]"},"Success":true,"Message":"No subcategories found"}
+2025-02-20 23:51:38 [ CLIENT REQUEST ] : Processing request type: Login
+2025-02-20 23:51:38 [ LOGIN ] : Processing login for username: joma
+2025-02-20 23:51:39 [ LOGIN ] : Successful login for joma with role: admin
+2025-02-20 23:51:39 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":4,"Data":{"success":"true","message":"Login successful","userId":"4","username":"joma","role":"admin"},"Success":true,"Message":"Login successful"}
+2025-02-20 23:51:42 [ CLIENT REQUEST ] : Processing request type: GetCategory
+2025-02-20 23:51:42 [ CATEGORY ] : Categories retrieved successfully
+2025-02-20 23:51:42 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":15,"Data":{"success":"true","message":"Categories retrieved successfully","categories":"[{\"Id\":33,\"Name\":\"awaw\"},{\"Id\":31,\"Name\":\"Beverage\"},{\"Id\":34,\"Name\":\"Karla\"},{\"Id\":32,\"Name\":\"Main Course\"}]"},"Success":true,"Message":"Categories retrieved successfully"}
+2025-02-20 23:51:53 [ CLIENT REQUEST ] : Processing request type: GetSubCategory
+2025-02-20 23:51:53 [ SUBCATEGORY ] : Found 2 subcategories for category 31
+2025-02-20 23:51:53 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":17,"Data":{"success":"true","message":"Subcategories retrieved successfully","subcategories":"[{\"scId\":32,\"catId\":31,\"scName\":\"Coffee\"},{\"scId\":31,\"catId\":31,\"scName\":\"Milk Tea\"}]"},"Success":true,"Message":"Subcategories retrieved successfully"}
+2025-02-20 23:51:55 [ CLIENT REQUEST ] : Processing request type: GetSubCategory
+2025-02-20 23:51:55 [ SUBCATEGORY ] : Found 2 subcategories for category 31
+2025-02-20 23:51:55 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":17,"Data":{"success":"true","message":"Subcategories retrieved successfully","subcategories":"[{\"scId\":32,\"catId\":31,\"scName\":\"Coffee\"},{\"scId\":31,\"catId\":31,\"scName\":\"Milk Tea\"}]"},"Success":true,"Message":"Subcategories retrieved successfully"}
+2025-02-20 23:51:59 [ CLIENT REQUEST ] : Processing request type: CreateProduct
+2025-02-20 23:52:00 [ PRODUCT CREATION ] : Processing product creation: Awawawawaw
+2025-02-20 23:52:00 [ REGISTRATION ] : Database connection opened
+2025-02-20 23:52:00 [ PRODUCT CREATION ] : Product creation error: Table 'elicias.products' doesn't exist
+2025-02-20 23:52:00 [ SERVER RESPONSE ] : Sent to 127.0.0.1: {"Type":7,"Data":{"success":"false","message":"Internal server error"},"Success":false,"Message":"Internal server error"}
