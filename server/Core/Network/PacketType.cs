@@ -19,6 +19,16 @@ namespace server.Core.Network
         UpdateProduct = 8,
         UpdateProductResponse = 9,
         DeleteProduct = 10,
-        DeleteProductResponse = 11
+        DeleteProductResponse = 11,
+        GetProduct = 12,
+        GetProductResponse = 13,
+        GetCategory = 14,
+        GetCategoryResponse = 15,
+        GetSubCategory = 16,
+        GetSubCategoryResponse = 17,
+        CreateCategory = 18,
+        CreateCategoryResponse = 19,
+        CreateSubCategory = 20,
+        CreateSubCategoryResponse = 21,
     }
 }
