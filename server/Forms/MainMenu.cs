@@ -319,6 +319,7 @@ namespace server.Forms
         {
             var authController = new AuthController();
             var productController = new ProductController();
+            var unitController = new UnitController();
             var categoryController = new CategoryController();
             var subCategoryController = new SubCategoryController();
 
@@ -374,6 +375,16 @@ namespace server.Forms
                     return subCategoryController.Create(request);
                 case PacketType.CreateSubCategoryResponse:
                     return subCategoryController.Create(request);
+
+                // Product Unit
+                case PacketType.GetUnit:
+                    return unitController.Get(request);
+                case PacketType.GetUnitResponse:
+                    return unitController.Get(request);
+                case PacketType.CreateUnit:
+                    return unitController.Create(request);
+                case PacketType.CreateUnitResponse:
+                    return unitController.Create(request);
 
                 default:
                     LogMessage($"Unknown packet type: {request.Type}");
