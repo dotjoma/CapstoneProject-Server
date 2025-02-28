@@ -28,10 +28,10 @@ namespace server.Controllers
                 string catId = request.Data["catId"];
                 string scId = request.Data["scId"];
                 string pName = request.Data["pName"];
-                string pDesc = request.Data["pDesc"];
                 string unitId = request.Data["unitId"];
                 string unitPrice = request.Data["unitPrice"];
                 string image = request.Data["image"];
+                string isActive = request.Data["isActive"];
 
                 Packet? validationResult = ProductCreateValidation(request);
                 if (validationResult != null)
@@ -40,23 +40,47 @@ namespace server.Controllers
                 }
 
                 string query = @"
-                    INSERT INTO product (catId, scId, pName, pDesc, unitId, unitPrice, image)
-                    VALUES (@catId, @scId, @pName, @pDesc, @unitId, @unitPrice, @image)";
+                    INSERT INTO product (catId, scId, pName, unitId, unitPrice, image, isActive)
+                    VALUES (@catId, @scId, @pName, @unitId, @unitPrice, @image, @isActive)";
 
                 using (var connection = new MySqlConnection(DatabaseManager.Instance.ConnectionString))
                 {
                     connection.Open();
                     Logger.Write("REGISTRATION", "Database connection opened");
 
+                    string checkScIdQuery = "SELECT COUNT(*) FROM subcategory WHERE scId = @scId";
+                    using (var checkCommand = new MySqlCommand(checkScIdQuery, connection))
+                    {
+                        checkCommand.Parameters.Add("@scId", MySqlDbType.VarChar).Value = scId;
+
+                        int count = Convert.ToInt32(checkCommand.ExecuteScalar());
+                        if (count == 0)
+                        {
+                            Logger.Write("PRODUCT CREATION", $"Invalid scId: {scId} does not exist in subcategory table");
+
+                            return new Packet
+                            {
+                                Type = PacketType.CreateProductResponse,
+                                Success = false,
+                                Message = "Invalid subcategory ID",
+                                Data = new Dictionary<string, string>
+                                {
+                                    { "success", "false" },
+                                    { "message", "Subcategory does not exist" }
+                                }
+                            };
+                        }
+                    }
+
                     using (var command = new MySqlCommand(query, connection))
                     {
                         command.Parameters.Add("@catId", MySqlDbType.VarChar).Value = catId;
                         command.Parameters.Add("@scId", MySqlDbType.VarChar).Value = scId;
                         command.Parameters.Add("@pName", MySqlDbType.VarChar).Value = pName;
-                        command.Parameters.Add("@pDesc", MySqlDbType.VarChar).Value = pDesc;
                         command.Parameters.Add("@unitId", MySqlDbType.VarChar).Value = unitId;
                         command.Parameters.Add("@unitPrice", MySqlDbType.Decimal).Value = decimal.Parse(unitPrice);
                         command.Parameters.Add("@image", MySqlDbType.VarChar).Value = image;
+                        command.Parameters.Add("@isActive", MySqlDbType.VarChar).Value = isActive;
 
                         command.ExecuteNonQuery();
                     }
@@ -98,7 +122,7 @@ namespace server.Controllers
         {
             try
             {
-                string query = @"SELECT pId, pName, pDesc, unitPrice, image FROM product";
+                string query = @"SELECT pId, catId, scId, pName, unitId, unitPrice, image, isVatable, isActive FROM product";
 
                 using (var connection = new MySqlConnection(DatabaseManager.Instance.ConnectionString))
                 {
@@ -121,12 +145,14 @@ namespace server.Controllers
                             var product = new Product
                             {
                                 productId = reader.GetInt32("pId"),
+                                categoryId = reader.GetInt32("catId"),
+                                subcategoryId = reader.GetInt32("scId"),
                                 productName = reader.GetString("pName"),
-                                productDesc = reader.IsDBNull(reader.GetOrdinal("pDesc"))
-                                    ? null
-                                    : reader.GetString("pDesc"),
+                                unitId = reader.GetInt32("unitId"),
                                 productPrice = reader.GetDecimal("unitPrice"),
-                                productImage = imageBase64
+                                productImage = imageBase64,
+                                isVatable = reader.GetInt32("isVatable"),
+                                isActive = reader.GetInt32("isActive")
                             };
                             productsList.Add(product);
                         }
@@ -181,7 +207,6 @@ namespace server.Controllers
             string catId = request.Data["catId"];
             string scId = request.Data["scId"];
             string pName = request.Data["pName"];
-            string pDesc = request.Data["pDesc"];
             string unitId = request.Data["unitId"];
             string unitPrice = request.Data["unitPrice"];
             string image = request.Data["image"];
@@ -226,12 +251,6 @@ namespace server.Controllers
                 responsePacket.Data["image"] = "Please select an image.";
             }
 
-            // Validate description
-            if (string.IsNullOrWhiteSpace(pDesc))
-            {
-                responsePacket.Data["description"] = "Product description is required.";
-            }
-
             // Return validation errors if any
             if (responsePacket.Data.Count > 0)
             {
@@ -241,7 +260,6 @@ namespace server.Controllers
             request.Data["pName"] = pName;
             request.Data["image"] = image;
             request.Data["unitPrice"] = unitPrice;
-            request.Data["pDesc"] = pDesc;
             request.Data["catId"] = catId;
             request.Data["scId"] = scId;
 
