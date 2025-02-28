@@ -32,11 +32,14 @@
             btnStopServer = new Button();
             label1 = new Label();
             label2 = new Label();
-            btnClose = new Button();
             richTextBox1 = new RichTextBox();
             rtbLogs = new RichTextBox();
             lblStatus = new Label();
             button1 = new Button();
+            btnCloseWindow = new PictureBox();
+            btnMinimizeWindow = new PictureBox();
+            ((System.ComponentModel.ISupportInitialize)btnCloseWindow).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)btnMinimizeWindow).BeginInit();
             SuspendLayout();
             // 
             // btnStartServer
@@ -77,16 +80,6 @@
             label2.TabIndex = 5;
             label2.Text = "Client's";
             // 
-            // btnClose
-            // 
-            btnClose.Location = new Point(740, 12);
-            btnClose.Name = "btnClose";
-            btnClose.Size = new Size(48, 23);
-            btnClose.TabIndex = 6;
-            btnClose.Text = "Close";
-            btnClose.UseVisualStyleBackColor = true;
-            btnClose.Click += btnClose_Click;
-            // 
             // richTextBox1
             // 
             richTextBox1.Location = new Point(12, 81);
@@ -122,16 +115,39 @@
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
             // 
+            // btnCloseWindow
+            // 
+            btnCloseWindow.Image = Properties.Resources.Close_Window;
+            btnCloseWindow.Location = new Point(758, 5);
+            btnCloseWindow.Name = "btnCloseWindow";
+            btnCloseWindow.Size = new Size(30, 30);
+            btnCloseWindow.SizeMode = PictureBoxSizeMode.StretchImage;
+            btnCloseWindow.TabIndex = 11;
+            btnCloseWindow.TabStop = false;
+            btnCloseWindow.Click += btnCloseWindow_Click;
+            // 
+            // btnMinimizeWindow
+            // 
+            btnMinimizeWindow.Image = Properties.Resources.Minimize_Window;
+            btnMinimizeWindow.Location = new Point(727, 5);
+            btnMinimizeWindow.Name = "btnMinimizeWindow";
+            btnMinimizeWindow.Size = new Size(30, 30);
+            btnMinimizeWindow.SizeMode = PictureBoxSizeMode.StretchImage;
+            btnMinimizeWindow.TabIndex = 12;
+            btnMinimizeWindow.TabStop = false;
+            btnMinimizeWindow.Click += btnMinimizeWindow_Click;
+            // 
             // MainMenu
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 639);
+            Controls.Add(btnMinimizeWindow);
+            Controls.Add(btnCloseWindow);
             Controls.Add(button1);
             Controls.Add(lblStatus);
             Controls.Add(rtbLogs);
             Controls.Add(richTextBox1);
-            Controls.Add(btnClose);
             Controls.Add(label2);
             Controls.Add(label1);
             Controls.Add(btnStopServer);
@@ -143,6 +159,8 @@
             MouseDown += MainMenu_MouseDown;
             MouseMove += MainMenu_MouseMove;
             MouseUp += MainMenu_MouseUp;
+            ((System.ComponentModel.ISupportInitialize)btnCloseWindow).EndInit();
+            ((System.ComponentModel.ISupportInitialize)btnMinimizeWindow).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -157,5 +175,7 @@
         private RichTextBox rtbLogs;
         private Label lblStatus;
         private Button button1;
+        private PictureBox btnCloseWindow;
+        private PictureBox btnMinimizeWindow;
     }
 }

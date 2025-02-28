@@ -35,3 +35,4 @@ E:\Visual Studio 2022\Projects\CapstoneProject\server\server\obj\Debug\net8.0-wi
 E:\Visual Studio 2022\Projects\CapstoneProject\server\server\obj\Debug\net8.0-windows\server.pdb
 E:\Visual Studio 2022\Projects\CapstoneProject\server\server\obj\Debug\net8.0-windows\server.genruntimeconfig.cache
 E:\Visual Studio 2022\Projects\CapstoneProject\server\server\obj\Debug\net8.0-windows\ref\server.dll
+E:\Visual Studio 2022\Projects\CapstoneProject\server\server\obj\Debug\net8.0-windows\server.Properties.Resources.resources
