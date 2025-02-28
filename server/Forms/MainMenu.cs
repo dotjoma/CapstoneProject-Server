@@ -375,6 +375,10 @@ namespace server.Forms
                     return subCategoryController.Create(request);
                 case PacketType.CreateSubCategoryResponse:
                     return subCategoryController.Create(request);
+                case PacketType.GetAllSubcategory:
+                    return subCategoryController.GetSubCategories(request);
+                case PacketType.GetAllSubcategoryResponse:
+                    return subCategoryController.GetSubCategories(request);
 
                 // Product Unit
                 case PacketType.GetUnit:
@@ -447,7 +451,15 @@ namespace server.Forms
             isDragging = false;
         }
 
-        private void btnClose_Click(object sender, EventArgs e)
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Clear logs?", "Clear", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                rtbLogs.Clear();
+            }
+        }
+
+        private void btnCloseWindow_Click(object sender, EventArgs e)
         {
             if (StopServerWithConfirmation())
             {
@@ -456,12 +468,9 @@ namespace server.Forms
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btnMinimizeWindow_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Clear logs?", "Clear", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-            {
-                rtbLogs.Clear();
-            }
+            this.WindowState = FormWindowState.Minimized;
         }
     }
 }
