@@ -118,6 +118,75 @@ namespace server.Controllers
             }
         }
 
+        public Packet GetSubCategories(Packet packet)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(DatabaseManager.Instance.ConnectionString))
+                {
+                    connection.Open();
+                    string query = @"SELECT scId, catId, scName FROM subcategory";
+
+                    using (var command = new MySqlCommand(query, connection))
+                    {
+                        using (var reader = command.ExecuteReader())
+                        {
+                            var subcategories = new List<SubCategory>();
+
+                            while (reader.Read())
+                            {
+                                subcategories.Add(new SubCategory
+                                {
+                                    scId = reader.GetInt32("scId"),
+                                    catId = reader.GetInt32("catId"),
+                                    scName = reader.GetString("scName")
+                                });
+                            }
+
+                            Logger.Write("SUBCATEGORY", subcategories.Count > 0
+                                ? $"Found {subcategories.Count} subcategories."
+                                : $"No subcategories found.");
+
+                            return new Packet
+                            {
+                                Type = PacketType.GetAllSubcategoryResponse,
+                                Success = true,
+                                Message = subcategories.Count > 0
+                                    ? "Subcategories retrieved successfully"
+                                    : "No subcategories found",
+                                Data = new Dictionary<string, string>
+                                {
+                                    { "success", "true" },
+                                    { "message", subcategories.Count > 0
+                                        ? "Subcategories retrieved successfully"
+                                        : "No subcategories found" },
+                                    { "subcategories", System.Text.Json.JsonSerializer.Serialize(subcategories) }
+                                }
+                            };
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Write("SUBCATEGORY", $"Error retrieving subcategories: {ex.Message}");
+                Logger.Write("SUBCATEGORY", $"Stack trace: {ex.StackTrace}");
+
+                return new Packet
+                {
+                    Type = PacketType.GetAllSubcategoryResponse,
+                    Success = false,
+                    Message = "Error retrieving subcategories",
+                    Data = new Dictionary<string, string>
+                    {
+                        { "success", "false" },
+                        { "message", $"Internal server error: {ex.Message}" },
+                        { "subcategories", "[]" }
+                    }
+                };
+            }
+        }
+
         public Packet Create(Packet packet)
         {
             try
