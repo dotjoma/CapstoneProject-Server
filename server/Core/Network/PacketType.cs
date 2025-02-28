@@ -42,5 +42,8 @@ namespace server.Core.Network
         GetUnitResponse = 23,
         CreateUnit = 24,
         CreateUnitResponse = 25,
+
+        GetAllSubcategory = 26,
+        GetAllSubcategoryResponse = 27,
     }
 }
