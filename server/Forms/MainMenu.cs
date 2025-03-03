@@ -82,13 +82,27 @@ namespace server.Forms
         private void MainMenu_Load(object sender, EventArgs e)
         {
             LogMessage("Server application started");
+            ConnectToDatabase();
+        }
+
+        private void ConnectToDatabase()
+        {
+            string message = string.Empty;
 
             try
             {
+                btnConnectToDB.Enabled = false;
+                message = "Connecting...";
+                btnConnectToDB.Text = message;
+                Task.Delay(50);
+
                 using (var connection = new MySqlConnection(connectionString))
                 {
                     connection.Open();
                     LogMessage("Database connection successful");
+                    btnConnectToDB.Enabled = false;
+                    message = "Connect To Database";
+                    btnConnectToDB.Text = message;
                 }
             }
             catch (Exception ex)
@@ -96,7 +110,15 @@ namespace server.Forms
                 LogMessage($"Database connection error: {ex.Message}");
                 MessageBox.Show("Could not connect to database. Please check your connection settings.",
                     "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                btnConnectToDB.Enabled = true;
+                message = "Reconnect To Database";
+                btnConnectToDB.Text = message;
             }
+        }
+
+        private void btnConnectToDB_Click(object sender, EventArgs e)
+        {
+            ConnectToDatabase();
         }
 
         private void MainMenu_FormClosing(object sender, FormClosingEventArgs e)
@@ -322,6 +344,7 @@ namespace server.Forms
             var unitController = new UnitController();
             var categoryController = new CategoryController();
             var subCategoryController = new SubCategoryController();
+            var discountController = new DiscountController();
 
             LogMessage($"Processing request type: {request.Type}");
             Logger.Write("CLIENT REQUEST", $"Processing request type: {request.Type}");
@@ -389,6 +412,12 @@ namespace server.Forms
                     return unitController.Create(request);
                 case PacketType.CreateUnitResponse:
                     return unitController.Create(request);
+
+                // Discount
+                case PacketType.CreateDiscount:
+                    return discountController.Create(request);
+                case PacketType.CreateDiscountResponse:
+                    return discountController.Create(request);
 
                 default:
                     LogMessage($"Unknown packet type: {request.Type}");
