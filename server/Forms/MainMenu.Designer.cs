@@ -38,6 +38,7 @@
             button1 = new Button();
             btnCloseWindow = new PictureBox();
             btnMinimizeWindow = new PictureBox();
+            btnConnectToDB = new Button();
             ((System.ComponentModel.ISupportInitialize)btnCloseWindow).BeginInit();
             ((System.ComponentModel.ISupportInitialize)btnMinimizeWindow).BeginInit();
             SuspendLayout();
@@ -107,11 +108,11 @@
             // 
             // button1
             // 
-            button1.Location = new Point(713, 475);
+            button1.Location = new Point(699, 475);
             button1.Name = "button1";
-            button1.Size = new Size(75, 23);
+            button1.Size = new Size(89, 23);
             button1.TabIndex = 10;
-            button1.Text = "button1";
+            button1.Text = "Clear Console";
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
             // 
@@ -137,11 +138,22 @@
             btnMinimizeWindow.TabStop = false;
             btnMinimizeWindow.Click += btnMinimizeWindow_Click;
             // 
+            // btnConnectToDB
+            // 
+            btnConnectToDB.Location = new Point(174, 12);
+            btnConnectToDB.Name = "btnConnectToDB";
+            btnConnectToDB.Size = new Size(174, 23);
+            btnConnectToDB.TabIndex = 13;
+            btnConnectToDB.Text = "Connect To Database";
+            btnConnectToDB.UseVisualStyleBackColor = true;
+            btnConnectToDB.Click += btnConnectToDB_Click;
+            // 
             // MainMenu
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 639);
+            Controls.Add(btnConnectToDB);
             Controls.Add(btnMinimizeWindow);
             Controls.Add(btnCloseWindow);
             Controls.Add(button1);
@@ -177,5 +189,6 @@
         private Button button1;
         private PictureBox btnCloseWindow;
         private PictureBox btnMinimizeWindow;
+        private Button btnConnectToDB;
     }
 }
