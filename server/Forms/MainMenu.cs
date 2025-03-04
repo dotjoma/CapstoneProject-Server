@@ -418,6 +418,10 @@ namespace server.Forms
                     return discountController.Create(request);
                 case PacketType.CreateDiscountResponse:
                     return discountController.Create(request);
+                case PacketType.GetDiscount:
+                    return discountController.Get(request);
+                case PacketType.GetDiscountResponse:
+                    return discountController.Get(request);
 
                 default:
                     LogMessage($"Unknown packet type: {request.Type}");
