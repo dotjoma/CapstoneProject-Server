@@ -182,7 +182,6 @@
         private Button btnStopServer;
         private Label label1;
         private Label label2;
-        private Button btnClose;
         private RichTextBox richTextBox1;
         private RichTextBox rtbLogs;
         private Label lblStatus;
