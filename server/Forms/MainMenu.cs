@@ -345,6 +345,7 @@ namespace server.Forms
             var categoryController = new CategoryController();
             var subCategoryController = new SubCategoryController();
             var discountController = new DiscountController();
+            var transactionController = new TransactionController();
 
             LogMessage($"Processing request type: {request.Type}");
             Logger.Write("CLIENT REQUEST", $"Processing request type: {request.Type}");
@@ -422,6 +423,21 @@ namespace server.Forms
                     return discountController.Get(request);
                 case PacketType.GetDiscountResponse:
                     return discountController.Get(request);
+
+                // Transaction
+                case PacketType.GenerateTransactionNumbers:
+                    return transactionController.GenerateTransactionNumbers(request);
+                case PacketType.GenerateTransactionNumbersResponse:
+                    return transactionController.GenerateTransactionNumbers(request);
+                case PacketType.SaveTransaction:
+                    return transactionController.SaveTransaction(request);
+                case PacketType.SaveTransactionResponse:
+                    return transactionController.SaveTransaction(request);
+                case PacketType.RemoveTransaction:
+                    return transactionController.RemoveTransaction(request);
+                case PacketType.RemoveTransactionResponse:
+                    return transactionController.RemoveTransaction(request);
+
 
                 default:
                     LogMessage($"Unknown packet type: {request.Type}");

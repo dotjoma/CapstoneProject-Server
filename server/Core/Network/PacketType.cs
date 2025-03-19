@@ -50,5 +50,17 @@ namespace server.Core.Network
         CreateDiscountResponse = 29,
         GetDiscount = 30,
         GetDiscountResponse = 31,
+
+        // Transaction Packet
+        GenerateTransactionNumbers = 32,
+        GenerateTransactionNumbersResponse = 33,
+        GetNextTransactionId = 34,
+        GetNextTransactionIdResponse = 35,
+        GetNextOrderNumber = 36,
+        GetNextOrderNumberResponse = 37,
+        SaveTransaction = 38,
+        SaveTransactionResponse = 39,
+        RemoveTransaction = 40,
+        RemoveTransactionResponse = 41,
     }
 }
