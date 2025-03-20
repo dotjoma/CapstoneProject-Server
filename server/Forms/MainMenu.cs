@@ -356,33 +356,29 @@ namespace server.Forms
                 case PacketType.Login:
                     return authController.Login(request, tcpClient);
                 case PacketType.LoginResponse:
-                    LogMessage("Received LoginResponse packet type");
-                    Logger.Write("LOGIN PACKET", "Received LoginResponse packet type");
                     return authController.Login(request, tcpClient);
                 case PacketType.Register:
                     return authController.Register(request);
                 case PacketType.RegisterResponse:
-                    LogMessage("Received RegisterResponse packet type");
-                    Logger.Write("REGISTER PACKET", "Received RegisterResponse packet type");
                     return authController.Register(request);
 
                 // Product
                 case PacketType.GetProduct:
                     return productController.Get(request);
                 case PacketType.GetProductResponse:
-                    LogMessage("Received get product packet type");
-                    Logger.Write("GET PRODUCT PACKET", "Received get product packet type");
                     return productController.Get(request);
                 case PacketType.CreateProduct:
                     return productController.Create(request);
                 case PacketType.CreateProductResponse:
-                    LogMessage("Received product creation packet type");
-                    Logger.Write("CREATE PRODUCT PACKET", "Received product creation packet type");
                     return productController.Create(request);
                 case PacketType.UpdateProduct:
                     return productController.Update(request);
                 case PacketType.UpdateProductResponse:
                     return productController.Update(request);
+                case PacketType.DeleteProduct:
+                    return productController.Destroy(request);
+                case PacketType.DeleteProductResponse:
+                    return productController.Destroy(request);
 
                 // Product Category
                 case PacketType.GetCategory:

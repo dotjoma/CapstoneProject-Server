@@ -235,6 +235,101 @@ namespace server.Controllers
             }
         }
 
+        public Packet Destroy(Packet request)
+        {
+            try
+            {
+                Logger.Write("PRODUCT DELETE", $"Processing product delete: {request.Data["productId"]}");
+
+                string productId = request.Data["productId"];
+
+
+                using (var connection = new MySqlConnection(DatabaseManager.Instance.ConnectionString))
+                {
+                    connection.Open();
+                    Logger.Write("PRODUCT DELETE", "Database connection opened");
+
+                    string checkProductQuery = "SELECT COUNT(*) FROM product WHERE pId = @productId";
+                    using (var checkProductCommand = new MySqlCommand(checkProductQuery, connection))
+                    {
+                        checkProductCommand.Parameters.Add("@productId", MySqlDbType.VarChar).Value = productId;
+                        int productExists = Convert.ToInt32(checkProductCommand.ExecuteScalar());
+
+                        if (productExists == 0)
+                        {
+                            Logger.Write("PRODUCT DELETE", $"Product ID {productId} does not exist.");
+                            return new Packet
+                            {
+                                Type = PacketType.UpdateProductResponse,
+                                Success = false,
+                                Message = "Product does not exist",
+                                Data = new Dictionary<string, string>
+                                {
+                                    { "success", "false" },
+                                    { "message", "Product ID not found" }
+                                }
+                            };
+                        }
+                    }
+
+                    string query = @"
+                    DELETE FROM product
+                    WHERE pId = @productId";
+
+                    using (var command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.Add("@productId", MySqlDbType.VarChar).Value = productId;
+
+                        int rowsAffected = command.ExecuteNonQuery();
+                        if (rowsAffected == 0)
+                        {
+                            return new Packet
+                            {
+                                Type = PacketType.DeleteProductResponse,
+                                Success = false,
+                                Message = "No changes made",
+                                Data = new Dictionary<string, string>
+                                {
+                                    { "success", "false" },
+                                    { "message", "No rows affected" }
+                                }
+                            };
+                        }
+                    }
+
+                    Logger.Write("PRODUCT DELETE", $"Successfully deleted product: {productId}");
+
+                    return new Packet
+                    {
+                        Type = PacketType.DeleteProductResponse,
+                        Success = true,
+                        Message = "Product deleted successfully",
+                        Data = new Dictionary<string, string>
+                        {
+                            { "success", "true" },
+                            { "message", "Product delete successful" }
+                        }
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Write("PRODUCT DELETE", $"Product delete error: {ex.Message}");
+
+                return new Packet
+                {
+                    Type = PacketType.DeleteProductResponse,
+                    Success = false,
+                    Message = "Internal server error",
+                    Data = new Dictionary<string, string>
+                    {
+                        { "success", "false" },
+                        { "message", "Internal server error" }
+                    }
+                };
+            }
+        }
+
         public Packet Get(Packet request)
         {
             try
