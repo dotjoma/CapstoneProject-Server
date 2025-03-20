@@ -62,5 +62,7 @@ namespace server.Core.Network
         SaveTransactionResponse = 39,
         RemoveTransaction = 40,
         RemoveTransactionResponse = 41,
+        ProcessTransaction = 42,
+        ProcessTransactionResponse = 43,
     }
 }

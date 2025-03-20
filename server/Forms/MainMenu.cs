@@ -379,6 +379,10 @@ namespace server.Forms
                     LogMessage("Received product creation packet type");
                     Logger.Write("CREATE PRODUCT PACKET", "Received product creation packet type");
                     return productController.Create(request);
+                case PacketType.UpdateProduct:
+                    return productController.Update(request);
+                case PacketType.UpdateProductResponse:
+                    return productController.Update(request);
 
                 // Product Category
                 case PacketType.GetCategory:

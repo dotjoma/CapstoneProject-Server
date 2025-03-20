@@ -118,6 +118,123 @@ namespace server.Controllers
             }
         }
 
+        public Packet Update(Packet request)
+        {
+            try
+            {
+                Logger.Write("PRODUCT UPDATE", $"Processing product update: {request.Data["pName"]}");
+
+                string productId = request.Data["productId"];
+                string catId = request.Data["catId"];
+                string scId = request.Data["scId"];
+                string pName = request.Data["pName"];
+                string unitId = request.Data["unitId"];
+                string unitPrice = request.Data["unitPrice"];
+                string image = request.Data["image"];
+                string isActive = request.Data["isActive"];
+
+                Packet? validationResult = ProductCreateValidation(request);
+                if (validationResult != null)
+                {
+                    return validationResult;
+                }
+
+                using (var connection = new MySqlConnection(DatabaseManager.Instance.ConnectionString))
+                {
+                    connection.Open();
+                    Logger.Write("PRODUCT UPDATE", "Database connection opened");
+
+                    // Check if product exists
+                    string checkProductQuery = "SELECT COUNT(*) FROM product WHERE productId = @productId";
+                    using (var checkProductCommand = new MySqlCommand(checkProductQuery, connection))
+                    {
+                        checkProductCommand.Parameters.Add("@productId", MySqlDbType.VarChar).Value = productId;
+                        int productExists = Convert.ToInt32(checkProductCommand.ExecuteScalar());
+
+                        if (productExists == 0)
+                        {
+                            Logger.Write("PRODUCT UPDATE", $"Product ID {productId} does not exist.");
+                            return new Packet
+                            {
+                                Type = PacketType.UpdateProductResponse,
+                                Success = false,
+                                Message = "Product does not exist",
+                                Data = new Dictionary<string, string>
+                                {
+                                    { "success", "false" },
+                                    { "message", "Product ID not found" }
+                                }
+                            };
+                        }
+                    }
+
+                    string query = @"
+                    UPDATE product 
+                    SET catId = @catId, scId = @scId, pName = @pName, 
+                        unitId = @unitId, unitPrice = @unitPrice, image = @image, isActive = @isActive
+                    WHERE productId = @productId";
+
+                    using (var command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.Add("@productId", MySqlDbType.VarChar).Value = productId;
+                        command.Parameters.Add("@catId", MySqlDbType.VarChar).Value = catId;
+                        command.Parameters.Add("@scId", MySqlDbType.VarChar).Value = scId;
+                        command.Parameters.Add("@pName", MySqlDbType.VarChar).Value = pName;
+                        command.Parameters.Add("@unitId", MySqlDbType.VarChar).Value = unitId;
+                        command.Parameters.Add("@unitPrice", MySqlDbType.Decimal).Value = decimal.Parse(unitPrice);
+                        command.Parameters.Add("@image", MySqlDbType.VarChar).Value = image;
+                        command.Parameters.Add("@isActive", MySqlDbType.VarChar).Value = isActive;
+
+                        int rowsAffected = command.ExecuteNonQuery();
+                        if (rowsAffected == 0)
+                        {
+                            return new Packet
+                            {
+                                Type = PacketType.UpdateProductResponse,
+                                Success = false,
+                                Message = "No changes made",
+                                Data = new Dictionary<string, string>
+                                {
+                                    { "success", "false" },
+                                    { "message", "No rows affected" }
+                                }
+                            };
+                        }
+                    }
+
+                    Logger.Write("PRODUCT UPDATE", $"Successfully updated product: {pName}");
+
+                    return new Packet
+                    {
+                        Type = PacketType.UpdateProductResponse,
+                        Success = true,
+                        Message = "Product updated successfully",
+                        Data = new Dictionary<string, string>
+                        {
+                            { "success", "true" },
+                            { "message", "Product update successful" }
+                        }
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Write("PRODUCT UPDATE", $"Product update error: {ex.Message}");
+
+                return new Packet
+                {
+                    Type = PacketType.UpdateProductResponse,
+                    Success = false,
+                    Message = "Internal server error",
+                    Data = new Dictionary<string, string>
+                    {
+                        { "success", "false" },
+                        { "message", "Internal server error" }
+                    }
+                };
+            }
+        }
+
         public Packet Get(Packet request)
         {
             try

@@ -2,6 +2,7 @@
 using MySql.Data.MySqlClient;
 using server.Core.Network;
 using server.Database;
+using server.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -121,6 +122,190 @@ namespace server.Controllers
                         { "message", "Critical error occurred" }
                     }
                 };
+            }
+        }
+
+        public bool ProcessTransaction(int transId, decimal totalAmount, string paymentMethod,
+    List<TransactionItem> transactionItems, Payment payment)
+        {
+            if (!ValidateTransactionInput(transId, totalAmount, paymentMethod, transactionItems, payment))
+            {
+                Logger.Write("TRANSACTION", "Invalid input parameters");
+                return false;
+            }
+
+            using (var connection = new MySqlConnection(DatabaseManager.Instance.ConnectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    using (var transaction = connection.BeginTransaction())
+                    {
+                        try
+                        {
+                            // Verify transaction exists and is unpaid
+                            if (!VerifyTransactionStatus(transId, connection, transaction))
+                            {
+                                transaction.Rollback();
+                                return false;
+                            }
+
+                            // Update Transactions table
+                            string updateTransactionQuery = @"
+                                UPDATE transactions 
+                                SET total_amount = @totalAmount, 
+                                    status = 'paid', 
+                                    payment_method = @paymentMethod,
+                                    updated_at = CURRENT_TIMESTAMP 
+                                WHERE trans_id = @transId";
+
+                            using (var cmd = new MySqlCommand(updateTransactionQuery, connection, transaction))
+                            {
+                                cmd.Parameters.AddWithValue("@totalAmount", totalAmount);
+                                cmd.Parameters.AddWithValue("@paymentMethod", paymentMethod);
+                                cmd.Parameters.AddWithValue("@transId", transId);
+                                cmd.ExecuteNonQuery();
+                            }
+
+                            // Insert Order Details
+                            string insertOrderDetailsQuery = @"
+                                INSERT INTO orderdetails 
+                                (trans_id, item_id, quantity, price, total_price, notes) 
+                                VALUES 
+                                (@transId, @itemId, @quantity, @price, @totalPrice, @notes)";
+
+                            foreach (var item in transactionItems)
+                            {
+                                using (var cmd = new MySqlCommand(insertOrderDetailsQuery, connection, transaction))
+                                {
+                                    cmd.Parameters.AddWithValue("@transId", transId);
+                                    cmd.Parameters.AddWithValue("@itemId", item.Product?.productId);
+                                    cmd.Parameters.AddWithValue("@quantity", item.Quantity);
+                                    cmd.Parameters.AddWithValue("@price", item.Price);
+                                    cmd.Parameters.AddWithValue("@totalPrice", item.TotalPrice);
+                                    cmd.Parameters.AddWithValue("@notes", item.Notes ?? "");
+                                    cmd.ExecuteNonQuery();
+                                }
+                            }
+
+                            // Insert Payment Record
+                            string insertPaymentQuery = @"
+                                INSERT INTO payments 
+                                (trans_id, amount_paid, payment_method, reference_number, 
+                                    payment_time, change_amount, notes) 
+                                VALUES 
+                                (@transId, @amountPaid, @paymentMethod, @referenceNumber, 
+                                    CURRENT_TIMESTAMP, @changeAmount, @notes)";
+
+                            using (var cmd = new MySqlCommand(insertPaymentQuery, connection, transaction))
+                            {
+                                cmd.Parameters.AddWithValue("@transId", transId);
+                                cmd.Parameters.AddWithValue("@amountPaid", payment.AmountPaid);
+                                cmd.Parameters.AddWithValue("@paymentMethod", payment.PaymentMethod);
+                                cmd.Parameters.AddWithValue("@referenceNumber",
+                                    payment.ReferenceNumber ?? (object)DBNull.Value);
+                                cmd.Parameters.AddWithValue("@changeAmount", payment.ChangeAmount);
+                                cmd.Parameters.AddWithValue("@notes", payment.Notes ?? "");
+                                cmd.ExecuteNonQuery();
+                            }
+
+                            transaction.Commit();
+                            Logger.Write("TRANSACTION", $"Successfully processed transaction {transId}");
+                            return true;
+                        }
+                        catch (Exception ex)
+                        {
+                            transaction.Rollback();
+                            Logger.Write("TRANSACTION", $"Error processing transaction {transId}: {ex.Message}");
+                            return false;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Write("TRANSACTION", $"Database connection error: {ex.Message}");
+                    return false;
+                }
+            }
+        }
+
+        private bool ValidateTransactionInput(int transId, decimal totalAmount, string paymentMethod,
+        List<TransactionItem> transactionItems, Payment payment)
+        {
+            if (transId <= 0)
+            {
+                Logger.Write("VALIDATION", "Invalid transaction ID");
+                return false;
+            }
+
+            if (totalAmount <= 0)
+            {
+                Logger.Write("VALIDATION", "Invalid total amount");
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(paymentMethod))
+            {
+                Logger.Write("VALIDATION", "Payment method is required");
+                return false;
+            }
+
+            if (transactionItems == null || !transactionItems.Any())
+            {
+                Logger.Write("VALIDATION", "Transaction items are required");
+                return false;
+            }
+
+            if (payment == null)
+            {
+                Logger.Write("VALIDATION", "Payment details are required");
+                return false;
+            }
+
+            // Validate transaction items
+            foreach (var item in transactionItems)
+            {
+                if (item.Product?.productId <= 0 || item.Quantity <= 0 || item.Price < 0)
+                {
+                    Logger.Write("VALIDATION",
+                        $"Invalid item details - ProductId: {item.Product?.productId}, " +
+                        $"Quantity: {item.Quantity}, Price: {item.Price}");
+                    return false;
+                }
+            }
+
+            // Validate payment
+            if (payment.AmountPaid <= 0)
+            {
+                Logger.Write("VALIDATION", "Invalid payment amount");
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool VerifyTransactionStatus(int transId, MySqlConnection connection, MySqlTransaction transaction)
+        {
+            string verifyQuery = "SELECT status FROM transactions WHERE trans_id = @transId FOR UPDATE";
+
+            using (var cmd = new MySqlCommand(verifyQuery, connection, transaction))
+            {
+                cmd.Parameters.AddWithValue("@transId", transId);
+                string? status = cmd.ExecuteScalar()?.ToString();
+
+                if (status == null)
+                {
+                    Logger.Write("VALIDATION", $"Transaction {transId} not found");
+                    return false;
+                }
+
+                if (status != "unpaid")
+                {
+                    Logger.Write("VALIDATION", $"Invalid transaction status: {status}");
+                    return false;
+                }
+
+                return true;
             }
         }
 

@@ -3,8 +3,8 @@
   "WorkspaceRootPath": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{53A1D91F-49CD-4E44-9DA8-E38D969FBE1B}|server\\server.csproj|e:\\visual studio 2022\\projects\\capstoneproject\\server\\server\\controllers\\transactioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{53A1D91F-49CD-4E44-9DA8-E38D969FBE1B}|server\\server.csproj|solutionrelative:server\\controllers\\transactioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{53A1D91F-49CD-4E44-9DA8-E38D969FBE1B}|server\\server.csproj|e:\\visual studio 2022\\projects\\capstoneproject\\server\\server\\controllers\\productcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{53A1D91F-49CD-4E44-9DA8-E38D969FBE1B}|server\\server.csproj|solutionrelative:server\\controllers\\productcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{53A1D91F-49CD-4E44-9DA8-E38D969FBE1B}|server\\server.csproj|e:\\visual studio 2022\\projects\\capstoneproject\\server\\server\\forms\\mainmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -15,12 +15,16 @@
       "RelativeMoniker": "D:0:0:{53A1D91F-49CD-4E44-9DA8-E38D969FBE1B}|server\\server.csproj|solutionrelative:server\\core\\network\\packettype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{53A1D91F-49CD-4E44-9DA8-E38D969FBE1B}|server\\server.csproj|e:\\visual studio 2022\\projects\\capstoneproject\\server\\server\\core\\network\\server.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{53A1D91F-49CD-4E44-9DA8-E38D969FBE1B}|server\\server.csproj|solutionrelative:server\\core\\network\\server.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{53A1D91F-49CD-4E44-9DA8-E38D969FBE1B}|server\\server.csproj|e:\\visual studio 2022\\projects\\capstoneproject\\server\\server\\controllers\\categorycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{53A1D91F-49CD-4E44-9DA8-E38D969FBE1B}|server\\server.csproj|solutionrelative:server\\controllers\\categorycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{53A1D91F-49CD-4E44-9DA8-E38D969FBE1B}|server\\server.csproj|e:\\visual studio 2022\\projects\\capstoneproject\\server\\server\\controllers\\transactioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{53A1D91F-49CD-4E44-9DA8-E38D969FBE1B}|server\\server.csproj|solutionrelative:server\\controllers\\transactioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{53A1D91F-49CD-4E44-9DA8-E38D969FBE1B}|server\\server.csproj|e:\\visual studio 2022\\projects\\capstoneproject\\server\\server\\core\\network\\server.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{53A1D91F-49CD-4E44-9DA8-E38D969FBE1B}|server\\server.csproj|solutionrelative:server\\core\\network\\server.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{53A1D91F-49CD-4E44-9DA8-E38D969FBE1B}|server\\server.csproj|e:\\visual studio 2022\\projects\\capstoneproject\\server\\server\\controllers\\discountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -41,10 +45,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{53A1D91F-49CD-4E44-9DA8-E38D969FBE1B}|server\\server.csproj|E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\forms\\mainmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{53A1D91F-49CD-4E44-9DA8-E38D969FBE1B}|server\\server.csproj|solutionrelative:server\\forms\\mainmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{53A1D91F-49CD-4E44-9DA8-E38D969FBE1B}|server\\server.csproj|e:\\visual studio 2022\\projects\\capstoneproject\\server\\server\\controllers\\productcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{53A1D91F-49CD-4E44-9DA8-E38D969FBE1B}|server\\server.csproj|solutionrelative:server\\controllers\\productcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{53A1D91F-49CD-4E44-9DA8-E38D969FBE1B}|server\\server.csproj|e:\\visual studio 2022\\projects\\capstoneproject\\server\\server\\models\\category.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -98,7 +98,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Bookmark",
@@ -106,52 +106,19 @@
             },
             {
               "$type": "Bookmark",
-              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
-            },
-            {
-              "$type": "Bookmark",
               "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
-            },
-            {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 4,
               "Title": "TransactionController.cs",
               "DocumentMoniker": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Controllers\\TransactionController.cs",
               "RelativeDocumentMoniker": "server\\Controllers\\TransactionController.cs",
               "ToolTip": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Controllers\\TransactionController.cs",
               "RelativeToolTip": "server\\Controllers\\TransactionController.cs",
-              "ViewState": "AgIAABEAAAAAAAAAAAAUwCcAAABJAAAAAAAAAA==",
+              "ViewState": "AgIAABcAAAAAAAAAAAAqwDEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-19T16:49:29.6Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "UnitController.cs",
-              "DocumentMoniker": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Controllers\\UnitController.cs",
-              "RelativeDocumentMoniker": "server\\Controllers\\UnitController.cs",
-              "ToolTip": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Controllers\\UnitController.cs",
-              "RelativeToolTip": "server\\Controllers\\UnitController.cs",
-              "ViewState": "AgIAAIcAAAAAAAAAAAAiwKEAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-21T11:04:05.871Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Server.cs",
-              "DocumentMoniker": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Core\\Network\\Server.cs",
-              "RelativeDocumentMoniker": "server\\Core\\Network\\Server.cs",
-              "ToolTip": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Core\\Network\\Server.cs",
-              "RelativeToolTip": "server\\Core\\Network\\Server.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-16T12:35:30.844Z",
               "EditorCaption": ""
             },
             {
@@ -162,40 +129,14 @@
               "RelativeDocumentMoniker": "server\\Core\\Network\\PacketType.cs",
               "ToolTip": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Core\\Network\\PacketType.cs",
               "RelativeToolTip": "server\\Core\\Network\\PacketType.cs",
-              "ViewState": "AgIAACAAAAAAAAAAAAAYwDcAAAAwAAAAAAAAAA==",
+              "ViewState": "AgIAABoAAAAAAAAAAAAQwEEAAAAoAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-16T12:29:08.984Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "MainMenu.cs",
-              "DocumentMoniker": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Forms\\MainMenu.cs",
-              "RelativeDocumentMoniker": "server\\Forms\\MainMenu.cs",
-              "ToolTip": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Forms\\MainMenu.cs",
-              "RelativeToolTip": "server\\Forms\\MainMenu.cs",
-              "ViewState": "AgIAAKUBAAAAAAAAAAAmwLQBAAApAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-10T13:14:49.17Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "DiscountController.cs",
-              "DocumentMoniker": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Controllers\\DiscountController.cs",
-              "RelativeDocumentMoniker": "server\\Controllers\\DiscountController.cs",
-              "ToolTip": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Controllers\\DiscountController.cs",
-              "RelativeToolTip": "server\\Controllers\\DiscountController.cs",
-              "ViewState": "AgIAAAUAAAAAAAAAAAAUwC4AAABAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-02T16:45:03.979Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 3,
               "Title": "CategoryController.cs",
               "DocumentMoniker": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Controllers\\CategoryController.cs",
               "RelativeDocumentMoniker": "server\\Controllers\\CategoryController.cs",
@@ -208,7 +149,77 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ProductController.cs",
+              "DocumentMoniker": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Controllers\\ProductController.cs",
+              "RelativeDocumentMoniker": "server\\Controllers\\ProductController.cs",
+              "ToolTip": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Controllers\\ProductController.cs",
+              "RelativeToolTip": "server\\Controllers\\ProductController.cs",
+              "ViewState": "AgIAAMsAAAAAAAAAAAAEwOIAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-20T16:10:29.967Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "MainMenu.cs",
+              "DocumentMoniker": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Forms\\MainMenu.cs",
+              "RelativeDocumentMoniker": "server\\Forms\\MainMenu.cs",
+              "ToolTip": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Forms\\MainMenu.cs",
+              "RelativeToolTip": "server\\Forms\\MainMenu.cs",
+              "ViewState": "AgIAAJwBAAAAAAAAAAAmwJoBAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-10T13:14:49.17Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Server.cs",
+              "DocumentMoniker": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Core\\Network\\Server.cs",
+              "RelativeDocumentMoniker": "server\\Core\\Network\\Server.cs",
+              "ToolTip": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Core\\Network\\Server.cs",
+              "RelativeToolTip": "server\\Core\\Network\\Server.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-16T12:35:30.844Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "UnitController.cs",
+              "DocumentMoniker": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Controllers\\UnitController.cs",
+              "RelativeDocumentMoniker": "server\\Controllers\\UnitController.cs",
+              "ToolTip": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Controllers\\UnitController.cs",
+              "RelativeToolTip": "server\\Controllers\\UnitController.cs",
+              "ViewState": "AgIAAIcAAAAAAAAAAAAiwKEAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-21T11:04:05.871Z"
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 6,
+              "Title": "DiscountController.cs",
+              "DocumentMoniker": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Controllers\\DiscountController.cs",
+              "RelativeDocumentMoniker": "server\\Controllers\\DiscountController.cs",
+              "ToolTip": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Controllers\\DiscountController.cs",
+              "RelativeToolTip": "server\\Controllers\\DiscountController.cs",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAUwC4AAABAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-02T16:45:03.979Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "Discount.cs",
               "DocumentMoniker": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Models\\Discount.cs",
               "RelativeDocumentMoniker": "server\\Models\\Discount.cs",
@@ -220,7 +231,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "Product.cs",
               "DocumentMoniker": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Models\\Product.cs",
               "RelativeDocumentMoniker": "server\\Models\\Product.cs",
@@ -229,18 +240,6 @@
               "ViewState": "AgIAAAMAAAAAAAAAAAAAABEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-22T02:23:31.45Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "ProductController.cs",
-              "DocumentMoniker": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Controllers\\ProductController.cs",
-              "RelativeDocumentMoniker": "server\\Controllers\\ProductController.cs",
-              "ToolTip": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Controllers\\ProductController.cs",
-              "RelativeToolTip": "server\\Controllers\\ProductController.cs",
-              "ViewState": "AgIAAO8AAAAAAAAAAAAEwAoBAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-20T16:10:29.967Z"
             },
             {
               "$type": "Document",
@@ -256,7 +255,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 10,
               "Title": "MainMenu.cs [Design]",
               "DocumentMoniker": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\Forms\\MainMenu.cs",
               "RelativeDocumentMoniker": "server\\Forms\\MainMenu.cs",
