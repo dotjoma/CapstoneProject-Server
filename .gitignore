@@ -1,2 +1,11 @@
+# Visual Studio files
+.vs/
 bin/
 obj/
+*.suo
+*.user
+*.bin
+*.cache
+*.pdb
+*.dll
+*.exe
