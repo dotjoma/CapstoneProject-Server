@@ -500,6 +500,10 @@ namespace server.Forms
                     return transactionController.RemoveTransaction(request);
                 case PacketType.RemoveTransactionResponse:
                     return transactionController.RemoveTransaction(request);
+                case PacketType.ProcessTransaction:
+                    return transactionController.ProcessTransaction(request);
+                case PacketType.ProcessTransactionResponse:
+                    return transactionController.ProcessTransaction(request);
 
 
                 default:

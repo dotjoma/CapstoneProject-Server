@@ -8,6 +8,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Dapper;
+using Org.BouncyCastle.Asn1.Ocsp;
+using Newtonsoft.Json;
 
 namespace server.Controllers
 {
@@ -34,11 +37,12 @@ namespace server.Controllers
                             string transNumber = $"{today}{nextTransId:D4}";
                             string orderNumber = $"{nextOrderNumber:D3}";
 
+                            // Insert the generated transaction and order numbers into the database
                             string insertQuery = @"
-                                INSERT INTO transactions 
-                                (transNumber, orderNumber, transDate) 
-                                VALUES 
-                                (@transNumber, @orderNumber, CURDATE())";
+                            INSERT INTO transactions
+                            (transNumber, orderNumber, transDate) 
+                            VALUES 
+                            (@transNumber, @orderNumber, CURDATE())";
 
                             using (var command = new MySqlCommand(insertQuery, connection, transaction))
                             {
@@ -47,9 +51,29 @@ namespace server.Controllers
                                 command.ExecuteNonQuery();
                             }
 
+                            string selectQuery = "SELECT transID, transNumber, orderNumber FROM transactions WHERE transNumber = @transNumber";
+                            string? fetchedTransId = string.Empty;
+                            string? fetchedTransNumber = string.Empty;
+                            string? fetchedOrderNumber = string.Empty;
+
+                            using (var command = new MySqlCommand(selectQuery, connection, transaction))
+                            {
+                                command.Parameters.AddWithValue("@transNumber", transNumber);
+                                using (var reader = command.ExecuteReader())
+                                {
+                                    if (reader.Read())
+                                    {
+                                        fetchedTransId = reader["transID"] == DBNull.Value ? null : reader["transID"].ToString();
+                                        fetchedTransNumber = reader["transNumber"] == DBNull.Value ? null : reader["transNumber"].ToString();
+                                        fetchedOrderNumber = reader["orderNumber"] == DBNull.Value ? null : reader["orderNumber"].ToString();
+                                    }
+                                }
+                            }
+
+                            // Commit the transaction
                             transaction.Commit();
 
-                            Logger.Write("TRANSACTION", $"Generated transaction: {transNumber}, Order: {orderNumber}");
+                            Logger.Write("TRANSACTION", $"Generated transaction: {fetchedTransNumber}, Order: {fetchedOrderNumber}, TransID: {fetchedTransId}");
 
                             return new Packet
                             {
@@ -60,8 +84,9 @@ namespace server.Controllers
                                 {
                                     { "success", "true" },
                                     { "message", "Transaction numbers generated successfully" },
-                                    { "transNumber", transNumber },
-                                    { "orderNumber", orderNumber }
+                                    { "transID", fetchedTransId ?? "" },
+                                    { "transNumber", fetchedTransNumber ?? "" },
+                                    { "orderNumber", fetchedOrderNumber ?? "" }
                                 }
                             };
                         }
@@ -84,7 +109,8 @@ namespace server.Controllers
                                     Data = new Dictionary<string, string>
                                     {
                                         { "success", "false" },
-                                        { "message", "Failed to generate unique transaction numbers" }
+                                        { "message", "Failed to generate unique transaction numbers" },
+                                        { "retryCount", retryCount.ToString() }
                                     }
                                 };
                             }
@@ -125,172 +151,117 @@ namespace server.Controllers
             }
         }
 
-        public bool ProcessTransaction(int transId, decimal totalAmount, string paymentMethod,
-    List<TransactionItem> transactionItems, Payment payment)
+        public Packet ProcessTransaction(Packet request)
         {
-            if (!ValidateTransactionInput(transId, totalAmount, paymentMethod, transactionItems, payment))
+            // Deserialize the transaction data from the request
+            var transactionData = JsonConvert.DeserializeObject<Dictionary<string, string>>(request.Data["transaction"]);
+
+            // Validate the transaction data
+            if (transactionData == null || !transactionData.ContainsKey("transId"))
             {
-                Logger.Write("TRANSACTION", "Invalid input parameters");
-                return false;
+                return new Packet
+                {
+                    Type = PacketType.ProcessTransactionResponse,
+                    Success = false,
+                    Message = "Missing transId in transaction data.",
+                    Data = new Dictionary<string, string>
+                    {
+                        { "success", "false" },
+                        { "message", "Missing transId in transaction data." }
+                    }
+                };
             }
 
+            // Extract transaction details
+            string transId = transactionData["transId"];
+            string paymentMethod = transactionData["paymentMethod"];
+
+            // Connect to the database
             using (var connection = new MySqlConnection(DatabaseManager.Instance.ConnectionString))
             {
-                try
+                connection.Open();
+
+                // Begin a database transaction
+                using (var transaction = connection.BeginTransaction())
                 {
-                    connection.Open();
-                    using (var transaction = connection.BeginTransaction())
+                    try
                     {
-                        try
-                        {
-                            // Verify transaction exists and is unpaid
-                            if (!VerifyTransactionStatus(transId, connection, transaction))
-                            {
-                                transaction.Rollback();
-                                return false;
-                            }
-
-                            // Update Transactions table
-                            string updateTransactionQuery = @"
-                                UPDATE transactions 
-                                SET total_amount = @totalAmount, 
-                                    status = 'paid', 
-                                    payment_method = @paymentMethod,
-                                    updated_at = CURRENT_TIMESTAMP 
-                                WHERE trans_id = @transId";
-
-                            using (var cmd = new MySqlCommand(updateTransactionQuery, connection, transaction))
-                            {
-                                cmd.Parameters.AddWithValue("@totalAmount", totalAmount);
-                                cmd.Parameters.AddWithValue("@paymentMethod", paymentMethod);
-                                cmd.Parameters.AddWithValue("@transId", transId);
-                                cmd.ExecuteNonQuery();
-                            }
-
-                            // Insert Order Details
-                            string insertOrderDetailsQuery = @"
-                                INSERT INTO orderdetails 
-                                (trans_id, item_id, quantity, price, total_price, notes) 
-                                VALUES 
-                                (@transId, @itemId, @quantity, @price, @totalPrice, @notes)";
-
-                            foreach (var item in transactionItems)
-                            {
-                                using (var cmd = new MySqlCommand(insertOrderDetailsQuery, connection, transaction))
-                                {
-                                    cmd.Parameters.AddWithValue("@transId", transId);
-                                    cmd.Parameters.AddWithValue("@itemId", item.Product?.productId);
-                                    cmd.Parameters.AddWithValue("@quantity", item.Quantity);
-                                    cmd.Parameters.AddWithValue("@price", item.Price);
-                                    cmd.Parameters.AddWithValue("@totalPrice", item.TotalPrice);
-                                    cmd.Parameters.AddWithValue("@notes", item.Notes ?? "");
-                                    cmd.ExecuteNonQuery();
-                                }
-                            }
-
-                            // Insert Payment Record
-                            string insertPaymentQuery = @"
-                                INSERT INTO payments 
-                                (trans_id, amount_paid, payment_method, reference_number, 
-                                    payment_time, change_amount, notes) 
-                                VALUES 
-                                (@transId, @amountPaid, @paymentMethod, @referenceNumber, 
-                                    CURRENT_TIMESTAMP, @changeAmount, @notes)";
-
-                            using (var cmd = new MySqlCommand(insertPaymentQuery, connection, transaction))
-                            {
-                                cmd.Parameters.AddWithValue("@transId", transId);
-                                cmd.Parameters.AddWithValue("@amountPaid", payment.AmountPaid);
-                                cmd.Parameters.AddWithValue("@paymentMethod", payment.PaymentMethod);
-                                cmd.Parameters.AddWithValue("@referenceNumber",
-                                    payment.ReferenceNumber ?? (object)DBNull.Value);
-                                cmd.Parameters.AddWithValue("@changeAmount", payment.ChangeAmount);
-                                cmd.Parameters.AddWithValue("@notes", payment.Notes ?? "");
-                                cmd.ExecuteNonQuery();
-                            }
-
-                            transaction.Commit();
-                            Logger.Write("TRANSACTION", $"Successfully processed transaction {transId}");
-                            return true;
-                        }
-                        catch (Exception ex)
+                        // Verify the transaction status
+                        if (!VerifyTransactionStatus(transId, connection, transaction))
                         {
                             transaction.Rollback();
-                            Logger.Write("TRANSACTION", $"Error processing transaction {transId}: {ex.Message}");
-                            return false;
+                            return new Packet
+                            {
+                                Type = PacketType.ProcessTransactionResponse,
+                                Success = false,
+                                Message = "Transaction not found or already paid",
+                                Data = new Dictionary<string, string>
+                                {
+                                    { "success", "false" },
+                                    { "message", "Transaction not found or already paid" }
+                                }
+                            };
                         }
+
+                        // Update the transaction status in the database
+                        var updateTransactionQuery = @"
+                            UPDATE transactions 
+                            SET status = 'paid', 
+                                paymentMethod = @PaymentMethod,
+                                updated_at = CURRENT_TIMESTAMP 
+                            WHERE transId = @TransId"; // Updated to use transId
+
+                        connection.Execute(updateTransactionQuery,
+                            new { PaymentMethod = paymentMethod, TransId = transId },
+                            transaction);
+
+                        // Commit the transaction
+                        transaction.Commit();
+                        Logger.Write("TRANSACTION", $"Successfully processed transaction {transId}");
+
+                        // Return a success response
+                        return new Packet
+                        {
+                            Type = PacketType.ProcessTransactionResponse,
+                            Success = true,
+                            Message = $"Transaction {transId} processed successfully.",
+                            Data = new Dictionary<string, string>
+                            {
+                                { "success", "true" },
+                                { "message", $"Transaction {transId} processed successfully." }
+                            }
+                        };
+                    }
+                    catch (Exception ex)
+                    {
+                        // Rollback the transaction in case of an error
+                        transaction.Rollback();
+                        Logger.Write("TRANSACTION", $"Error processing transaction {transId}: {ex.Message}");
+
+                        // Return an error response
+                        return new Packet
+                        {
+                            Type = PacketType.ProcessTransactionResponse,
+                            Success = false,
+                            Message = $"Error processing transaction {transId}: {ex.Message}",
+                            Data = new Dictionary<string, string>
+                            {
+                                { "success", "false" },
+                                { "message", $"Error processing transaction {transId}: {ex.Message}" }
+                            }
+                        };
                     }
                 }
-                catch (Exception ex)
-                {
-                    Logger.Write("TRANSACTION", $"Database connection error: {ex.Message}");
-                    return false;
-                }
             }
         }
 
-        private bool ValidateTransactionInput(int transId, decimal totalAmount, string paymentMethod,
-        List<TransactionItem> transactionItems, Payment payment)
+        private bool VerifyTransactionStatus(string transId, MySqlConnection connection, MySqlTransaction transaction)
         {
-            if (transId <= 0)
-            {
-                Logger.Write("VALIDATION", "Invalid transaction ID");
-                return false;
-            }
-
-            if (totalAmount <= 0)
-            {
-                Logger.Write("VALIDATION", "Invalid total amount");
-                return false;
-            }
-
-            if (string.IsNullOrEmpty(paymentMethod))
-            {
-                Logger.Write("VALIDATION", "Payment method is required");
-                return false;
-            }
-
-            if (transactionItems == null || !transactionItems.Any())
-            {
-                Logger.Write("VALIDATION", "Transaction items are required");
-                return false;
-            }
-
-            if (payment == null)
-            {
-                Logger.Write("VALIDATION", "Payment details are required");
-                return false;
-            }
-
-            // Validate transaction items
-            foreach (var item in transactionItems)
-            {
-                if (item.Product?.productId <= 0 || item.Quantity <= 0 || item.Price < 0)
-                {
-                    Logger.Write("VALIDATION",
-                        $"Invalid item details - ProductId: {item.Product?.productId}, " +
-                        $"Quantity: {item.Quantity}, Price: {item.Price}");
-                    return false;
-                }
-            }
-
-            // Validate payment
-            if (payment.AmountPaid <= 0)
-            {
-                Logger.Write("VALIDATION", "Invalid payment amount");
-                return false;
-            }
-
-            return true;
-        }
-
-        private bool VerifyTransactionStatus(int transId, MySqlConnection connection, MySqlTransaction transaction)
-        {
-            string verifyQuery = "SELECT status FROM transactions WHERE trans_id = @transId FOR UPDATE";
+            string verifyQuery = "SELECT status FROM transactions WHERE transID = @transID FOR UPDATE";
 
             using (var cmd = new MySqlCommand(verifyQuery, connection, transaction))
             {
-                cmd.Parameters.AddWithValue("@transId", transId);
+                cmd.Parameters.AddWithValue("@transID", transId);
                 string? status = cmd.ExecuteScalar()?.ToString();
 
                 if (status == null)

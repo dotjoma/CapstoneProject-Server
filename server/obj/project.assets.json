@@ -15,6 +15,19 @@
           }
         }
       },
+      "Dapper/2.1.66": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/Dapper.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Dapper.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Google.Protobuf/3.26.1": {
         "type": "package",
         "compile": {
@@ -571,6 +584,25 @@
         "lib/netstandard2.0/BouncyCastle.Cryptography.dll",
         "lib/netstandard2.0/BouncyCastle.Cryptography.xml",
         "packageIcon.png"
+      ]
+    },
+    "Dapper/2.1.66": {
+      "sha512": "/q77jUgDOS+bzkmk3Vy9SiWMaetTw+NOoPAV0xPBsGVAyljd5S6P+4RUW7R3ZUGGr9lDRyPKgAMj2UAOwvqZYw==",
+      "type": "package",
+      "path": "dapper/2.1.66",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Dapper.png",
+        "dapper.2.1.66.nupkg.sha512",
+        "dapper.nuspec",
+        "lib/net461/Dapper.dll",
+        "lib/net461/Dapper.xml",
+        "lib/net8.0/Dapper.dll",
+        "lib/net8.0/Dapper.xml",
+        "lib/netstandard2.0/Dapper.dll",
+        "lib/netstandard2.0/Dapper.xml",
+        "readme.md"
       ]
     },
     "Google.Protobuf/3.26.1": {
@@ -1802,6 +1834,7 @@
   },
   "projectFileDependencyGroups": {
     "net8.0-windows7.0": [
+      "Dapper >= 2.1.66",
       "MySql.Data >= 9.2.0",
       "Newtonsoft.Json >= 13.0.3",
       "Serilog >= 4.2.0",
@@ -1811,23 +1844,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\raymond balondo\\.nuget\\packages\\": {},
+    "C:\\Users\\baste\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\raymond balondo\\Desktop\\CAPSTONE\\CapstoneProject-Server\\server\\server.csproj",
+      "projectUniqueName": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\server.csproj",
       "projectName": "server",
-      "projectPath": "C:\\Users\\raymond balondo\\Desktop\\CAPSTONE\\CapstoneProject-Server\\server\\server.csproj",
-      "packagesPath": "C:\\Users\\raymond balondo\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\raymond balondo\\Desktop\\CAPSTONE\\CapstoneProject-Server\\server\\obj\\",
+      "projectPath": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\server.csproj",
+      "packagesPath": "C:\\Users\\baste\\.nuget\\packages\\",
+      "outputPath": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\raymond balondo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\baste\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -1860,6 +1893,10 @@
       "net8.0-windows7.0": {
         "targetAlias": "net8.0-windows",
         "dependencies": {
+          "Dapper": {
+            "target": "Package",
+            "version": "[2.1.66, )"
+          },
           "MySql.Data": {
             "target": "Package",
             "version": "[9.2.0, )"

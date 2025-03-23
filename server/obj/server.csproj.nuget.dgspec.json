@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\raymond balondo\\Desktop\\CAPSTONE\\CapstoneProject-Server\\server\\server.csproj": {}
+    "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\server.csproj": {}
   },
   "projects": {
-    "C:\\Users\\raymond balondo\\Desktop\\CAPSTONE\\CapstoneProject-Server\\server\\server.csproj": {
+    "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\server.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\raymond balondo\\Desktop\\CAPSTONE\\CapstoneProject-Server\\server\\server.csproj",
+        "projectUniqueName": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\server.csproj",
         "projectName": "server",
-        "projectPath": "C:\\Users\\raymond balondo\\Desktop\\CAPSTONE\\CapstoneProject-Server\\server\\server.csproj",
-        "packagesPath": "C:\\Users\\raymond balondo\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\raymond balondo\\Desktop\\CAPSTONE\\CapstoneProject-Server\\server\\obj\\",
+        "projectPath": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\server.csproj",
+        "packagesPath": "C:\\Users\\baste\\.nuget\\packages\\",
+        "outputPath": "E:\\Visual Studio 2022\\Projects\\CapstoneProject\\server\\server\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\raymond balondo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\baste\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -50,6 +50,10 @@
         "net8.0-windows7.0": {
           "targetAlias": "net8.0-windows",
           "dependencies": {
+            "Dapper": {
+              "target": "Package",
+              "version": "[2.1.66, )"
+            },
             "MySql.Data": {
               "target": "Package",
               "version": "[9.2.0, )"
