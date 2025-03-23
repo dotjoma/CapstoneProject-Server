@@ -74,3 +74,7 @@ C:\Users\raymond balondo\Desktop\CAPSTONE\CapstoneProject-Server\server\obj\Debu
 C:\Users\raymond balondo\Desktop\CAPSTONE\CapstoneProject-Server\server\obj\Debug\net8.0-windows\server.pdb
 C:\Users\raymond balondo\Desktop\CAPSTONE\CapstoneProject-Server\server\obj\Debug\net8.0-windows\server.genruntimeconfig.cache
 C:\Users\raymond balondo\Desktop\CAPSTONE\CapstoneProject-Server\server\obj\Debug\net8.0-windows\ref\server.dll
+C:\Users\raymond balondo\Desktop\CAPSTONE\CapstoneProject-Server\server\bin\Debug\net8.0-windows\Serilog.dll
+C:\Users\raymond balondo\Desktop\CAPSTONE\CapstoneProject-Server\server\bin\Debug\net8.0-windows\Serilog.Formatting.Compact.dll
+C:\Users\raymond balondo\Desktop\CAPSTONE\CapstoneProject-Server\server\bin\Debug\net8.0-windows\Serilog.Sinks.Console.dll
+C:\Users\raymond balondo\Desktop\CAPSTONE\CapstoneProject-Server\server\bin\Debug\net8.0-windows\Serilog.Sinks.File.dll

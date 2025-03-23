@@ -1,5 +1,6 @@
 ﻿using server.Core.Network;
 using System;
+using Serilog;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -40,6 +41,7 @@ namespace server.Forms
         public MainMenu()
         {
             InitializeComponent();
+            Logger.Initialize(rtbLogs);
             SetupForm();
         }
 
@@ -59,7 +61,7 @@ namespace server.Forms
                 listener.Start();
                 isServerRunning = true;
 
-                LogMessage($"Server started on port {serverPort}");
+                Logger.Write("SERVER STARTED", $"Server started on port {serverPort}");
                 UpdateStatus("Server running");
 
                 btnStartServer.Enabled = false;
@@ -69,7 +71,7 @@ namespace server.Forms
             }
             catch (Exception ex)
             {
-                LogMessage($"Error starting server: {ex.Message}");
+                Logger.WriteError("SERVER ERROR", $"Error starting server: {ex.Message}", ex);
                 StopServer();
             }
         }
@@ -81,7 +83,7 @@ namespace server.Forms
 
         private void MainMenu_Load(object sender, EventArgs e)
         {
-            LogMessage("Server application started");
+            Logger.Write("APPLICATION STARTED", "Server application started");
             ConnectToDatabase();
         }
 
@@ -99,7 +101,7 @@ namespace server.Forms
                 using (var connection = new MySqlConnection(connectionString))
                 {
                     connection.Open();
-                    LogMessage("Database connection successful");
+                    Logger.Write("DATABASE CONNECTION", "Database connection successful");
                     btnConnectToDB.Enabled = false;
                     message = "Connect To Database";
                     btnConnectToDB.Text = message;
@@ -107,7 +109,7 @@ namespace server.Forms
             }
             catch (Exception ex)
             {
-                LogMessage($"Database connection error: {ex.Message}");
+                Logger.WriteError("DATABASE ERROR", $"Database connection error: {ex.Message}", ex);
                 MessageBox.Show("Could not connect to database. Please check your connection settings.",
                     "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 btnConnectToDB.Enabled = true;
@@ -198,7 +200,7 @@ namespace server.Forms
             }
 
             // Log the closing event
-            LogMessage($"Application closing: {e.CloseReason}");
+            Logger.Write("APPLICATION CLOSING", $"Application closing: {e.CloseReason}");
         }
 
         private void StopServer()
@@ -211,12 +213,12 @@ namespace server.Forms
                     isServerRunning = false;
                     listener?.Stop();
                     listener = null;
-                    LogMessage("Server stopped");
+                    Logger.Write("SERVER STOPPED", "Server stopped");
                     UpdateStatus("Server stopped");
                 }
                 catch (Exception ex)
                 {
-                    LogMessage($"Error stopping server during shutdown: {ex.Message}");
+                    Logger.WriteError("SERVER ERROR", $"Error stopping server during shutdown: {ex.Message}", ex);
                 }
                 finally
                 {
@@ -254,7 +256,7 @@ namespace server.Forms
                     isServerRunning = false;
                     listener?.Stop();
                     listener = null;
-                    LogMessage("Server stopped");
+                    Logger.Write("SERVER STOPPED", "Server stopped");
                     UpdateStatus("Server stopped");
 
                     btnStartServer.Enabled = true;
@@ -263,7 +265,7 @@ namespace server.Forms
             }
             catch (Exception ex)
             {
-                LogMessage($"Error stopping server: {ex.Message}");
+                Logger.WriteError("SERVER ERROR", $"Error stopping server: {ex.Message}", ex);
             }
         }
 
@@ -272,7 +274,7 @@ namespace server.Forms
         {
             if (listener == null)
             {
-                LogMessage("Error: TCP listener is not initialized");
+                Logger.Write("LISTENER ERROR", "TCP listener is not initialized");
                 return;
             }
 
@@ -295,7 +297,7 @@ namespace server.Forms
                 {
                     if (isServerRunning) // Only log if it wasn't a normal shutdown
                     {
-                        LogMessage($"Error accepting client: {ex.Message}");
+                        Logger.WriteError("CLIENT ACCEPT ERROR", $"Error accepting client: {ex.Message}", ex);
                     }
                 }
             }
@@ -303,37 +305,99 @@ namespace server.Forms
 
         private async Task HandleClientAsync(TcpClient client)
         {
+            string clientAddress = "Unknown";
+
             try
             {
                 var endpoint = client.Client.RemoteEndPoint as IPEndPoint;
-                string clientAddress = endpoint?.Address.ToString() ?? "Unknown";
-                LogMessage($"Client connected from: {clientAddress}");
+                clientAddress = endpoint?.Address.ToString() ?? "Unknown";
+
+                // Log client connection
+                Logger.Write("CLIENT CONNECTED", $"Client connected from: {clientAddress}");
 
                 using (client)
                 using (NetworkStream stream = client.GetStream())
                 using (var reader = new StreamReader(stream, Encoding.UTF8, leaveOpen: true))
                 {
-                    string jsonRequest = (await reader.ReadLineAsync())!;
-                    var request = JsonConvert.DeserializeObject<Packet>(jsonRequest);
-                    if (request == null)
+                    // Read the request from the client
+                    string jsonRequest = (await reader.ReadLineAsync().ConfigureAwait(false))!;
+                    Logger.Write("CLIENT REQUEST", $"Received from {clientAddress}: {jsonRequest}");
+
+                    // Deserialize the request
+                    Packet? request;
+                    try
                     {
-                        LogMessage($"Error: Invalid packet received from {clientAddress}");
+                        request = JsonConvert.DeserializeObject<Packet>(jsonRequest);
+                        if (request == null)
+                        {
+                            Logger.Write("INVALID PACKET", $"Invalid packet received from {clientAddress}");
+                            return;
+                        }
+                    }
+                    catch (JsonException ex)
+                    {
+                        Logger.WriteError("DESERIALIZATION ERROR", $"Failed to deserialize packet from {clientAddress}", ex);
                         return;
                     }
 
+                    // Process the request
                     var response = ProcessRequest(request, client);
+
+                    // Serialize the response
                     string jsonResponse = JsonConvert.SerializeObject(response);
                     byte[] responseData = Encoding.UTF8.GetBytes(jsonResponse);
-                    await stream.WriteAsync(responseData, 0, responseData.Length);
 
-                    LogMessage($"Sent to {clientAddress}: {jsonResponse}");
-                    Logger.Write("SERVER RESPONSE", $"Sent to {clientAddress}: {jsonResponse}");
+                    // Send the response to the client
+                    await stream.WriteAsync(responseData, 0, responseData.Length).ConfigureAwait(false);
+
+                    // Log the response (only Type, Success, and Message)
+                    LogResponse(jsonResponse);
+                }
+            }
+            catch (IOException ex)
+            {
+                Logger.WriteError("I/O ERROR", $"I/O error while handling client {clientAddress}", ex);
+            }
+            catch (SocketException ex)
+            {
+                Logger.WriteError("SOCKET ERROR", $"Socket error while handling client {clientAddress}", ex);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteError("UNEXPECTED ERROR", $"Unexpected error while handling client {clientAddress}", ex);
+            }
+            finally
+            {
+                Logger.Write("CLIENT DISCONNECTED", $"Client disconnected: {clientAddress}");
+            }
+        }
+
+        private void LogResponse(string jsonResponse)
+        {
+            try
+            {
+                // Parse the JSON response
+                var response = JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+
+                // Extract the required fields
+                int type = response?.Type;
+                bool success = response?.Success;
+                string? message = response?.Message;
+
+                // Log based on the type
+                if (type == 12)
+                {
+                    Logger.Write("PRODUCTS RESPONSE", $"Type: {type}, Success: {success}, Message: {message}");
+                }
+                else
+                {
+                    Logger.Write("SERVER RESPONSE", $"Type: {type}, Success: {success}, Message: {message}");
                 }
             }
             catch (Exception ex)
             {
-                LogMessage($"Error handling client: {ex.Message}");
-                Logger.Write("EXCEPTION", $"Error handling client: {ex.Message}");
+                // Log errors if parsing fails
+                Logger.WriteError("LOGGING ERROR", $"Failed to parse response: {ex.Message}", ex);
             }
         }
 
@@ -347,8 +411,7 @@ namespace server.Forms
             var discountController = new DiscountController();
             var transactionController = new TransactionController();
 
-            LogMessage($"Processing request type: {request.Type}");
-            Logger.Write("CLIENT REQUEST", $"Processing request type: {request.Type}");
+            Logger.Write("PROCESSING REQUEST", $"Processing request type: {request.Type}");
 
             switch (request.Type)
             {
@@ -440,7 +503,6 @@ namespace server.Forms
 
 
                 default:
-                    LogMessage($"Unknown packet type: {request.Type}");
                     Logger.Write("UNKNOWN PACKET", $"Unknown packet type: {request.Type}");
                     return new Packet
                     {
@@ -452,18 +514,6 @@ namespace server.Forms
                         }
                     };
             }
-        }
-
-        private void LogMessage(string message)
-        {
-            if (rtbLogs.InvokeRequired)
-            {
-                rtbLogs.Invoke(new Action(() => LogMessage(message)));
-                return;
-            }
-
-            rtbLogs.AppendText($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {message}{Environment.NewLine}");
-            rtbLogs.ScrollToCaret();
         }
 
         private void UpdateStatus(string status)
@@ -512,7 +562,7 @@ namespace server.Forms
         {
             if (StopServerWithConfirmation())
             {
-                LogMessage("Server stopped by user request");
+                Logger.Write("SERVER STOPPED", "Server stopped by user request");
                 System.Windows.Forms.Application.Exit();
             }
         }
