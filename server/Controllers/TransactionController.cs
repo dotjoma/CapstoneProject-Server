@@ -153,10 +153,10 @@ namespace server.Controllers
 
         public Packet ProcessTransaction(Packet request)
         {
-            // Deserialize the transaction data from the request
             var transactionData = JsonConvert.DeserializeObject<Dictionary<string, string>>(request.Data["transaction"]);
+            var orderData = JsonConvert.DeserializeObject<List<OrderProcessing>>(request.Data["order"]);
+            var paymentData = JsonConvert.DeserializeObject<Dictionary<string, string>>(request.Data["payment"]);
 
-            // Validate the transaction data
             if (transactionData == null || !transactionData.ContainsKey("transId"))
             {
                 return new Packet
@@ -172,21 +172,38 @@ namespace server.Controllers
                 };
             }
 
-            // Extract transaction details
+            if (paymentData == null || !paymentData.ContainsKey("transId"))
+            {
+                return new Packet
+                {
+                    Type = PacketType.ProcessTransactionResponse,
+                    Success = false,
+                    Message = "Missing transId in payment data.",
+                    Data = new Dictionary<string, string>
+                    {
+                        { "success", "false" },
+                        { "message", "Missing transId in payment data." }
+                    }
+                };
+            }
+
             string transId = transactionData["transId"];
+            string totalAmount = transactionData["totalAmount"];
+            string status = transactionData["status"];
             string paymentMethod = transactionData["paymentMethod"];
 
-            // Connect to the database
+            string amountPaid = paymentData["amountPaid"];
+            string referenceNo = paymentData["referenceNo"];
+            string changeAmount = paymentData["changeAmount"];
+
             using (var connection = new MySqlConnection(DatabaseManager.Instance.ConnectionString))
             {
                 connection.Open();
 
-                // Begin a database transaction
                 using (var transaction = connection.BeginTransaction())
                 {
                     try
                     {
-                        // Verify the transaction status
                         if (!VerifyTransactionStatus(transId, connection, transaction))
                         {
                             transaction.Rollback();
@@ -203,23 +220,84 @@ namespace server.Controllers
                             };
                         }
 
-                        // Update the transaction status in the database
-                        var updateTransactionQuery = @"
-                            UPDATE transactions 
-                            SET status = 'paid', 
-                                paymentMethod = @PaymentMethod,
-                                updated_at = CURRENT_TIMESTAMP 
-                            WHERE transId = @TransId"; // Updated to use transId
+                        if (orderData != null)
+                        {
+                            foreach (var order in orderData)
+                            {
+                                var insertOrderQuery = @"
+                                INSERT INTO orderdetails 
+                                (trans_no, item_id, cashier_id, quantity, price, total_price, notes, order_type, order_time, order_date)
+                                VALUES 
+                                (@TransNo, @ProductId, @CashierId, @Quantity, @Price, @TotalPrice, @Notes, @OrderType, CURTIME(), CURDATE())";
 
-                        connection.Execute(updateTransactionQuery,
-                            new { PaymentMethod = paymentMethod, TransId = transId },
+                                connection.Execute(insertOrderQuery, new
+                                {
+                                    TransNo = order.TransNo,
+                                    ProductId = order.ProductId,
+                                    CashierId = order.CashierId,
+                                    Quantity = order.Quantity,
+                                    Price = order.Price,
+                                    TotalPrice = order.TotalPrice,
+                                    Notes = order.Notes,
+                                    OrderType = order.OrderType
+                                }, transaction);
+                            }
+                        }
+                        else
+                        {
+                            Logger.Write("ERROR", "Order data is null.");
+                        }
+
+                        var insertPaymentQuery = @"
+                        INSERT INTO payments 
+                        (trans_id, amount_paid, payment_method, reference_number, payment_time, change_amount)
+                        VALUES 
+                        (
+                            @TransId,
+                            @AmountPaid,
+                            @PaymentMethod,
+                            CASE 
+                                WHEN @PaymentMethod = 'cash'
+                                    THEN CONCAT('CASH-', @TransId, '-', DATE_FORMAT(NOW(), '%Y%m%d%H%i%s'))
+                                ELSE @ReferenceNumber
+                            END,
+                            CURTIME(), 
+                            @ChangeAmount
+                        )";
+
+                        connection.Execute(insertPaymentQuery,
+                            new 
+                            { 
+                                TransId = transId, 
+                                AmountPaid = amountPaid, 
+                                PaymentMethod = paymentMethod, 
+                                ReferenceNumber = referenceNo,
+                                ChangeAmount = changeAmount
+                            },
                             transaction);
 
-                        // Commit the transaction
+                        var updateTransactionQuery = @"
+                        UPDATE transactions 
+                        SET totalAmount = @TotalAmount,
+                            status = @Status, 
+                            paymentMethod = @PaymentMethod,
+                            updated_at = CURRENT_TIMESTAMP 
+                        WHERE transId = @TransId";
+
+                        connection.Execute(updateTransactionQuery,
+                            new 
+                            { 
+                                TotalAmount = totalAmount, 
+                                Status = status, 
+                                PaymentMethod = paymentMethod, 
+                                TransId = transId 
+                            },
+                            transaction);
+
                         transaction.Commit();
+
                         Logger.Write("TRANSACTION", $"Successfully processed transaction {transId}");
 
-                        // Return a success response
                         return new Packet
                         {
                             Type = PacketType.ProcessTransactionResponse,
@@ -234,11 +312,9 @@ namespace server.Controllers
                     }
                     catch (Exception ex)
                     {
-                        // Rollback the transaction in case of an error
                         transaction.Rollback();
                         Logger.Write("TRANSACTION", $"Error processing transaction {transId}: {ex.Message}");
 
-                        // Return an error response
                         return new Packet
                         {
                             Type = PacketType.ProcessTransactionResponse,
