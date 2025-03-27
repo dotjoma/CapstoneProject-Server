@@ -83,3 +83,46 @@ E:\Visual Studio 2022\Projects\CapstoneProject\server\server\bin\Debug\net8.0-wi
 E:\Visual Studio 2022\Projects\CapstoneProject\server\server\bin\Debug\net8.0-windows\Serilog.Sinks.Console.dll
 E:\Visual Studio 2022\Projects\CapstoneProject\server\server\bin\Debug\net8.0-windows\Serilog.Sinks.File.dll
 E:\Visual Studio 2022\Projects\CapstoneProject\server\server\bin\Debug\net8.0-windows\Dapper.dll
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\bin\Debug\net8.0-windows\server.exe
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\bin\Debug\net8.0-windows\server.deps.json
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\bin\Debug\net8.0-windows\server.runtimeconfig.json
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\bin\Debug\net8.0-windows\server.dll
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\bin\Debug\net8.0-windows\server.pdb
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\bin\Debug\net8.0-windows\BouncyCastle.Cryptography.dll
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\bin\Debug\net8.0-windows\Dapper.dll
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\bin\Debug\net8.0-windows\Google.Protobuf.dll
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\bin\Debug\net8.0-windows\K4os.Compression.LZ4.dll
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\bin\Debug\net8.0-windows\K4os.Compression.LZ4.Streams.dll
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\bin\Debug\net8.0-windows\K4os.Hash.xxHash.dll
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\bin\Debug\net8.0-windows\MySql.Data.dll
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\bin\Debug\net8.0-windows\Newtonsoft.Json.dll
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\bin\Debug\net8.0-windows\Serilog.dll
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\bin\Debug\net8.0-windows\Serilog.Formatting.Compact.dll
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\bin\Debug\net8.0-windows\Serilog.Sinks.Console.dll
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\bin\Debug\net8.0-windows\Serilog.Sinks.File.dll
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\bin\Debug\net8.0-windows\System.IO.Pipelines.dll
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\bin\Debug\net8.0-windows\System.Text.Encodings.Web.dll
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\bin\Debug\net8.0-windows\System.Text.Json.dll
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\bin\Debug\net8.0-windows\ZstdSharp.dll
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\bin\Debug\net8.0-windows\runtimes\win-x64\native\comerr64.dll
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\bin\Debug\net8.0-windows\runtimes\win-x64\native\gssapi64.dll
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\bin\Debug\net8.0-windows\runtimes\win-x64\native\k5sprt64.dll
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\bin\Debug\net8.0-windows\runtimes\win-x64\native\krb5_64.dll
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\bin\Debug\net8.0-windows\runtimes\win-x64\native\krbcc64.dll
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\bin\Debug\net8.0-windows\runtimes\browser\lib\net8.0\System.Text.Encodings.Web.dll
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\obj\Debug\net8.0-windows\server.csproj.AssemblyReference.cache
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\obj\Debug\net8.0-windows\server.Form1.resources
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\obj\Debug\net8.0-windows\server.Forms.MainMenu.resources
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\obj\Debug\net8.0-windows\server.Properties.Resources.resources
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\obj\Debug\net8.0-windows\server.csproj.GenerateResource.cache
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\obj\Debug\net8.0-windows\server.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\obj\Debug\net8.0-windows\server.AssemblyInfoInputs.cache
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\obj\Debug\net8.0-windows\server.AssemblyInfo.cs
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\obj\Debug\net8.0-windows\server.csproj.CoreCompileInputs.cache
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\obj\Debug\net8.0-windows\server.sourcelink.json
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\obj\Debug\net8.0-windows\server.csproj.Up2Date
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\obj\Debug\net8.0-windows\server.dll
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\obj\Debug\net8.0-windows\refint\server.dll
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\obj\Debug\net8.0-windows\server.pdb
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\obj\Debug\net8.0-windows\server.genruntimeconfig.cache
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\obj\Debug\net8.0-windows\ref\server.dll

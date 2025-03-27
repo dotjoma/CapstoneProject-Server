@@ -145,7 +145,7 @@ namespace server.Controllers
                     Logger.Write("PRODUCT UPDATE", "Database connection opened");
 
                     // Check if product exists
-                    string checkProductQuery = "SELECT COUNT(*) FROM product WHERE productId = @productId";
+                    string checkProductQuery = "SELECT COUNT(*) FROM product WHERE pId = @productId";
                     using (var checkProductCommand = new MySqlCommand(checkProductQuery, connection))
                     {
                         checkProductCommand.Parameters.Add("@productId", MySqlDbType.VarChar).Value = productId;
@@ -172,7 +172,7 @@ namespace server.Controllers
                     UPDATE product 
                     SET catId = @catId, scId = @scId, pName = @pName, 
                         unitId = @unitId, unitPrice = @unitPrice, image = @image, isActive = @isActive
-                    WHERE productId = @productId";
+                    WHERE pId = @productId";
 
                     using (var command = new MySqlCommand(query, connection))
                     {
