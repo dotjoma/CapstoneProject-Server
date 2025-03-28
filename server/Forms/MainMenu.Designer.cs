@@ -46,7 +46,7 @@
             btnStartServer.Location = new Point(14, 16);
             btnStartServer.Margin = new Padding(3, 4, 3, 4);
             btnStartServer.Name = "btnStartServer";
-            btnStartServer.Size = new Size(86, 31);
+            btnStartServer.Size = new Size(106, 31);
             btnStartServer.TabIndex = 1;
             btnStartServer.Text = "Start Server";
             btnStartServer.UseVisualStyleBackColor = true;
@@ -54,10 +54,10 @@
             // 
             // btnStopServer
             // 
-            btnStopServer.Location = new Point(106, 16);
+            btnStopServer.Location = new Point(126, 16);
             btnStopServer.Margin = new Padding(3, 4, 3, 4);
             btnStopServer.Name = "btnStopServer";
-            btnStopServer.Size = new Size(86, 31);
+            btnStopServer.Size = new Size(104, 31);
             btnStopServer.TabIndex = 2;
             btnStopServer.Text = "Stop Server";
             btnStopServer.UseVisualStyleBackColor = true;
@@ -134,7 +134,7 @@
             // 
             // btnConnectToDB
             // 
-            btnConnectToDB.Location = new Point(199, 16);
+            btnConnectToDB.Location = new Point(236, 16);
             btnConnectToDB.Margin = new Padding(3, 4, 3, 4);
             btnConnectToDB.Name = "btnConnectToDB";
             btnConnectToDB.Size = new Size(199, 31);

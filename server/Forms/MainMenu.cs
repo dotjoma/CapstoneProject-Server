@@ -410,6 +410,7 @@ namespace server.Forms
             var subCategoryController = new SubCategoryController();
             var discountController = new DiscountController();
             var transactionController = new TransactionController();
+            var salesReportController = new SalesReportController();
 
             Logger.Write("PROCESSING REQUEST", $"Processing request type: {request.Type}");
 
@@ -504,6 +505,11 @@ namespace server.Forms
                     return transactionController.ProcessTransaction(request);
                 case PacketType.ProcessTransactionResponse:
                     return transactionController.ProcessTransaction(request);
+
+                case PacketType.GetSalesReport:
+                    return salesReportController.GetSalesReport(request);
+                case PacketType.GetSalesReportResponse:
+                    return salesReportController.GetSalesReport(request);
 
 
                 default:

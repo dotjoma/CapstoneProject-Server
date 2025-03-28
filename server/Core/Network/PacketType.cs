@@ -64,5 +64,9 @@ namespace server.Core.Network
         RemoveTransactionResponse = 41,
         ProcessTransaction = 42,
         ProcessTransactionResponse = 43,
+
+        // SalesReport Packet
+        GetSalesReport = 44,
+        GetSalesReportResponse = 45,
     }
 }
