@@ -26,7 +26,6 @@ namespace server.Controllers
             {
                 connection.Open();
 
-                // First get all order details with cashier info in one query
                 var query = @"
                 SELECT 
                     od.id, od.trans_no, od.item_id, od.cashier_id, 

@@ -24,6 +24,7 @@ using static System.Net.Mime.MediaTypeNames;
 using Microsoft.VisualBasic.ApplicationServices;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 using server.Controllers;
+using server.Services;
 
 namespace server.Forms
 {
@@ -33,41 +34,78 @@ namespace server.Forms
         private bool isServerRunning;
         private int serverPort = 8888;
 
+        private bool isConnectedToDatabase;
+
         private Point dragOffset;
         private bool isDragging = false;
 
         private readonly string connectionString = DatabaseManager.Instance.ConnectionString;
 
+        private SystemLogs? _systemLogsInstance;
+        private Dashboard? _dashboardInstace;
+
+        public static event Action? OnServerStarted;
+        public static event Action? OnServerStopped;
+        public static event Action? OnLogOut;
+
         public MainMenu()
         {
             InitializeComponent();
-            Logger.Initialize(rtbLogs);
             SetupForm();
+
+            LoginForm.StartServerOnLogin += StartServerOnLogin;
         }
 
         private void SetupForm()
         {
-            btnStartServer.Enabled = true;
-            btnStopServer.Enabled = false;
-            rtbLogs.ReadOnly = true;
-            UpdateStatus("Server stopped");
+            UpdateStatus("Not Running");
+        }
+
+        private async void StartServerOnLogin()
+        {
+            await StartServer();
         }
 
         private async void btnStartServer_Click(object? sender, EventArgs e)
         {
+            await StartServer();
+        }
+
+        private async Task StartServer()
+        {
+            if (isServerRunning)
+            {
+                MessageBox.Show("Server is already running", "Server Status",
+                               MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
             try
             {
+                if (listener != null && listener.Server.IsBound)
+                {
+                    Logger.Write("SERVER", "Attempted to start already bound listener");
+                    return;
+                }
+
                 listener = new TcpListener(IPAddress.Any, serverPort);
+                listener.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
                 listener.Start();
                 isServerRunning = true;
 
-                Logger.Write("SERVER STARTED", $"Server started on port {serverPort}");
-                UpdateStatus("Server running");
+                OnServerStarted?.Invoke();
 
-                btnStartServer.Enabled = false;
-                btnStopServer.Enabled = true;
+                Logger.Write("SERVER STARTED", $"Server started on port {serverPort}");
+                UpdateStatus("Running");
 
                 await ListenForClients();
+            }
+            catch (SocketException sex) when (sex.SocketErrorCode == SocketError.AddressAlreadyInUse)
+            {
+                Logger.WriteError("SERVER ERROR", $"Port {serverPort} is already in use", sex);
+                MessageBox.Show($"Port {serverPort} is already in use", "Server Error",
+                              MessageBoxButtons.OK, MessageBoxIcon.Error);
+                StopServer();
             }
             catch (Exception ex)
             {
@@ -83,6 +121,10 @@ namespace server.Forms
 
         private void MainMenu_Load(object sender, EventArgs e)
         {
+            AddFormToPanel(new SystemLogs());
+            Task.Delay(100);
+            AddFormToPanel(new Dashboard());
+            SetActiveForm(btnDashboard);
             Logger.Write("APPLICATION STARTED", "Server application started");
             ConnectToDatabase();
         }
@@ -90,6 +132,9 @@ namespace server.Forms
         private void ConnectToDatabase()
         {
             string message = string.Empty;
+
+            if (isConnectedToDatabase)
+                return;
 
             try
             {
@@ -105,6 +150,7 @@ namespace server.Forms
                     btnConnectToDB.Enabled = false;
                     message = "Connect To Database";
                     btnConnectToDB.Text = message;
+                    isConnectedToDatabase = true;
                 }
             }
             catch (Exception ex)
@@ -115,92 +161,13 @@ namespace server.Forms
                 btnConnectToDB.Enabled = true;
                 message = "Reconnect To Database";
                 btnConnectToDB.Text = message;
+                isConnectedToDatabase = false;
             }
         }
 
         private void btnConnectToDB_Click(object sender, EventArgs e)
         {
             ConnectToDatabase();
-        }
-
-        private void MainMenu_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (!isServerRunning) return;
-
-            switch (e.CloseReason)
-            {
-                case CloseReason.UserClosing:
-                    var result = MessageBox.Show(
-                        "The server is still running. Do you want to stop the server and exit?",
-                        "Server Running",
-                        MessageBoxButtons.YesNo,
-                        MessageBoxIcon.Question);
-
-                    if (result == DialogResult.Yes)
-                    {
-                        StopServer();
-                    }
-                    else
-                    {
-                        e.Cancel = true; // Prevent form from closing
-                    }
-                    break;
-
-                case CloseReason.WindowsShutDown:
-                    MessageBox.Show(
-                        "Windows is shutting down. The server will be stopped automatically.",
-                        "Windows Shutdown",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
-                    StopServer();
-                    break;
-
-                case CloseReason.TaskManagerClosing:
-                    MessageBox.Show(
-                        "Application is being closed by Task Manager. The server will be stopped.",
-                        "Task Manager Closing",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
-                    StopServer();
-                    break;
-
-                case CloseReason.ApplicationExitCall:
-                    var confirmExit = MessageBox.Show(
-                        "Are you sure you want to stop the server and exit the application?",
-                        "Confirm Exit",
-                        MessageBoxButtons.YesNo,
-                        MessageBoxIcon.Question);
-
-                    if (confirmExit == DialogResult.Yes)
-                    {
-                        StopServer();
-                    }
-                    else
-                    {
-                        e.Cancel = true;
-                    }
-                    break;
-
-                default:
-                    var defaultResult = MessageBox.Show(
-                        "The server is still running. Would you like to stop it before closing?",
-                        "Server Running",
-                        MessageBoxButtons.YesNo,
-                        MessageBoxIcon.Question);
-
-                    if (defaultResult == DialogResult.Yes)
-                    {
-                        StopServer();
-                    }
-                    else
-                    {
-                        e.Cancel = true;
-                    }
-                    break;
-            }
-
-            // Log the closing event
-            Logger.Write("APPLICATION CLOSING", $"Application closing: {e.CloseReason}");
         }
 
         private void StopServer()
@@ -214,16 +181,11 @@ namespace server.Forms
                     listener?.Stop();
                     listener = null;
                     Logger.Write("SERVER STOPPED", "Server stopped");
-                    UpdateStatus("Server stopped");
+                    UpdateStatus("Stopped");
                 }
                 catch (Exception ex)
                 {
                     Logger.WriteError("SERVER ERROR", $"Error stopping server during shutdown: {ex.Message}", ex);
-                }
-                finally
-                {
-                    btnStartServer.Enabled = true;
-                    btnStopServer.Enabled = false;
                 }
             }
         }
@@ -251,21 +213,40 @@ namespace server.Forms
         {
             try
             {
-                if (isServerRunning)
+                if (!isServerRunning)
                 {
-                    isServerRunning = false;
-                    listener?.Stop();
-                    listener = null;
-                    Logger.Write("SERVER STOPPED", "Server stopped");
-                    UpdateStatus("Server stopped");
-
-                    btnStartServer.Enabled = true;
-                    btnStopServer.Enabled = false;
+                    Logger.Write("SERVER", "Stop requested but server was not running");
+                    MessageBox.Show("Server is not running.", "Information",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
                 }
+
+                isServerRunning = false;
+                listener?.Stop();
+                listener = null;
+                OnServerStopped?.Invoke();
+
+                Logger.Write("SERVER STOPPED", "Server stopped");
+                UpdateStatus("Stopped");
+            }
+            catch (SocketException sex)
+            {
+                Logger.WriteError("SERVER STOP ERROR", $"Socket error while stopping: {sex.SocketErrorCode}", sex);
+                listener = null;
+                isServerRunning = false;
             }
             catch (Exception ex)
             {
-                Logger.WriteError("SERVER ERROR", $"Error stopping server: {ex.Message}", ex);
+                Logger.WriteError("SERVER ERROR", $"Unexpected error stopping server: {ex.Message}", ex);
+            }
+            finally
+            {
+                if (listener != null)
+                {
+                    listener.Server.Close();
+                    listener = null;
+                }
+                isServerRunning = false;
             }
         }
 
@@ -411,6 +392,7 @@ namespace server.Forms
             var discountController = new DiscountController();
             var transactionController = new TransactionController();
             var salesReportController = new SalesReportController();
+            var backupController = new BackupController();
 
             Logger.Write("PROCESSING REQUEST", $"Processing request type: {request.Type}");
 
@@ -511,6 +493,20 @@ namespace server.Forms
                 case PacketType.GetSalesReportResponse:
                     return salesReportController.GetSalesReport(request);
 
+                // Backup & Restore
+                case PacketType.GetBackupData:
+                    return backupController.GetBackupData(request);
+                case PacketType.GetBackupDataResponse:
+                    return backupController.GetBackupData(request);
+                case PacketType.RestoreData:
+                    return backupController.Restore(request);
+                case PacketType.RestoreDataResponse:
+                    return backupController.Restore(request);
+
+                case PacketType.BackupDataAuth:
+                    return authController.BackupDataAuth(request);
+                case PacketType.BackupDataAuthResponse:
+                    return authController.BackupDataAuth(request);
 
                 default:
                     Logger.Write("UNKNOWN PACKET", $"Unknown packet type: {request.Type}");
@@ -534,8 +530,68 @@ namespace server.Forms
                 return;
             }
 
-            lblStatus.Text = $"Status: {status}";
+            lblStatus.Text = $"Server Status: {status}";
         }
+
+        private void AddFormToPanel(Form form)
+        {
+            if (form == null) return;
+
+            if (form is SystemLogs systemLogsForm)
+            {
+                _systemLogsInstance ??= systemLogsForm;
+
+                if (!pnlContainer.Controls.Contains(_systemLogsInstance))
+                {
+                    InitializeFormInPanel(_systemLogsInstance);
+                    pnlContainer.Controls.Add(_systemLogsInstance);
+                }
+
+                _systemLogsInstance.Show();
+                _systemLogsInstance.BringToFront();
+                return;
+            }
+
+            if (form is Dashboard dashboard)
+            {
+                _dashboardInstace ??= dashboard;
+
+                if (!pnlContainer.Controls.Contains(_dashboardInstace))
+                {
+                    InitializeFormInPanel(_dashboardInstace);
+                    pnlContainer.Controls.Add(_dashboardInstace);
+                }
+
+                _dashboardInstace.Show();
+                _dashboardInstace.BringToFront();
+                return;
+            }
+
+            foreach (Control control in pnlContainer.Controls.OfType<Form>().ToList())
+            {
+                if (control != form)
+                {
+                    control.Hide();
+                }
+            }
+
+            if (!pnlContainer.Controls.Contains(form))
+            {
+                InitializeFormInPanel(form);
+                pnlContainer.Controls.Add(form);
+            }
+
+            form.Show();
+            form.BringToFront();
+        }
+
+        private void InitializeFormInPanel(Form form)
+        {
+            form.TopLevel = false;
+            form.FormBorderStyle = FormBorderStyle.None;
+            form.Dock = DockStyle.Fill;
+        }
+
 
         private void MainMenu_MouseDown(object sender, MouseEventArgs e)
         {
@@ -564,22 +620,136 @@ namespace server.Forms
         {
             if (MessageBox.Show("Clear logs?", "Clear", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                rtbLogs.Clear();
+                ClearAllLogs();
+            }
+        }
+
+        private void ClearAllLogs()
+        {
+            var logsForm = SystemLogs.Instance;
+
+            if (!logsForm.IsHandleCreated)
+            {
+                var dummy = logsForm.Handle;
+            }
+
+            if (ReferenceEquals(logsForm, SystemLogs.Instance))
+            {
+                logsForm.Clear();
+            }
+            else
+            {
+                MessageBox.Show("Instance mismatch detected!");
             }
         }
 
         private void btnCloseWindow_Click(object sender, EventArgs e)
         {
-            if (StopServerWithConfirmation())
-            {
-                Logger.Write("SERVER STOPPED", "Server stopped by user request");
-                System.Windows.Forms.Application.Exit();
-            }
+
         }
 
         private void btnMinimizeWindow_Click(object sender, EventArgs e)
         {
             this.WindowState = FormWindowState.Minimized;
+        }
+
+        private void btnDashboard_Click(object sender, EventArgs e)
+        {
+            AddFormToPanel(new Dashboard());
+            SetActiveForm(btnDashboard);
+        }
+
+        private void btnConnectedClients_Click(object sender, EventArgs e)
+        {
+            AddFormToPanel(new ConnectedClients());
+            SetActiveForm(btnConnectedClients);
+        }
+
+        private void btnSystemLogs_Click(object sender, EventArgs e)
+        {
+            AddFormToPanel(new SystemLogs());
+            SetActiveForm(btnSystemLogs);
+        }
+
+        private void SetActiveForm(Button activeButton)
+        {
+            foreach (Control control in buttonPanel.Controls)
+            {
+                if (control is Button button)
+                {
+                    button.BackColor = Color.Transparent;
+                    button.ForeColor = Color.Black;
+                }
+            }
+
+            activeButton.BackColor = Color.White;
+            activeButton.ForeColor = Color.Black;
+        }
+
+
+        AuthController _authController = new AuthController();
+        private void tsLogout_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Are you sure you want to logout?", "Logout",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                OnLogOut?.Invoke();
+
+                Logout();
+            }
+        }
+
+        private async void Logout()
+        {
+            string? sessionToken = SessionManager.Instance.CurrentSessionToken ?? "";
+            bool isSessionValid = _authController.ValidateSession(sessionToken);
+
+            if (!isSessionValid)
+            {
+                OnLogOut?.Invoke();
+                ForceStopServer();
+                await Task.Delay(100);
+                _authController.RedirectTo(new LoginForm());
+            }
+
+            isServerRunning = false;
+            listener?.Stop();
+            listener = null;
+
+            bool success = _authController.ServerLogout(sessionToken);
+            if (success)
+            {
+                await Task.Delay(100);
+                _authController.RedirectTo(new LoginForm());
+            }
+        }
+
+        private void fileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void MainMenu_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (isServerRunning)
+            {
+                var result = MessageBox.Show(
+                    "Are you sure you want to stop the server and exit?",
+                    "Stop Server",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+
+                if (result != DialogResult.Yes)
+                {
+                    e.Cancel = true;
+                    return;
+                }
+
+                ForceStopServer();
+                Logger.Write("SERVER STOPPED", "Server stopped by user request");
+            }
+
+            Logger.Write("APPLICATION CLOSING", $"Application closing: {e.CloseReason}");
         }
     }
 }

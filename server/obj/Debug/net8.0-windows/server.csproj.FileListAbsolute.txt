@@ -95,6 +95,7 @@ C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\bin\Debug\net8.0-windows
 C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\bin\Debug\net8.0-windows\K4os.Compression.LZ4.Streams.dll
 C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\bin\Debug\net8.0-windows\K4os.Hash.xxHash.dll
 C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\bin\Debug\net8.0-windows\MySql.Data.dll
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\bin\Debug\net8.0-windows\MySqlBackup.dll
 C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\bin\Debug\net8.0-windows\Newtonsoft.Json.dll
 C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\bin\Debug\net8.0-windows\Serilog.dll
 C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\bin\Debug\net8.0-windows\Serilog.Formatting.Compact.dll
@@ -112,6 +113,7 @@ C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\bin\Debug\net8.0-windows
 C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\bin\Debug\net8.0-windows\runtimes\browser\lib\net8.0\System.Text.Encodings.Web.dll
 C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\obj\Debug\net8.0-windows\server.csproj.AssemblyReference.cache
 C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\obj\Debug\net8.0-windows\server.Form1.resources
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\obj\Debug\net8.0-windows\server.Forms.LoginForm.resources
 C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\obj\Debug\net8.0-windows\server.Forms.MainMenu.resources
 C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\obj\Debug\net8.0-windows\server.Properties.Resources.resources
 C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\obj\Debug\net8.0-windows\server.csproj.GenerateResource.cache
@@ -126,3 +128,6 @@ C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\obj\Debug\net8.0-windows
 C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\obj\Debug\net8.0-windows\server.pdb
 C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\obj\Debug\net8.0-windows\server.genruntimeconfig.cache
 C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\obj\Debug\net8.0-windows\ref\server.dll
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\obj\Debug\net8.0-windows\server.Forms.ConnectedClients.resources
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\obj\Debug\net8.0-windows\server.Forms.Dashboard.resources
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\obj\Debug\net8.0-windows\server.Forms.SystemLogs.resources

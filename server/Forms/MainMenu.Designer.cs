@@ -28,145 +28,263 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainMenu));
             btnStartServer = new Button();
             btnStopServer = new Button();
-            label1 = new Label();
-            rtbLogs = new RichTextBox();
             lblStatus = new Label();
-            button1 = new Button();
-            btnCloseWindow = new PictureBox();
-            btnMinimizeWindow = new PictureBox();
             btnConnectToDB = new Button();
-            ((System.ComponentModel.ISupportInitialize)btnCloseWindow).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)btnMinimizeWindow).BeginInit();
+            panel1 = new Panel();
+            menuStrip1 = new MenuStrip();
+            fileToolStripMenuItem = new ToolStripMenuItem();
+            txSettings = new ToolStripMenuItem();
+            tsLogout = new ToolStripMenuItem();
+            tsExit = new ToolStripMenuItem();
+            monitorToolStripMenuItem = new ToolStripMenuItem();
+            reportsToolStripMenuItem = new ToolStripMenuItem();
+            toolsToolStripMenuItem = new ToolStripMenuItem();
+            helpToolStripMenuItem = new ToolStripMenuItem();
+            panel2 = new Panel();
+            buttonPanel = new Panel();
+            btnSystemLogs = new Button();
+            btnConnectedClients = new Button();
+            btnDashboard = new Button();
+            pnlContainer = new Panel();
+            panel1.SuspendLayout();
+            menuStrip1.SuspendLayout();
+            panel2.SuspendLayout();
+            buttonPanel.SuspendLayout();
             SuspendLayout();
             // 
             // btnStartServer
             // 
-            btnStartServer.Location = new Point(14, 16);
+            btnStartServer.BackColor = Color.FromArgb(76, 175, 80);
+            btnStartServer.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnStartServer.ForeColor = Color.White;
+            btnStartServer.Location = new Point(12, 7);
             btnStartServer.Margin = new Padding(3, 4, 3, 4);
             btnStartServer.Name = "btnStartServer";
-            btnStartServer.Size = new Size(106, 31);
+            btnStartServer.Size = new Size(131, 45);
             btnStartServer.TabIndex = 1;
             btnStartServer.Text = "Start Server";
-            btnStartServer.UseVisualStyleBackColor = true;
+            btnStartServer.UseVisualStyleBackColor = false;
             btnStartServer.Click += btnStartServer_Click;
             // 
             // btnStopServer
             // 
-            btnStopServer.Location = new Point(126, 16);
+            btnStopServer.BackColor = Color.FromArgb(244, 67, 54);
+            btnStopServer.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold);
+            btnStopServer.ForeColor = Color.White;
+            btnStopServer.Location = new Point(149, 7);
             btnStopServer.Margin = new Padding(3, 4, 3, 4);
             btnStopServer.Name = "btnStopServer";
-            btnStopServer.Size = new Size(104, 31);
+            btnStopServer.Size = new Size(130, 45);
             btnStopServer.TabIndex = 2;
             btnStopServer.Text = "Stop Server";
-            btnStopServer.UseVisualStyleBackColor = true;
+            btnStopServer.UseVisualStyleBackColor = false;
             btnStopServer.Click += btnStopServer_Click;
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label1.Location = new Point(12, 65);
-            label1.Name = "label1";
-            label1.Size = new Size(55, 28);
-            label1.TabIndex = 4;
-            label1.Text = "Logs";
-            // 
-            // rtbLogs
-            // 
-            rtbLogs.BorderStyle = BorderStyle.FixedSingle;
-            rtbLogs.Location = new Point(12, 97);
-            rtbLogs.Margin = new Padding(3, 4, 3, 4);
-            rtbLogs.Name = "rtbLogs";
-            rtbLogs.Size = new Size(886, 352);
-            rtbLogs.TabIndex = 8;
-            rtbLogs.Text = "";
             // 
             // lblStatus
             // 
             lblStatus.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             lblStatus.AutoSize = true;
             lblStatus.FlatStyle = FlatStyle.System;
-            lblStatus.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblStatus.Location = new Point(14, 509);
+            lblStatus.Font = new Font("Arial", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lblStatus.Location = new Point(8, 17);
             lblStatus.Name = "lblStatus";
-            lblStatus.Size = new Size(66, 28);
+            lblStatus.Size = new Size(112, 19);
             lblStatus.TabIndex = 9;
-            lblStatus.Text = "status";
-            // 
-            // button1
-            // 
-            button1.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            button1.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            button1.Location = new Point(723, 498);
-            button1.Margin = new Padding(3, 4, 3, 4);
-            button1.Name = "button1";
-            button1.Size = new Size(175, 39);
-            button1.TabIndex = 10;
-            button1.Text = "Clear Console";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
-            // 
-            // btnCloseWindow
-            // 
-            btnCloseWindow.Image = Properties.Resources.Close_Window;
-            btnCloseWindow.Location = new Point(866, 7);
-            btnCloseWindow.Margin = new Padding(3, 4, 3, 4);
-            btnCloseWindow.Name = "btnCloseWindow";
-            btnCloseWindow.Size = new Size(34, 40);
-            btnCloseWindow.SizeMode = PictureBoxSizeMode.StretchImage;
-            btnCloseWindow.TabIndex = 11;
-            btnCloseWindow.TabStop = false;
-            btnCloseWindow.Click += btnCloseWindow_Click;
-            // 
-            // btnMinimizeWindow
-            // 
-            btnMinimizeWindow.Image = Properties.Resources.Minimize_Window;
-            btnMinimizeWindow.Location = new Point(831, 7);
-            btnMinimizeWindow.Margin = new Padding(3, 4, 3, 4);
-            btnMinimizeWindow.Name = "btnMinimizeWindow";
-            btnMinimizeWindow.Size = new Size(34, 40);
-            btnMinimizeWindow.SizeMode = PictureBoxSizeMode.StretchImage;
-            btnMinimizeWindow.TabIndex = 12;
-            btnMinimizeWindow.TabStop = false;
-            btnMinimizeWindow.Click += btnMinimizeWindow_Click;
+            lblStatus.Text = "Server Status:";
             // 
             // btnConnectToDB
             // 
-            btnConnectToDB.Location = new Point(236, 16);
+            btnConnectToDB.Location = new Point(806, 6);
             btnConnectToDB.Margin = new Padding(3, 4, 3, 4);
             btnConnectToDB.Name = "btnConnectToDB";
-            btnConnectToDB.Size = new Size(199, 31);
+            btnConnectToDB.Size = new Size(199, 40);
             btnConnectToDB.TabIndex = 13;
             btnConnectToDB.Text = "Connect To Database";
             btnConnectToDB.UseVisualStyleBackColor = true;
             btnConnectToDB.Click += btnConnectToDB_Click;
             // 
+            // panel1
+            // 
+            panel1.BackColor = Color.FromArgb(208, 208, 208);
+            panel1.Controls.Add(btnStartServer);
+            panel1.Controls.Add(btnStopServer);
+            panel1.Dock = DockStyle.Top;
+            panel1.Location = new Point(0, 31);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(1017, 58);
+            panel1.TabIndex = 14;
+            // 
+            // menuStrip1
+            // 
+            menuStrip1.BackColor = Color.FromArgb(224, 224, 224);
+            menuStrip1.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            menuStrip1.ImageScalingSize = new Size(20, 20);
+            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, monitorToolStripMenuItem, reportsToolStripMenuItem, toolsToolStripMenuItem, helpToolStripMenuItem });
+            menuStrip1.Location = new Point(0, 0);
+            menuStrip1.Name = "menuStrip1";
+            menuStrip1.Size = new Size(1017, 31);
+            menuStrip1.TabIndex = 15;
+            menuStrip1.Text = "menuStrip1";
+            // 
+            // fileToolStripMenuItem
+            // 
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { txSettings, tsLogout, tsExit });
+            fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            fileToolStripMenuItem.Size = new Size(50, 27);
+            fileToolStripMenuItem.Text = "File";
+            fileToolStripMenuItem.Click += fileToolStripMenuItem_Click;
+            // 
+            // txSettings
+            // 
+            txSettings.Name = "txSettings";
+            txSettings.Size = new Size(155, 28);
+            txSettings.Text = "Settings";
+            // 
+            // tsLogout
+            // 
+            tsLogout.Name = "tsLogout";
+            tsLogout.Size = new Size(155, 28);
+            tsLogout.Text = "Logout";
+            tsLogout.Click += tsLogout_Click;
+            // 
+            // tsExit
+            // 
+            tsExit.Name = "tsExit";
+            tsExit.Size = new Size(155, 28);
+            tsExit.Text = "Exit";
+            // 
+            // monitorToolStripMenuItem
+            // 
+            monitorToolStripMenuItem.Name = "monitorToolStripMenuItem";
+            monitorToolStripMenuItem.Size = new Size(86, 27);
+            monitorToolStripMenuItem.Text = "Monitor";
+            // 
+            // reportsToolStripMenuItem
+            // 
+            reportsToolStripMenuItem.Name = "reportsToolStripMenuItem";
+            reportsToolStripMenuItem.Size = new Size(83, 27);
+            reportsToolStripMenuItem.Text = "Reports";
+            // 
+            // toolsToolStripMenuItem
+            // 
+            toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
+            toolsToolStripMenuItem.Size = new Size(62, 27);
+            toolsToolStripMenuItem.Text = "Tools";
+            // 
+            // helpToolStripMenuItem
+            // 
+            helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            helpToolStripMenuItem.Size = new Size(60, 27);
+            helpToolStripMenuItem.Text = "Help";
+            // 
+            // panel2
+            // 
+            panel2.BackColor = Color.FromArgb(224, 224, 224);
+            panel2.Controls.Add(btnConnectToDB);
+            panel2.Controls.Add(lblStatus);
+            panel2.Dock = DockStyle.Bottom;
+            panel2.Location = new Point(0, 603);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(1017, 52);
+            panel2.TabIndex = 16;
+            // 
+            // buttonPanel
+            // 
+            buttonPanel.BackColor = Color.FromArgb(224, 224, 224);
+            buttonPanel.Controls.Add(btnSystemLogs);
+            buttonPanel.Controls.Add(btnConnectedClients);
+            buttonPanel.Controls.Add(btnDashboard);
+            buttonPanel.Dock = DockStyle.Top;
+            buttonPanel.Location = new Point(0, 89);
+            buttonPanel.Name = "buttonPanel";
+            buttonPanel.Size = new Size(1017, 56);
+            buttonPanel.TabIndex = 18;
+            // 
+            // btnSystemLogs
+            // 
+            btnSystemLogs.BackColor = Color.Transparent;
+            btnSystemLogs.Dock = DockStyle.Left;
+            btnSystemLogs.FlatAppearance.BorderSize = 0;
+            btnSystemLogs.FlatAppearance.MouseOverBackColor = Color.LightGray;
+            btnSystemLogs.FlatStyle = FlatStyle.Flat;
+            btnSystemLogs.Location = new Point(286, 0);
+            btnSystemLogs.Name = "btnSystemLogs";
+            btnSystemLogs.Size = new Size(143, 56);
+            btnSystemLogs.TabIndex = 2;
+            btnSystemLogs.Text = "System Logs";
+            btnSystemLogs.UseVisualStyleBackColor = false;
+            btnSystemLogs.Click += btnSystemLogs_Click;
+            // 
+            // btnConnectedClients
+            // 
+            btnConnectedClients.BackColor = Color.Transparent;
+            btnConnectedClients.Dock = DockStyle.Left;
+            btnConnectedClients.FlatAppearance.BorderSize = 0;
+            btnConnectedClients.FlatAppearance.MouseOverBackColor = Color.LightGray;
+            btnConnectedClients.FlatStyle = FlatStyle.Flat;
+            btnConnectedClients.Location = new Point(143, 0);
+            btnConnectedClients.Name = "btnConnectedClients";
+            btnConnectedClients.Size = new Size(143, 56);
+            btnConnectedClients.TabIndex = 1;
+            btnConnectedClients.Text = "Connected Clients";
+            btnConnectedClients.UseVisualStyleBackColor = false;
+            btnConnectedClients.Click += btnConnectedClients_Click;
+            // 
+            // btnDashboard
+            // 
+            btnDashboard.BackColor = Color.White;
+            btnDashboard.Dock = DockStyle.Left;
+            btnDashboard.FlatAppearance.BorderSize = 0;
+            btnDashboard.FlatAppearance.MouseOverBackColor = Color.LightGray;
+            btnDashboard.FlatStyle = FlatStyle.Flat;
+            btnDashboard.Location = new Point(0, 0);
+            btnDashboard.Name = "btnDashboard";
+            btnDashboard.Size = new Size(143, 56);
+            btnDashboard.TabIndex = 0;
+            btnDashboard.Text = "Dashboard";
+            btnDashboard.UseVisualStyleBackColor = false;
+            btnDashboard.Click += btnDashboard_Click;
+            // 
+            // pnlContainer
+            // 
+            pnlContainer.Dock = DockStyle.Fill;
+            pnlContainer.Location = new Point(0, 145);
+            pnlContainer.Name = "pnlContainer";
+            pnlContainer.Size = new Size(1017, 458);
+            pnlContainer.TabIndex = 19;
+            // 
             // MainMenu
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(914, 556);
-            Controls.Add(btnConnectToDB);
-            Controls.Add(btnMinimizeWindow);
-            Controls.Add(btnCloseWindow);
-            Controls.Add(button1);
-            Controls.Add(lblStatus);
-            Controls.Add(rtbLogs);
-            Controls.Add(label1);
-            Controls.Add(btnStopServer);
-            Controls.Add(btnStartServer);
-            FormBorderStyle = FormBorderStyle.None;
+            BackColor = Color.White;
+            ClientSize = new Size(1017, 655);
+            Controls.Add(pnlContainer);
+            Controls.Add(buttonPanel);
+            Controls.Add(panel1);
+            Controls.Add(menuStrip1);
+            Controls.Add(panel2);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            MainMenuStrip = menuStrip1;
             Margin = new Padding(3, 4, 3, 4);
             Name = "MainMenu";
             StartPosition = FormStartPosition.CenterScreen;
+            Text = "ELICIAS GARDEN FOOD PARK";
+            FormClosing += MainMenu_FormClosing;
             Load += MainMenu_Load;
             MouseDown += MainMenu_MouseDown;
             MouseMove += MainMenu_MouseMove;
             MouseUp += MainMenu_MouseUp;
-            ((System.ComponentModel.ISupportInitialize)btnCloseWindow).EndInit();
-            ((System.ComponentModel.ISupportInitialize)btnMinimizeWindow).EndInit();
+            panel1.ResumeLayout(false);
+            menuStrip1.ResumeLayout(false);
+            menuStrip1.PerformLayout();
+            panel2.ResumeLayout(false);
+            panel2.PerformLayout();
+            buttonPanel.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -174,12 +292,23 @@
         #endregion
         private Button btnStartServer;
         private Button btnStopServer;
-        private Label label1;
-        private RichTextBox rtbLogs;
         private Label lblStatus;
-        private Button button1;
-        private PictureBox btnCloseWindow;
-        private PictureBox btnMinimizeWindow;
         private Button btnConnectToDB;
+        private Panel panel1;
+        private MenuStrip menuStrip1;
+        private ToolStripMenuItem fileToolStripMenuItem;
+        private ToolStripMenuItem monitorToolStripMenuItem;
+        private ToolStripMenuItem reportsToolStripMenuItem;
+        private ToolStripMenuItem toolsToolStripMenuItem;
+        private ToolStripMenuItem helpToolStripMenuItem;
+        private Panel panel2;
+        private Panel buttonPanel;
+        private Button btnSystemLogs;
+        private Button btnConnectedClients;
+        private Button btnDashboard;
+        private Panel pnlContainer;
+        private ToolStripMenuItem txSettings;
+        private ToolStripMenuItem tsLogout;
+        private ToolStripMenuItem tsExit;
     }
 }

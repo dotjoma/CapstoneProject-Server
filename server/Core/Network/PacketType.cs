@@ -68,5 +68,14 @@ namespace server.Core.Network
         // SalesReport Packet
         GetSalesReport = 44,
         GetSalesReportResponse = 45,
+
+        // Backup & Restore Packet
+        GetBackupData = 46,
+        GetBackupDataResponse = 47,
+        RestoreData = 48,
+        RestoreDataResponse = 49,
+
+        BackupDataAuth = 50,
+        BackupDataAuthResponse = 51,
     }
 }

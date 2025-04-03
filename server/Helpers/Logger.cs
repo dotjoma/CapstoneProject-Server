@@ -15,30 +15,30 @@ namespace client.Helpers
         private static readonly string logDirectory = "logs";
         private const long maxFileSize = 5 * 1024 * 1024; // 5 MB
         private const int retainedFileCount = 10; // Keep up to 10 log files
-        private static RichTextBox _rtbLogs = new RichTextBox(); // Reference to the RichTextBox for UI logging
+        private static RichTextBox? _rtbLogs;
 
-        // Initialize the logger with a reference to the RichTextBox
+        public static event Action<string>? OnLogMessage;
+        public static RichTextBox? LogControl => _rtbLogs;
+
         public static void Initialize(RichTextBox rtbConsole)
         {
             _rtbLogs = rtbConsole;
 
-            // Create logs directory if it doesn't exist
             if (!Directory.Exists(logDirectory))
             {
                 Directory.CreateDirectory(logDirectory);
             }
 
-            // Configure Serilog
             Log.Logger = new LoggerConfiguration()
-                .Enrich.FromLogContext() // Add contextual information
-                .WriteTo.Console() // Write logs to the console
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
                 .WriteTo.File(
-                    path: Path.Combine(logDirectory, "log-.txt"), // Log file path
-                    rollingInterval: RollingInterval.Day, // Roll logs daily
-                    fileSizeLimitBytes: maxFileSize, // Limit file size to 5 MB
-                    retainedFileCountLimit: retainedFileCount, // Keep up to 10 log files
-                    rollOnFileSizeLimit: true, // Roll files when size limit is reached
-                    formatter: new CompactJsonFormatter() // Use JSON format for structured logging
+                    path: Path.Combine(logDirectory, "log-.txt"),
+                    rollingInterval: RollingInterval.Day,
+                    fileSizeLimitBytes: maxFileSize,
+                    retainedFileCountLimit: retainedFileCount,
+                    rollOnFileSizeLimit: true,
+                    formatter: new CompactJsonFormatter()
                 )
                 .CreateLogger();
         }
@@ -47,16 +47,13 @@ namespace client.Helpers
         {
             try
             {
-                // Log with structured data to Serilog (file and console)
-                Log.Information("{Type}: {Message}", type, message);
-
-                // Log to the RichTextBox (UI)
-                LogMessage($"[{type}] {message}");
+                string formattedMessage = $"[{type}] {message}";
+                Log.Information(formattedMessage);
+                OnLogMessage?.Invoke(formattedMessage);
             }
             catch (Exception ex)
             {
-                // Log errors if logging fails
-                Console.Error.WriteLine($"Error writing to log file: {ex.Message}");
+                Console.Error.WriteLine($"Error writing to log: {ex.Message}");
             }
         }
 
@@ -64,35 +61,64 @@ namespace client.Helpers
         {
             try
             {
-                // Log errors with exception details to Serilog (file and console)
                 Log.Error(ex, "{Type}: {Message}", type, message);
-
-                // Log to the RichTextBox (UI)
                 LogMessage($"[{type}] {message}: {ex.Message}");
             }
             catch (Exception logEx)
             {
-                // Log errors if logging fails
                 Console.Error.WriteLine($"Error writing to log file: {logEx.Message}");
             }
         }
 
-        // Log a message to the RichTextBox (UI)
         private static void LogMessage(string message)
         {
-            if (_rtbLogs.InvokeRequired)
+            try
             {
-                _rtbLogs.Invoke(new Action(() => LogMessage(message)));
-                return;
-            }
+                string formattedMessage = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {message}";
 
-            _rtbLogs.AppendText($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {message}{Environment.NewLine}");
-            _rtbLogs.ScrollToCaret();
+                // File logging (existing)
+                Log.Information(formattedMessage);
+
+                // RichTextBox logging (existing)
+                if (_rtbLogs != null && !_rtbLogs.IsDisposed)
+                {
+                    if (_rtbLogs.InvokeRequired)
+                    {
+                        _rtbLogs.Invoke(new Action(() => LogMessage(message)));
+                    }
+                    else
+                    {
+                        _rtbLogs.AppendText($"{formattedMessage}{Environment.NewLine}");
+                        _rtbLogs.ScrollToCaret();
+                    }
+                }
+
+                // Notify SystemLogs form
+                OnLogMessage?.Invoke(message);
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error in LogMessage: {ex.Message}");
+            }
+        }
+
+        public static void ClearLogs()
+        {
+            if (_rtbLogs != null && !_rtbLogs.IsDisposed)
+            {
+                if (_rtbLogs.InvokeRequired)
+                {
+                    _rtbLogs.Invoke(new Action(ClearLogs));
+                }
+                else
+                {
+                    _rtbLogs.Clear();
+                }
+            }
         }
 
         public static void CloseAndFlush()
         {
-            // Ensure all logs are written before application exits
             Log.CloseAndFlush();
         }
     }
