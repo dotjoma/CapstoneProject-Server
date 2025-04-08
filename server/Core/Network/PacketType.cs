@@ -77,5 +77,11 @@ namespace server.Core.Network
 
         BackupDataAuth = 50,
         BackupDataAuthResponse = 51,
+
+        // Audit
+        AuditSave = 52,
+        AuditSaveResponse = 53,
+        GetAudit = 54,
+        GetAuditResponse = 55,
     }
 }

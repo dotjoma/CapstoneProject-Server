@@ -220,32 +220,70 @@ namespace server.Controllers
                             };
                         }
 
-                        if (orderData != null)
+                        if (orderData != null && orderData.Any())
                         {
+                            var validOrders = new List<OrderProcessing>();
+                            var invalidOrders = new List<(OrderProcessing order, string reason)>();
+
                             foreach (var order in orderData)
                             {
-                                var insertOrderQuery = @"
-                                INSERT INTO orderdetails 
-                                (trans_no, item_id, cashier_id, quantity, price, total_price, notes, order_type, order_time, order_date)
-                                VALUES 
-                                (@TransNo, @ProductId, @CashierId, @Quantity, @Price, @TotalPrice, @Notes, @OrderType, CURTIME(), CURDATE())";
-
-                                connection.Execute(insertOrderQuery, new
+                                if (ValidateOrder(order, out var errorMessage))
                                 {
-                                    TransNo = order.TransNo,
-                                    ProductId = order.ProductId,
-                                    CashierId = order.CashierId,
-                                    Quantity = order.Quantity,
-                                    Price = order.Price,
-                                    TotalPrice = order.TotalPrice,
-                                    Notes = order.Notes,
-                                    OrderType = order.OrderType
-                                }, transaction);
+                                    validOrders.Add(order);
+                                }
+                                else
+                                {
+                                    invalidOrders.Add((order, errorMessage));
+                                }
+                            }
+
+                            if (invalidOrders.Any())
+                            {
+                                Logger.Write("VALIDATION",
+                                    $"{invalidOrders.Count} invalid orders detected. Reasons: {string.Join(", ", invalidOrders.Select(x => x.reason))}");
+                            }
+
+                            if (validOrders.Any())
+                            {
+                                try
+                                {
+                                    var insertOrderQuery = @"
+                                    INSERT INTO orderdetails 
+                                    (trans_no, item_id, cashier_id, quantity, discount, price, total_price, notes, order_type, order_time, order_date)
+                                    VALUES 
+                                    (@TransNo, @ProductId, @CashierId, @Quantity, @Discount, @Price, @TotalPrice, @Notes, @OrderType, CURTIME(), CURDATE())";
+
+                                    connection.Execute(insertOrderQuery,
+                                        validOrders.Select(order => new
+                                        {
+                                            TransNo = order.TransNo,
+                                            ProductId = order.ProductId,
+                                            CashierId = order.CashierId,
+                                            Quantity = order.Quantity,
+                                            Discount = order.Discount,
+                                            Price = order.Price,
+                                            TotalPrice = order.TotalPrice,
+                                            Notes = order.Notes,
+                                            OrderType = order.OrderType
+                                        }),
+                                        transaction);
+
+                                    Logger.Write("ORDER", $"Successfully inserted {validOrders.Count} valid orders");
+                                }
+                                catch (Exception ex)
+                                {
+                                    Logger.Write("ORDER_ERROR", $"Failed to insert valid orders: {ex.Message}");
+                                    throw;
+                                }
+                            }
+                            else
+                            {
+                                Logger.Write("ORDER", "No valid orders to process");
                             }
                         }
                         else
                         {
-                            Logger.Write("ERROR", "Order data is null.");
+                            Logger.Write("WARNING", "Empty order data received - no orders to process");
                         }
 
                         var insertPaymentQuery = @"
@@ -329,6 +367,69 @@ namespace server.Controllers
                     }
                 }
             }
+        }
+
+        private bool ValidateOrder(OrderProcessing order, out string errorMessage)
+        {
+            errorMessage = string.Empty;
+
+            if (order == null)
+            {
+                errorMessage = "Order is null";
+                Logger.Write("VALIDATION", errorMessage);
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(order.TransNo))
+            {
+                errorMessage = "Transaction number is required";
+                Logger.Write("VALIDATION", $"{errorMessage} | Order: {order.ProductId}");
+                return false;
+            }
+
+            if (order.ProductId <= 0)
+            {
+                errorMessage = $"Invalid product ID: {order.ProductId}";
+                Logger.Write("VALIDATION", errorMessage);
+                return false;
+            }
+
+            if (order.CashierId <= 0)
+            {
+                errorMessage = $"Invalid cashier ID: {order.CashierId}";
+                Logger.Write("VALIDATION", errorMessage);
+                return false;
+            }
+
+            if (order.Quantity <= 0)
+            {
+                errorMessage = $"Quantity must be positive: {order.Quantity}";
+                Logger.Write("VALIDATION", errorMessage);
+                return false;
+            }
+
+            if (order.Price <= 0)
+            {
+                errorMessage = $"Price must be positive: {order.Price}";
+                Logger.Write("VALIDATION", errorMessage);
+                return false;
+            }
+
+            if (order.Discount < 0)
+            {
+                errorMessage = $"Discount cannot be negative: {order.Discount}";
+                Logger.Write("VALIDATION", errorMessage);
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(order.OrderType))
+            {
+                errorMessage = "Order type is required";
+                Logger.Write("VALIDATION", $"{errorMessage} | Order: {order.ProductId}");
+                return false;
+            }
+
+            return true;
         }
 
         private bool VerifyTransactionStatus(string transId, MySqlConnection connection, MySqlTransaction transaction)

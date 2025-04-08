@@ -88,9 +88,11 @@
             txtPassword.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             txtPassword.Location = new Point(38, 266);
             txtPassword.Name = "txtPassword";
+            txtPassword.PasswordChar = '*';
             txtPassword.PlaceholderText = "Enter password";
             txtPassword.Size = new Size(439, 34);
             txtPassword.TabIndex = 5;
+            txtPassword.UseSystemPasswordChar = true;
             // 
             // label4
             // 

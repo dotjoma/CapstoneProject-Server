@@ -25,6 +25,7 @@ using Microsoft.VisualBasic.ApplicationServices;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 using server.Controllers;
 using server.Services;
+using System.Text.Json.Nodes;
 
 namespace server.Forms
 {
@@ -54,6 +55,7 @@ namespace server.Forms
             SetupForm();
 
             LoginForm.StartServerOnLogin += StartServerOnLogin;
+            SessionManager.ForceLogoutUser += ForceLogoutRequest;
         }
 
         private void SetupForm()
@@ -64,6 +66,11 @@ namespace server.Forms
         private async void StartServerOnLogin()
         {
             await StartServer();
+        }
+
+        private void ForceLogoutRequest()
+        {
+            Logout();
         }
 
         private async void btnStartServer_Click(object? sender, EventArgs e)
@@ -302,7 +309,16 @@ namespace server.Forms
                 {
                     // Read the request from the client
                     string jsonRequest = (await reader.ReadLineAsync().ConfigureAwait(false))!;
-                    Logger.Write("CLIENT REQUEST", $"Received from {clientAddress}: {jsonRequest}");
+                    var jsonNode = JsonNode.Parse(jsonRequest);
+                    if (jsonNode?["Data"]?["image"] != null)
+                    {
+                        jsonNode["Data"]!["image"] = "[REDACTED]";
+                    }
+
+                    string sanitizedJson = jsonNode!.ToJsonString();
+
+                    // Log the sanitized JSON
+                    Logger.Write("CLIENT REQUEST", $"Received from {clientAddress}: {sanitizedJson}");
 
                     // Deserialize the request
                     Packet? request;
@@ -393,6 +409,7 @@ namespace server.Forms
             var transactionController = new TransactionController();
             var salesReportController = new SalesReportController();
             var backupController = new BackupController();
+            var auditTrailController = new AuditTrailController();
 
             Logger.Write("PROCESSING REQUEST", $"Processing request type: {request.Type}");
 
@@ -507,6 +524,15 @@ namespace server.Forms
                     return authController.BackupDataAuth(request);
                 case PacketType.BackupDataAuthResponse:
                     return authController.BackupDataAuth(request);
+
+                case PacketType.AuditSave:
+                    return auditTrailController.SaveAudit(request);
+                case PacketType.AuditSaveResponse:
+                    return auditTrailController.SaveAudit(request);
+                case PacketType.GetAudit:
+                    return auditTrailController.GetAllAudit(request);
+                case PacketType.GetAuditResponse:
+                    return auditTrailController.GetAllAudit(request);
 
                 default:
                     Logger.Write("UNKNOWN PACKET", $"Unknown packet type: {request.Type}");
@@ -709,6 +735,9 @@ namespace server.Forms
                 OnLogOut?.Invoke();
                 ForceStopServer();
                 await Task.Delay(100);
+                isServerRunning = false;
+                listener?.Stop();
+                listener = null;
                 _authController.RedirectTo(new LoginForm());
             }
 
@@ -750,6 +779,8 @@ namespace server.Forms
             }
 
             Logger.Write("APPLICATION CLOSING", $"Application closing: {e.CloseReason}");
+
+            Environment.Exit(0);
         }
     }
 }

@@ -31,6 +31,7 @@ using Org.BouncyCastle.Tls;
 using MySqlX.XDevAPI.Common;
 using static System.ComponentModel.Design.ObjectSelectorEditor;
 using Mysqlx.Session;
+using server.Services;
 
 namespace server.Controllers
 {
@@ -91,7 +92,6 @@ namespace server.Controllers
                         }
                     }
 
-                    // Insert new user
                     string insertQuery = @"
                         INSERT INTO users (username, password, created_at) 
                         VALUES (@username, @password, @created_at)";
@@ -343,10 +343,10 @@ namespace server.Controllers
                 Success = success,
                 Message = message,
                 Data = new Dictionary<string, string>
-        {
-            { "success", success.ToString().ToLower() },
-            { "message", message }
-        }
+                {
+                    { "success", success.ToString().ToLower() },
+                    { "message", message }
+                }
             };
 
             if (additionalData != null)
@@ -637,68 +637,126 @@ namespace server.Controllers
 
 
         // SERVER AUTH
-
         public string? ServerLogin(string username, string password)
         {
+            string sessionToken = string.Empty;
+            string hashedPassword = HashPassword(password);
+
             try
             {
                 if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
                 {
-                    MessageBox.Show("Username and password cannot be empty.", "Login Error",
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Username and password cannot be empty.", "Login Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return null;
                 }
-
-                string sessionToken = string.Empty;
-                string hashedPassword = HashPassword(password);
-                
 
                 using (var connection = new MySqlConnection(ServerDatabaseManager.Instance.ServerConnectionString))
                 {
                     connection.Open();
 
-                    string query = @"SELECT id FROM users WHERE username = @Username AND password = @Password";
-
-                    using (var command = new MySqlCommand(query, connection))
+                    using (var transaction = connection.BeginTransaction(IsolationLevel.Serializable))
                     {
-                        command.Parameters.AddWithValue("@Username", username);
-                        command.Parameters.AddWithValue("@Password", password);
-
-                        object result = command.ExecuteScalar();
-
-                        if (result != null && result != DBNull.Value)
+                        try
                         {
-                            int userId = Convert.ToInt32(result);
+                            var cleanupCommand = new MySqlCommand(
+                                "DELETE FROM user_sessions WHERE expires_at < NOW()",
+                                connection, transaction
+                            );
+                            int rowsAffected = cleanupCommand.ExecuteNonQuery();
+
+                            int userId;
+
+                            using (var userCommand = new MySqlCommand(
+                                "SELECT id FROM users WHERE username = @Username AND password = @Password",
+                                connection, transaction))
+                            {
+                                userCommand.Parameters.AddWithValue("@Username", username);
+                                userCommand.Parameters.AddWithValue("@Password", password);
+
+                                var result = userCommand.ExecuteScalar();
+                                if (result == null || result == DBNull.Value)
+                                {
+                                    MessageBox.Show("Invalid username or password.", "Login Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                    return null;
+                                }
+                                userId = Convert.ToInt32(result);
+                            }
+
+                            string sessionTokenFromDb = string.Empty;
+                            int sessionTimeDiff = -1;  // Initialize to an invalid value (-1 means no session found)
+
+                            using (var checkSessionCommand = new MySqlCommand(
+                                "SELECT session_token, TIMESTAMPDIFF(SECOND, last_activity, NOW()) AS time_diff " +
+                                "FROM user_sessions WHERE user_id = @UserId AND is_active = TRUE AND expires_at > NOW() FOR UPDATE",
+                                connection, transaction))
+                            {
+                                checkSessionCommand.Parameters.AddWithValue("@UserId", userId);
+                                using (var reader = checkSessionCommand.ExecuteReader())
+                                {
+                                    if (reader.Read())
+                                    {
+                                        sessionTokenFromDb = reader.GetString("session_token");
+                                        sessionTimeDiff = reader.GetInt32("time_diff");
+                                    }
+                                }
+                            }
+
+                            if (sessionTimeDiff == -1)
+                            {
+                                // No active session
+                            }
+                            else if (sessionTimeDiff > 180) // Session expired after 3 minutes
+                            {
+                                // Session expired, delete it
+                                string deleteSessionQuery = "DELETE FROM user_sessions WHERE user_id = @UserId AND session_token = @SessionToken";
+                                using (var deleteCommand = new MySqlCommand(deleteSessionQuery, connection, transaction))
+                                {
+                                    deleteCommand.Parameters.AddWithValue("@UserId", userId);
+                                    deleteCommand.Parameters.AddWithValue("@SessionToken", sessionTokenFromDb);
+                                    deleteCommand.ExecuteNonQuery();
+                                }
+                            }
+                            else
+                            {
+                                // Session is still valid, return ALREADY_LOGGED_IN
+                                return "ALREADY_LOGGED_IN";
+                            }
+
+                            var invalidateCommand = new MySqlCommand(
+                                "UPDATE user_sessions SET is_active = FALSE WHERE user_id = @UserId AND is_active = TRUE",
+                                connection, transaction
+                            );
+                            invalidateCommand.Parameters.AddWithValue("@UserId", userId);
+                            invalidateCommand.ExecuteNonQuery();
+
                             sessionToken = Guid.NewGuid().ToString();
-
-                            string sessionQuery = @"INSERT INTO user_sessions 
-                            (user_id, session_token, created_at, expires_at) 
-                            VALUES (@userId, @sessionToken, NOW(), DATE_ADD(NOW(), INTERVAL 2 HOUR))";
-
-                            using (var sessionCommand = new MySqlCommand(sessionQuery, connection))
+                            using (var sessionCommand = new MySqlCommand(
+                                @"INSERT INTO user_sessions 
+                                (user_id, session_token, created_at, expires_at, last_activity, is_active) 
+                                VALUES (@userId, @sessionToken, NOW(), DATE_ADD(NOW(), INTERVAL 2 HOUR), NOW(), TRUE)",
+                                connection, transaction))
                             {
                                 sessionCommand.Parameters.AddWithValue("@userId", userId);
                                 sessionCommand.Parameters.AddWithValue("@sessionToken", sessionToken);
                                 sessionCommand.ExecuteNonQuery();
                             }
 
-                            Logger.Write("LOGIN", $"User {username} logged in successfully. Token: {sessionToken}");
+                            transaction.Commit();
+
                             return sessionToken;
                         }
-                        else
+                        catch (Exception ex)
                         {
-                            Logger.Write("LOGIN", $"Invalid credentials for username: {username}");
+                            transaction.Rollback();
+                            MessageBox.Show($"Error occurred: {ex.Message}", "Transaction Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            throw;
                         }
                     }
                 }
-
-                return sessionToken;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                MessageBox.Show($"Internal Server Error: {e.Message}", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Logger.Write("LOGIN_ERROR", $"Exception for user {username}: {e.Message}");
+                MessageBox.Show($"Failed to login: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
         }
@@ -725,10 +783,11 @@ namespace server.Controllers
                 {
                     connection.Open();
 
+                    // Use the `is_active` field to invalidate the session explicitly
                     string logoutQuery = @"UPDATE user_sessions 
-                                SET expired_at = NOW() 
-                                WHERE session_token = @sessionToken
-                                AND (expired_at IS NULL OR expired_at > NOW())";
+                                   SET is_active = FALSE, expires_at = NOW() 
+                                   WHERE session_token = @sessionToken
+                                   AND is_active = TRUE"; // Ensure we're only updating active sessions
 
                     using (var command = new MySqlCommand(logoutQuery, connection))
                     {
@@ -737,51 +796,46 @@ namespace server.Controllers
 
                         if (rowsAffected > 0)
                         {
-                            Logger.Write("LOGOUT_SUCCESS", $"Session terminated: {sessionToken}");
+                            SessionManager.Instance.Logout();
+                            Logger.Write("LOGOUT_SUCCESS", $"Session terminated: {sessionToken[..8]}...");
                             return true;
                         }
-
-                        Logger.Write("LOGOUT_WARNING", $"Session not found or already expired: {sessionToken}");
-                        return false;
+                        else
+                        {
+                            Logger.Write("LOGOUT_WARNING", $"Session not found or already expired: {sessionToken[..8]}...");
+                            return false;
+                        }
                     }
                 }
             }
             catch (MySqlException ex) when (ex.Number == 1292)
             {
-                Logger.Write("LOGOUT_DATETIME_ERROR", $"Invalid datetime value: {ex.Message}");
-                throw new Exception("Logout failed due to system error", ex);
+                Logger.Write("LOGOUT_DATETIME_ERROR", $"Invalid datetime: {ex.Message}");
+                throw new InvalidOperationException("Logout failed due to system error", ex);
             }
             catch (Exception ex)
             {
-                Logger.Write("LOGOUT_ERROR", $"Unexpected error: {ex.Message}");
+                Logger.Write("LOGOUT_CRITICAL", $"Unexpected error: {ex}");
                 throw;
             }
         }
 
-        public bool ValidateSession(string sessionToken)
+        public bool ValidateSession(string token)
         {
-            try
+            using (var connection = new MySqlConnection(ServerDatabaseManager.Instance.ServerConnectionString))
             {
-                using (var connection = new MySqlConnection(ServerDatabaseManager.Instance.ServerConnectionString))
+                connection.Open();
+
+                string sql = @"UPDATE user_sessions 
+                      SET last_activity = NOW() 
+                      WHERE session_token = @token 
+                      AND expires_at > NOW()";
+
+                using (var cmd = new MySqlCommand(sql, connection))
                 {
-                    connection.Open();
-
-                    string query = @"SELECT 1 FROM user_sessions 
-                          WHERE session_token = @sessionToken 
-                          AND NOW() < expires_at
-                          AND (expired_at IS NULL OR NOW() < expired_at)
-                          LIMIT 1";
-
-                    using (var command = new MySqlCommand(query, connection))
-                    {
-                        command.Parameters.AddWithValue("@sessionToken", sessionToken);
-                        return command.ExecuteScalar() != null;
-                    }
+                    cmd.Parameters.AddWithValue("@token", token);
+                    return cmd.ExecuteNonQuery() > 0;
                 }
-            }
-            catch
-            {
-                return false;
             }
         }
 
@@ -828,5 +882,54 @@ namespace server.Controllers
                 newForm.FormClosed += (s, args) => System.Windows.Forms.Application.Exit();
             }
         }
+
+        public void UpdateSessionHeartbeat(string sessionToken)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(ServerDatabaseManager.Instance.ServerConnectionString))
+                {
+                    connection.Open();
+
+                    using (var command = new MySqlCommand(
+                        "UPDATE user_sessions SET last_activity = NOW() WHERE session_token = @sessionToken AND expires_at > NOW() AND is_active = TRUE",
+                        connection))
+                    {
+                        command.Parameters.AddWithValue("@sessionToken", sessionToken);
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Write("SESSION_UPDATE_ERROR", ex.Message);
+            }
+        }
+
+
+        public void CleanupInactiveSessions()
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(ServerDatabaseManager.Instance.ServerConnectionString))
+                {
+                    connection.Open();
+
+                    // Invalidate sessions that have not had a heartbeat within the last 3 minutes
+                    using (var command = new MySqlCommand(
+                        "UPDATE user_sessions SET is_active = FALSE WHERE last_activity < DATE_SUB(NOW(), INTERVAL 3 MINUTE) AND is_active = TRUE",
+                        connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Write("SESSION_CLEANUP_ERROR", ex.Message);
+            }
+        }
+
+
     }
 }
