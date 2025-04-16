@@ -83,5 +83,30 @@ namespace server.Core.Network
         AuditSaveResponse = 53,
         GetAudit = 54,
         GetAuditResponse = 55,
+
+        // Inventory
+        CreateInventoryCategory = 56,
+        CreateInventoryCategoryResponse = 57,
+        CreateInventorySubcategory = 58,
+        CreateInventorySubcategoryResponse = 59,
+        GetInventoryCategory = 60,
+        GetInventoryCategoryResponse = 61,
+        GetInventorySubcategory = 62,
+        GetInventorySubcategoryResponse = 63,
+        GetAllInventorySubcategory = 64,
+        GetAllInventorySubcategoryResponse = 65,
+        CreateUnitType = 66,
+        CreateUnitTypeResponse = 67,
+        GetUnitType = 68,
+        GetUnitTypeResponse = 69,
+        CreateUnitMeasure = 70,
+        CreateUnitMeasureResponse = 71,
+        GetUnitMeasure = 72,
+        GetUnitMeasureResponse = 73,
+
+        CreateSupplier = 74,
+        CreateSupplierResponse = 75,
+        GetSupplier = 76,
+        GetSupplierResponse = 77,
     }
 }

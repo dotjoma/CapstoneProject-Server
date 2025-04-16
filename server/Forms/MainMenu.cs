@@ -26,6 +26,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 using server.Controllers;
 using server.Services;
 using System.Text.Json.Nodes;
+using System.Reflection.Metadata.Ecma335;
 
 namespace server.Forms
 {
@@ -70,7 +71,30 @@ namespace server.Forms
 
         private void ForceLogoutRequest()
         {
-            Logout();
+            if (this.InvokeRequired)
+            {
+                this.Invoke((MethodInvoker)delegate {
+                    //OnLogOut?.Invoke();
+                    //Logout();
+                    using (var reauthfrm = new ReAuthForm()) // re-used the forcelogout function
+                    {
+                        reauthfrm.StartPosition = FormStartPosition.Manual;
+                        reauthfrm.StartPosition = FormStartPosition.CenterParent;
+                        reauthfrm.ShowDialog();
+                    }
+                });
+            }
+            else
+            {
+                //OnLogOut?.Invoke();
+                //Logout();
+                using (var reauthfrm = new ReAuthForm())
+                {
+                    reauthfrm.StartPosition = FormStartPosition.Manual;
+                    reauthfrm.StartPosition = FormStartPosition.CenterParent;
+                    reauthfrm.ShowDialog();
+                }
+            }
         }
 
         private async void btnStartServer_Click(object? sender, EventArgs e)
@@ -534,6 +558,42 @@ namespace server.Forms
                 case PacketType.GetAuditResponse:
                     return auditTrailController.GetAllAudit(request);
 
+                // Inventory
+                case PacketType.CreateInventoryCategory:
+                    return categoryController.CreateInventoryCategory(request);
+                case PacketType.CreateInventoryCategoryResponse:
+                    return categoryController.CreateInventoryCategory(request);
+                case PacketType.CreateInventorySubcategory:
+                    return subCategoryController.CreateInventorySubcategory(request);
+                case PacketType.CreateInventorySubcategoryResponse:
+                    return subCategoryController.CreateInventorySubcategory(request);
+
+                case PacketType.GetInventoryCategory:
+                    return categoryController.GetInventoryCategory(request);
+                case PacketType.GetInventoryCategoryResponse:
+                    return categoryController.GetInventoryCategory(request);
+                case PacketType.GetAllInventorySubcategory:
+                    return subCategoryController.GetInventorySubCategories(request);
+                case PacketType.GetAllInventorySubcategoryResponse:
+                    return subCategoryController.GetInventorySubCategories(request);
+
+                case PacketType.CreateUnitType:
+                    return unitController.CreateInventoryUnitType(request);
+                case PacketType.CreateUnitTypeResponse:
+                    return unitController.CreateInventoryUnitType(request);
+                case PacketType.GetUnitType:
+                    return unitController.GetInventoryUnitType(request);
+                case PacketType.GetUnitTypeResponse:
+                    return unitController.GetInventoryUnitType(request);
+                case PacketType.CreateUnitMeasure:
+                    return unitController.CreateInventoryUnitMeasure(request);
+                case PacketType.CreateUnitMeasureResponse:
+                    return unitController.CreateInventoryUnitMeasure(request);
+                case PacketType.GetUnitMeasure:
+                    return unitController.GetInventoryUnitMeasure(request);
+                case PacketType.GetUnitMeasureResponse:
+                    return unitController.GetInventoryUnitMeasure(request);
+
                 default:
                     Logger.Write("UNKNOWN PACKET", $"Unknown packet type: {request.Type}");
                     return new Packet
@@ -720,7 +780,6 @@ namespace server.Forms
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 OnLogOut?.Invoke();
-
                 Logout();
             }
         }

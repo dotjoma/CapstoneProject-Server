@@ -16,6 +16,9 @@
     <Compile Update="Forms\MainMenu.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Forms\ReAuthForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Forms\SystemLogs.cs">
       <SubType>Form</SubType>
     </Compile>

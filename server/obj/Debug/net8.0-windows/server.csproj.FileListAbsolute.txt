@@ -131,3 +131,4 @@ C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\obj\Debug\net8.0-windows
 C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\obj\Debug\net8.0-windows\server.pdb
 C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\obj\Debug\net8.0-windows\server.genruntimeconfig.cache
 C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\obj\Debug\net8.0-windows\ref\server.dll
+C:\Users\raymond balondo\Desktop\CAPSTONE\server\server\obj\Debug\net8.0-windows\server.Forms.ReAuthForm.resources

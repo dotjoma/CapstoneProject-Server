@@ -284,5 +284,164 @@ namespace server.Controllers
                 };
             }
         }
+
+        public Packet CreateInventorySubcategory(Packet packet)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(DatabaseManager.Instance.ConnectionString))
+                {
+                    connection.Open();
+                    string subCategoryName = packet.Data["name"];
+                    int categoryId = int.Parse(packet.Data["categoryId"]);
+
+                    string checkQuery = "SELECT COUNT(*) FROM inventory_subcategories WHERE subcategory_name = @scName AND category_id = @catId";
+                    using (var checkCommand = new MySqlCommand(checkQuery, connection))
+                    {
+                        checkCommand.Parameters.AddWithValue("@scName", subCategoryName.Trim());
+                        checkCommand.Parameters.AddWithValue("@catId", categoryId);
+                        int count = Convert.ToInt32(checkCommand.ExecuteScalar());
+
+                        if (count > 0)
+                        {
+                            return new Packet
+                            {
+                                Type = PacketType.CreateInventorySubcategoryResponse,
+                                Success = false,
+                                Message = "Sub-category already exists in this category",
+                                Data = new Dictionary<string, string>
+                                {
+                                    { "success", "false" },
+                                    { "message", "Sub-category already exists in this category" }
+                                }
+                            };
+                        }
+                    }
+
+                    string checkCategoryQuery = "SELECT COUNT(*) FROM inventory_categories WHERE category_id = @catId";
+                    using (var checkCatCommand = new MySqlCommand(checkCategoryQuery, connection))
+                    {
+                        checkCatCommand.Parameters.AddWithValue("@catId", categoryId);
+                        int catCount = Convert.ToInt32(checkCatCommand.ExecuteScalar());
+
+                        if (catCount == 0)
+                        {
+                            return new Packet
+                            {
+                                Type = PacketType.CreateInventorySubcategoryResponse,
+                                Success = false,
+                                Message = "Parent category does not exist",
+                                Data = new Dictionary<string, string>
+                                {
+                                    { "success", "false" },
+                                    { "message", "Parent category does not exist" }
+                                }
+                            };
+                        }
+                    }
+
+                    // Insert the subcategory
+                    string insertQuery = "INSERT INTO inventory_subcategories (subcategory_name, category_id) VALUES (@scName, @catId)";
+                    using (var command = new MySqlCommand(insertQuery, connection))
+                    {
+                        command.Parameters.AddWithValue("@scName", subCategoryName);
+                        command.Parameters.AddWithValue("@catId", categoryId);
+                        command.ExecuteNonQuery();
+                    }
+
+                    return new Packet
+                    {
+                        Type = PacketType.CreateInventorySubcategoryResponse,
+                        Success = true,
+                        Message = "Sub-category created successfully",
+                        Data = new Dictionary<string, string>
+                        {
+                            { "success", "true" },
+                            { "message", $"Sub-category '{subCategoryName}' created successfully" }
+                        }
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Write("SUBCATEGORY", $"Error creating sub-category: {ex.Message}");
+
+                return new Packet
+                {
+                    Type = PacketType.CreateInventorySubcategoryResponse,
+                    Success = false,
+                    Message = "Error creating sub-category",
+                    Data = new Dictionary<string, string>
+                    {
+                        { "success", "false" },
+                        { "message", "Internal server error" }
+                    }
+                };
+            }
+        }
+
+        public Packet GetInventorySubCategories(Packet packet)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(DatabaseManager.Instance.ConnectionString))
+                {
+                    connection.Open();
+                    string query = @"SELECT subcategory_id, category_id, subcategory_name FROM inventory_subcategories";
+
+                    using (var command = new MySqlCommand(query, connection))
+                    {
+                        using (var reader = command.ExecuteReader())
+                        {
+                            var subcategories = new List<Dictionary<string, object>>();
+
+                            while (reader.Read())
+                            {
+                                var subcategory = new Dictionary<string, object>
+                                {
+                                    { "subcategory_id", reader.GetInt32("subcategory_id") },
+                                    { "category_id", reader.GetInt32("category_id") },
+                                    { "subcategory_name", reader.GetString("subcategory_name") }
+                                };
+
+                                subcategories.Add(subcategory);
+                            }
+
+                            return new Packet
+                            {
+                                Type = PacketType.GetAllSubcategoryResponse,
+                                Success = true,
+                                Message = subcategories.Count > 0
+                                    ? "Subcategories retrieved successfully"
+                                    : "No subcategories found",
+                                Data = new Dictionary<string, string>
+                                {
+                                    { "success", "true" },
+                                    { "message", subcategories.Count > 0
+                                        ? "Subcategories retrieved successfully"
+                                        : "No subcategories found" },
+                                    { "subcategories", System.Text.Json.JsonSerializer.Serialize(subcategories) }
+                                }
+                            };
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return new Packet
+                {
+                    Type = PacketType.GetAllSubcategoryResponse,
+                    Success = false,
+                    Message = "Error retrieving subcategories",
+                    Data = new Dictionary<string, string>
+                    {
+                        { "success", "false" },
+                        { "message", $"Internal server error: {ex.Message}" },
+                        { "subcategories", "[]" }
+                    }
+                };
+            }
+        }
     }
 }

@@ -58,6 +58,8 @@ namespace server.Forms
 
                     default:
                         SessionManager.Instance.CurrentSessionToken = sessionToken;
+                        SessionManager.Instance.CurrentUsername = username;
+
                         var mainfrm = new MainMenu();
                         mainfrm.Show();
 

@@ -1,6 +1,7 @@
 ﻿using client.Helpers;
 using MySql.Data.MySqlClient;
 using server.Database;
+using server.Forms;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,7 @@ namespace server.Services
         private static SessionManager? _instance;
         private string? _currentSessionToken;
         private System.Timers.Timer? _heartbeatTimer;
+        private string? _currentUsername;
 
         public static event Action? ForceLogoutUser;
 
@@ -34,6 +36,15 @@ namespace server.Services
                 {
                     StopHeartbeat();
                 }
+            }
+        }
+
+        public string? CurrentUsername
+        {
+            get => _currentUsername;
+            set
+            {
+                _currentUsername = value;
             }
         }
 
@@ -119,13 +130,35 @@ namespace server.Services
 
                         if (rowsAffected > 0)
                         {
-                            Logger.Write("SESSION_HEARTBEAT", $"\u2764 Received heartbeat for session: {sessionToken}");
+                            //Logger.Write("SESSION_HEARTBEAT", $"\u2764 Received heartbeat for session: {sessionToken}");
                         }
                         else
                         {
                             Logger.Write("SESSION_HEARTBEAT", $"No active session found for session token: {sessionToken}");
-                            ForceLogoutUser?.Invoke();
                             StopHeartbeat();
+
+                            // Lock screen instead of force logout.
+                            if (ForceLogoutUser != null && ForceLogoutUser.GetInvocationList().Length > 0)
+                            {
+                                foreach (var handler in ForceLogoutUser.GetInvocationList())
+                                {
+                                    try
+                                    {
+                                        if (handler.Target is Control control && control.InvokeRequired)
+                                        {
+                                            control.Invoke(handler);
+                                        }
+                                        else
+                                        {
+                                            handler.DynamicInvoke();
+                                        }
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Logger.Write("SESSION_ERROR", $"Handler invocation failed: {ex.Message}");
+                                    }
+                                }
+                            }
                         }
                     }
                 }

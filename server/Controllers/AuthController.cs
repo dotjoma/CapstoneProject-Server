@@ -676,14 +676,14 @@ namespace server.Controllers
                                 var result = userCommand.ExecuteScalar();
                                 if (result == null || result == DBNull.Value)
                                 {
-                                    MessageBox.Show("Invalid username or password.", "Login Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                    MessageBox.Show("Invalid credentials.", "Login Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                                     return null;
                                 }
                                 userId = Convert.ToInt32(result);
                             }
 
                             string sessionTokenFromDb = string.Empty;
-                            int sessionTimeDiff = -1;  // Initialize to an invalid value (-1 means no session found)
+                            int sessionTimeDiff = -1;
 
                             using (var checkSessionCommand = new MySqlCommand(
                                 "SELECT session_token, TIMESTAMPDIFF(SECOND, last_activity, NOW()) AS time_diff " +
@@ -705,9 +705,8 @@ namespace server.Controllers
                             {
                                 // No active session
                             }
-                            else if (sessionTimeDiff > 180) // Session expired after 3 minutes
+                            else if (sessionTimeDiff > 180) // Session expired 3 minutes
                             {
-                                // Session expired, delete it
                                 string deleteSessionQuery = "DELETE FROM user_sessions WHERE user_id = @UserId AND session_token = @SessionToken";
                                 using (var deleteCommand = new MySqlCommand(deleteSessionQuery, connection, transaction))
                                 {
@@ -718,7 +717,6 @@ namespace server.Controllers
                             }
                             else
                             {
-                                // Session is still valid, return ALREADY_LOGGED_IN
                                 return "ALREADY_LOGGED_IN";
                             }
 
@@ -733,7 +731,7 @@ namespace server.Controllers
                             using (var sessionCommand = new MySqlCommand(
                                 @"INSERT INTO user_sessions 
                                 (user_id, session_token, created_at, expires_at, last_activity, is_active) 
-                                VALUES (@userId, @sessionToken, NOW(), DATE_ADD(NOW(), INTERVAL 2 HOUR), NOW(), TRUE)",
+                                VALUES (@userId, @sessionToken, NOW(), DATE_ADD(NOW(), INTERVAL 24 HOUR), NOW(), TRUE)",
                                 connection, transaction))
                             {
                                 sessionCommand.Parameters.AddWithValue("@userId", userId);
@@ -787,7 +785,7 @@ namespace server.Controllers
                     string logoutQuery = @"UPDATE user_sessions 
                                    SET is_active = FALSE, expires_at = NOW() 
                                    WHERE session_token = @sessionToken
-                                   AND is_active = TRUE"; // Ensure we're only updating active sessions
+                                   AND is_active = TRUE";
 
                     using (var command = new MySqlCommand(logoutQuery, connection))
                     {
@@ -929,7 +927,5 @@ namespace server.Controllers
                 Logger.Write("SESSION_CLEANUP_ERROR", ex.Message);
             }
         }
-
-
     }
 }
