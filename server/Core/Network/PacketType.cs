@@ -108,5 +108,9 @@ namespace server.Core.Network
         CreateSupplierResponse = 75,
         GetSupplier = 76,
         GetSupplierResponse = 77,
+        CreateInventoryItem = 78,
+        CreateInventoryItemResponse = 79,
+        GetInventoryItem = 80,
+        GetInventoryItemResponse = 81,
     }
 }

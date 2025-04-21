@@ -17,10 +17,13 @@ namespace server.Forms
     {
         AuthController _authController = new AuthController();
 
+        private bool isSigningIn = false;
+
         public static event Action? StartServerOnLogin;
         public LoginForm()
         {
             InitializeComponent();
+            this.KeyPreview = true;
         }
 
         private void LoginForm_Load(object sender, EventArgs e)
@@ -30,6 +33,7 @@ namespace server.Forms
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
+            isSigningIn = true;
             string username = txtUsername.Text.Trim();
             string password = txtPassword.Text.Trim();
 
@@ -79,6 +83,21 @@ namespace server.Forms
             {
                 // Handle other exceptions (e.g., network issues)
                 MessageBox.Show($"An unexpected error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                isSigningIn = false;
+            }
+        }
+
+        private void LoginForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (!isSigningIn)
+            {
+                if (e.KeyCode == Keys.Enter)
+                {
+                    btnLogin.PerformClick();
+                }
             }
         }
     }

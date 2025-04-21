@@ -434,6 +434,8 @@ namespace server.Forms
             var salesReportController = new SalesReportController();
             var backupController = new BackupController();
             var auditTrailController = new AuditTrailController();
+            var supplierController = new SupplierController();
+            var inventoryController = new InventoryController();
 
             Logger.Write("PROCESSING REQUEST", $"Processing request type: {request.Type}");
 
@@ -567,7 +569,6 @@ namespace server.Forms
                     return subCategoryController.CreateInventorySubcategory(request);
                 case PacketType.CreateInventorySubcategoryResponse:
                     return subCategoryController.CreateInventorySubcategory(request);
-
                 case PacketType.GetInventoryCategory:
                     return categoryController.GetInventoryCategory(request);
                 case PacketType.GetInventoryCategoryResponse:
@@ -576,7 +577,6 @@ namespace server.Forms
                     return subCategoryController.GetInventorySubCategories(request);
                 case PacketType.GetAllInventorySubcategoryResponse:
                     return subCategoryController.GetInventorySubCategories(request);
-
                 case PacketType.CreateUnitType:
                     return unitController.CreateInventoryUnitType(request);
                 case PacketType.CreateUnitTypeResponse:
@@ -593,6 +593,22 @@ namespace server.Forms
                     return unitController.GetInventoryUnitMeasure(request);
                 case PacketType.GetUnitMeasureResponse:
                     return unitController.GetInventoryUnitMeasure(request);
+                case PacketType.CreateSupplier:
+                    return supplierController.CreateInventorySupplier(request);
+                case PacketType.CreateSupplierResponse:
+                    return supplierController.CreateInventorySupplier(request);
+                case PacketType.GetSupplier:
+                    return supplierController.GetInventorySupplier(request);
+                case PacketType.GetSupplierResponse:
+                    return supplierController.GetInventorySupplier(request);
+                case PacketType.CreateInventoryItem:
+                    return inventoryController.CreateInventoryItem(request);
+                case PacketType.CreateInventoryItemResponse:
+                    return inventoryController.CreateInventoryItem(request);
+                case PacketType.GetInventoryItem:
+                    return inventoryController.GetInventoryItems(request);
+                case PacketType.GetInventoryItemResponse:
+                    return inventoryController.GetInventoryItems(request);
 
                 default:
                     Logger.Write("UNKNOWN PACKET", $"Unknown packet type: {request.Type}");
