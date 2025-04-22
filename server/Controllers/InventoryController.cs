@@ -161,6 +161,7 @@ namespace server.Controllers
                         b.current_quantity,
                         b.unit_cost,
                         s.supplier_name,
+                        b.status,
                         b.is_active
 
                     FROM inventory_items i
@@ -221,6 +222,7 @@ namespace server.Controllers
                                     CurrentQuantity = reader.IsDBNull(reader.GetOrdinal("current_quantity")) ? 0 : reader.GetInt32("current_quantity"),
                                     UnitCost = reader.IsDBNull(reader.GetOrdinal("unit_cost")) ? 0 : reader.GetDecimal("unit_cost"),
                                     SupplierName = reader.IsDBNull(reader.GetOrdinal("supplier_name")) ? "" : reader.GetString("supplier_name"),
+                                    Status = reader.IsDBNull(reader.GetOrdinal("status")) ? "" : reader.GetString("status"),
                                     IsActive = reader.IsDBNull(reader.GetOrdinal("is_active")) ? 0 : reader.GetInt32("is_active")
                                 };
 
@@ -259,6 +261,94 @@ namespace server.Controllers
                     {
                         { "success", "false" },
                         { "message", ex.Message }
+                    }
+                };
+            }
+        }
+
+        public Packet CreateBatch(Packet packet)
+        {
+            var connection = new MySqlConnection(DatabaseManager.Instance.ConnectionString);
+
+            try
+            {
+                connection.Open();
+
+                int itemId = int.Parse(packet.Data["itemId"]);
+                string batchNumber = packet.Data["batchNumber"];
+                string purchaseDate = packet.Data["purchaseDate"];
+                string expirationDate = packet.Data["expirationDate"];
+                decimal quantity = decimal.Parse(packet.Data["quantity"]);
+                decimal unitCost = decimal.Parse(packet.Data["unitCost"]);
+                int? supplierId = string.IsNullOrEmpty(packet.Data["supplierId"]) ? (int?)null : int.Parse(packet.Data["supplierId"]);
+                bool isActive = bool.Parse(packet.Data["isActive"]);
+
+                string checkQuery = "SELECT COUNT(*) FROM inventory_batches WHERE batch_number = @batchNumber";
+                using (var checkCommand = new MySqlCommand(checkQuery, connection))
+                {
+                    checkCommand.Parameters.AddWithValue("@batchNumber", batchNumber.Trim());
+                    int count = Convert.ToInt32(checkCommand.ExecuteScalar());
+
+                    if (count > 0)
+                    {
+                        return new Packet
+                        {
+                            Type = PacketType.CreateBatchResponse,
+                            Success = false,
+                            Message = "Batch number already exists",
+                            Data = new Dictionary<string, string>
+                            {
+                                { "success", "false" },
+                                { "message", "Batch number already exists" }
+                            }
+                        };
+                    }
+                }
+
+                string insertQuery = @"
+                INSERT INTO inventory_batches (item_id, batch_number, purchase_date, expiration_date, initial_quantity, current_quantity, unit_cost, supplier_id, is_active)
+                VALUES (@itemId, @batchNumber, @purchaseDate, @expirationDate, @quantity, @currentQuantity, @unitCost, @supplierId, @isActive)";
+
+                using (var command = new MySqlCommand(insertQuery, connection))
+                {
+                    command.Parameters.AddWithValue("@itemId", itemId);
+                    command.Parameters.AddWithValue("@batchNumber", batchNumber);
+                    command.Parameters.AddWithValue("@purchaseDate", purchaseDate);
+                    command.Parameters.AddWithValue("@expirationDate", expirationDate);
+                    command.Parameters.AddWithValue("@quantity", quantity);
+                    command.Parameters.AddWithValue("@currentQuantity", quantity);
+                    command.Parameters.AddWithValue("@unitCost", unitCost);
+                    command.Parameters.AddWithValue("@supplierId", (object?)supplierId ?? DBNull.Value);
+                    command.Parameters.AddWithValue("@isActive", isActive);
+
+                    command.ExecuteNonQuery();
+                }
+
+                return new Packet
+                {
+                    Type = PacketType.CreateBatchResponse,
+                    Success = true,
+                    Message = "Batch created successfully",
+                    Data = new Dictionary<string, string>
+                    {
+                        { "success", "true" },
+                        { "message", $"Batch '{batchNumber}' created successfully" }
+                    }
+                };
+            }
+            catch (Exception ex)
+            {
+                Logger.Write("BATCH", $"Error creating batch: {ex.Message}");
+
+                return new Packet
+                {
+                    Type = PacketType.CreateBatchResponse,
+                    Success = false,
+                    Message = "Error creating batch",
+                    Data = new Dictionary<string, string>
+                    {
+                        { "success", "false" },
+                        { "message", "Internal server error" }
                     }
                 };
             }

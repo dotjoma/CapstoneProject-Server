@@ -609,6 +609,10 @@ namespace server.Forms
                     return inventoryController.GetInventoryItems(request);
                 case PacketType.GetInventoryItemResponse:
                     return inventoryController.GetInventoryItems(request);
+                case PacketType.CreateBatch:
+                    return inventoryController.CreateBatch(request);
+                case PacketType.CreateBatchResponse:
+                    return inventoryController.CreateBatch(request);
 
                 default:
                     Logger.Write("UNKNOWN PACKET", $"Unknown packet type: {request.Type}");

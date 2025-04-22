@@ -16,6 +16,7 @@ namespace server.Models
         public int CurrentQuantity { get; set; }
         public decimal UnitCost { get; set; }
         public string? SupplierName { get; set; }
+        public string? Status { get; set; }
         public int IsActive { get; set; }
     }
 }

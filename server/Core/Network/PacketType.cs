@@ -112,5 +112,8 @@ namespace server.Core.Network
         CreateInventoryItemResponse = 79,
         GetInventoryItem = 80,
         GetInventoryItemResponse = 81,
+
+        CreateBatch = 82,
+        CreateBatchResponse = 83,
     }
 }
