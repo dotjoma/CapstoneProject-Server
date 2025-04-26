@@ -160,6 +160,7 @@ namespace server.Controllers
                         b.initial_quantity,
                         b.current_quantity,
                         b.unit_cost,
+                        b.supplier_id,
                         s.supplier_name,
                         b.status,
                         b.is_active
@@ -221,6 +222,7 @@ namespace server.Controllers
                                     InitialQuantity = reader.IsDBNull(reader.GetOrdinal("initial_quantity")) ? 0 : reader.GetInt32("initial_quantity"),
                                     CurrentQuantity = reader.IsDBNull(reader.GetOrdinal("current_quantity")) ? 0 : reader.GetInt32("current_quantity"),
                                     UnitCost = reader.IsDBNull(reader.GetOrdinal("unit_cost")) ? 0 : reader.GetDecimal("unit_cost"),
+                                    SupplierId = reader.IsDBNull(reader.GetOrdinal("supplier_id")) ? 0 : reader.GetInt32("supplier_id"),
                                     SupplierName = reader.IsDBNull(reader.GetOrdinal("supplier_name")) ? "" : reader.GetString("supplier_name"),
                                     Status = reader.IsDBNull(reader.GetOrdinal("status")) ? "" : reader.GetString("status"),
                                     IsActive = reader.IsDBNull(reader.GetOrdinal("is_active")) ? 0 : reader.GetInt32("is_active")
@@ -349,6 +351,202 @@ namespace server.Controllers
                     {
                         { "success", "false" },
                         { "message", "Internal server error" }
+                    }
+                };
+            }
+        }
+
+        public Packet UpdateBatch(Packet packet)
+        {
+            var connection = new MySqlConnection(DatabaseManager.Instance.ConnectionString);
+
+            try
+            {
+                connection.Open();
+
+                string batchId = packet.Data["batchId"];
+                string purchaseDate = packet.Data["purchaseDate"];
+                string expirationDate = packet.Data["expirationDate"];
+                decimal initialQuantity = decimal.Parse(packet.Data["initialQuantity"]);
+                decimal currentQuantity = decimal.Parse(packet.Data["currentQuantity"]);
+                decimal unitCost = decimal.Parse(packet.Data["unitCost"]);
+                int? supplierId = string.IsNullOrEmpty(packet.Data["supplierId"]) ? (int?)null : int.Parse(packet.Data["supplierId"]);
+                bool isActive = bool.Parse(packet.Data["isActive"]);
+
+                string checkQuery = "SELECT COUNT(*) FROM inventory_batches WHERE batch_id = @batchId";
+                using (var checkCommand = new MySqlCommand(checkQuery, connection))
+                {
+                    checkCommand.Parameters.AddWithValue("@batchId", batchId.Trim());
+                    int count = Convert.ToInt32(checkCommand.ExecuteScalar());
+
+                    if (count == 0)
+                    {
+                        return new Packet
+                        {
+                            Type = PacketType.UpdateBatchResponse,
+                            Success = false,
+                            Message = "Batch not found",
+                            Data = new Dictionary<string, string>
+                            {
+                                { "success", "false" },
+                                { "message", "Batch not found" }
+                            }
+                        };
+                    }
+                }
+
+                string updateQuery = @"
+                UPDATE inventory_batches
+                SET purchase_date = @purchaseDate, 
+                    expiration_date = @expirationDate, 
+                    initial_quantity = @initialQuantity, 
+                    current_quantity = @currentQuantity, 
+                    unit_cost = @unitCost, 
+                    supplier_id = @supplierId, 
+                    is_active = @isActive
+                WHERE batch_id = @batchId";
+
+                using (var updateCommand = new MySqlCommand(updateQuery, connection))
+                {
+                    updateCommand.Parameters.AddWithValue("@batchId", batchId);
+                    updateCommand.Parameters.AddWithValue("@purchaseDate", purchaseDate);
+                    updateCommand.Parameters.AddWithValue("@expirationDate", expirationDate);
+                    updateCommand.Parameters.AddWithValue("@initialQuantity", initialQuantity);
+                    updateCommand.Parameters.AddWithValue("@currentQuantity", currentQuantity);
+                    updateCommand.Parameters.AddWithValue("@unitCost", unitCost);
+                    updateCommand.Parameters.AddWithValue("@supplierId", supplierId > 0 ? (object)supplierId : DBNull.Value);
+                    updateCommand.Parameters.AddWithValue("@isActive", isActive);
+
+                    updateCommand.ExecuteNonQuery();
+                }
+
+                return new Packet
+                {
+                    Type = PacketType.UpdateBatchResponse,
+                    Success = true,
+                    Message = "Batch updated successfully",
+                    Data = new Dictionary<string, string>
+                    {
+                        { "success", "true" },
+                        { "message", $"Batch '{batchId}' updated successfully" }
+                    }
+                };
+            }
+            catch (Exception ex)
+            {
+                Logger.Write("BATCH", $"Error updating batch: {ex.Message}");
+
+                return new Packet
+                {
+                    Type = PacketType.UpdateBatchResponse,
+                    Success = false,
+                    Message = "Error updating batch",
+                    Data = new Dictionary<string, string>
+                    {
+                        { "success", "false" },
+                        { "message", "Internal server error" }
+                    }
+                };
+            }
+        }
+
+        public Packet GetBatch(Packet request)
+        {
+            try
+            {
+                if (!request.Data.ContainsKey("itemId"))
+                {
+                    return new Packet
+                    {
+                        Type = PacketType.GetBatchResponse,
+                        Success = false,
+                        Message = "Item ID is required",
+                        Data = new Dictionary<string, string>
+                        {
+                            { "success", "false" },
+                            { "message", "Item ID is required" }
+                        }
+                    };
+                }
+
+                string itemId = request.Data["itemId"];
+
+                string query = @"
+                    SELECT 
+                        b.batch_id,
+                        b.item_id,
+                        b.batch_number,
+                        b.purchase_date,
+                        b.expiration_date,
+                        b.initial_quantity,
+                        b.current_quantity,
+                        b.unit_cost,
+                        b.supplier_id,
+                        IFNULL(s.supplier_name, '') AS supplier_name,
+                        b.status,
+                        b.is_active
+                    FROM inventory_batches b
+                    LEFT JOIN suppliers s ON b.supplier_id = s.supplier_id AND s.is_active = 1
+                    WHERE b.item_id = @itemId;
+                ";
+
+                using (var connection = new MySqlConnection(DatabaseManager.Instance.ConnectionString))
+                {
+                    connection.Open();
+
+                    var batches = new List<Dictionary<string, object>>();
+
+                    using (var command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@itemId", itemId);
+
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                var batch = new Dictionary<string, object>();
+
+                                for (int i = 0; i < reader.FieldCount; i++)
+                                {
+                                    var columnName = reader.GetName(i);
+                                    var value = reader.IsDBNull(i) ? null : reader.GetValue(i);
+                                    batch[columnName] = value!;
+                                }
+
+                                batches.Add(batch);
+                            }
+                        }
+                    }
+
+                    Logger.Write("GET BATCH SERVER", $"Found {batches.Count} batch(es) for item ID {itemId}");
+
+                    return new Packet
+                    {
+                        Type = PacketType.GetBatchResponse,
+                        Success = true,
+                        Message = "Batch(es) retrieved successfully",
+                        Data = new Dictionary<string, string>
+                        {
+                            { "success", "true" },
+                            { "message", "Batch(es) retrieved successfully" },
+                            { "batches", System.Text.Json.JsonSerializer.Serialize(batches) }
+                        }
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Write("GET BATCH SERVER ERROR", $"Error: {ex.Message}");
+
+                return new Packet
+                {
+                    Type = PacketType.GetBatchResponse,
+                    Success = false,
+                    Message = "Internal server error",
+                    Data = new Dictionary<string, string>
+                    {
+                        { "success", "false" },
+                        { "message", ex.Message }
                     }
                 };
             }

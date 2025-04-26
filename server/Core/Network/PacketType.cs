@@ -115,5 +115,11 @@ namespace server.Core.Network
 
         CreateBatch = 82,
         CreateBatchResponse = 83,
+        UpdateBatch = 84,
+        UpdateBatchResponse = 85,
+        DeleteBatch = 86,
+        DeleteBatchResponse = 87,
+        GetBatch = 88,
+        GetBatchResponse = 89,
     }
 }

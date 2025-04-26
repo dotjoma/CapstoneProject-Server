@@ -613,6 +613,14 @@ namespace server.Forms
                     return inventoryController.CreateBatch(request);
                 case PacketType.CreateBatchResponse:
                     return inventoryController.CreateBatch(request);
+                case PacketType.UpdateBatch:
+                    return inventoryController.UpdateBatch(request);
+                case PacketType.UpdateBatchResponse:
+                    return inventoryController.UpdateBatch(request);
+                case PacketType.GetBatch:
+                    return inventoryController.GetBatch(request);
+                case PacketType.GetBatchResponse:
+                    return inventoryController.GetBatch(request);
 
                 default:
                     Logger.Write("UNKNOWN PACKET", $"Unknown packet type: {request.Type}");
