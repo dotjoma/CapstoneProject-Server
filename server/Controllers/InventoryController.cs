@@ -152,6 +152,7 @@ namespace server.Controllers
                         sc.subcategory_name,
                         ut.unit_name AS unit_type_name,
                         um.name AS unit_measure_name,
+                        um.symbol AS unit_measure_symbol,
     
                         b.batch_id,
                         b.batch_number,
@@ -205,6 +206,7 @@ namespace server.Controllers
                                     SubcategoryName = reader.GetString("subcategory_name"),
                                     UnitTypeName = reader.GetString("unit_type_name"),
                                     UnitMeasureName = reader.GetString("unit_measure_name"),
+                                    UnitMeasureSymbol = reader.GetString("unit_measure_symbol"),
                                     Batches = new List<InventoryBatch>()
                                 };
 
@@ -397,7 +399,7 @@ namespace server.Controllers
 
                 string updateQuery = @"
                 UPDATE inventory_batches
-                SET purchase_date = @purchaseDate, 
+                SET purchase_date = @purchaseDate,
                     expiration_date = @expirationDate, 
                     initial_quantity = @initialQuantity, 
                     current_quantity = @currentQuantity, 

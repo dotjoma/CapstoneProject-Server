@@ -83,6 +83,7 @@
             Name = "SystemLogs";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "SystemLogs";
+            Load += SystemLogs_Load;
             panel1.ResumeLayout(false);
             ResumeLayout(false);
         }

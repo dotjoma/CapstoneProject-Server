@@ -172,7 +172,7 @@
             Margin = new Padding(3, 2, 3, 2);
             Name = "LoginForm";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = " ";
+            Text = "Login";
             Load += LoginForm_Load;
             KeyDown += LoginForm_KeyDown;
             ResumeLayout(false);

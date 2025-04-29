@@ -272,9 +272,14 @@ namespace server.Controllers
                         }
                     }
 
+                    //string query = @"
+                    //DELETE FROM product
+                    //WHERE pId = @productId";
+
                     string query = @"
-                    DELETE FROM product
-                    WHERE pId = @productId";
+                    UPDATE product
+                    SET isDeleted=1
+                    WHERE pId=@productId";
 
                     using (var command = new MySqlCommand(query, connection))
                     {
@@ -334,7 +339,8 @@ namespace server.Controllers
         {
             try
             {
-                string query = @"SELECT pId, catId, scId, pName, unitId, unitPrice, image, isVatable, isActive FROM product";
+                string query = @"SELECT pId, catId, scId, pName, unitId, unitPrice,
+                image, isVatable, isActive FROM product WHERE isDeleted=0";
 
                 using (var connection = new MySqlConnection(DatabaseManager.Instance.ConnectionString))
                 {

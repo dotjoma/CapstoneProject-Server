@@ -22,6 +22,7 @@ namespace server.Models
         public string? SubcategoryName { get; set; }
         public string? UnitTypeName { get; set; }
         public string? UnitMeasureName { get; set; }
+        public string? UnitMeasureSymbol { get; set; }
 
         public List<InventoryBatch> Batches { get; set; } = new List<InventoryBatch>();
     }

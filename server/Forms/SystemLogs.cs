@@ -77,5 +77,10 @@ namespace server.Forms
                 Clear();
             }
         }
+
+        private void SystemLogs_Load(object sender, EventArgs e)
+        {
+            Logger.Initialize(_logBox);
+        }
     }
 }
