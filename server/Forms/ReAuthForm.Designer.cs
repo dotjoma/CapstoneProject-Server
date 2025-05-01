@@ -28,16 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ReAuthForm));
             panel1 = new Panel();
             pictureBox1 = new PictureBox();
             label1 = new Label();
-            label2 = new Label();
             panel2 = new Panel();
             btnContinueSession = new Button();
             btnLogout = new Button();
-            label3 = new Label();
+            label2 = new Label();
             txtPassword = new TextBox();
+            label3 = new Label();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             panel2.SuspendLayout();
@@ -53,8 +52,8 @@
             panel1.Location = new Point(0, 0);
             panel1.Margin = new Padding(3, 2, 3, 2);
             panel1.Name = "panel1";
-            panel1.Size = new Size(508, 48);
-            panel1.TabIndex = 0;
+            panel1.Size = new Size(351, 48);
+            panel1.TabIndex = 6;
             // 
             // pictureBox1
             // 
@@ -78,36 +77,25 @@
             label1.TabIndex = 0;
             label1.Text = "SESSION EXPIRED";
             // 
-            // label2
-            // 
-            label2.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label2.ForeColor = Color.FromArgb(51, 51, 51);
-            label2.Location = new Point(88, 66);
-            label2.Name = "label2";
-            label2.Size = new Size(332, 50);
-            label2.TabIndex = 2;
-            label2.Text = "Your session has timed out, Please enter your password to continue.";
-            label2.TextAlign = ContentAlignment.MiddleCenter;
-            // 
             // panel2
             // 
             panel2.BackColor = Color.Gainsboro;
             panel2.Controls.Add(btnContinueSession);
             panel2.Controls.Add(btnLogout);
             panel2.Dock = DockStyle.Bottom;
-            panel2.Location = new Point(0, 218);
+            panel2.Location = new Point(0, 189);
             panel2.Margin = new Padding(3, 2, 3, 2);
             panel2.Name = "panel2";
-            panel2.Size = new Size(508, 54);
-            panel2.TabIndex = 3;
+            panel2.Size = new Size(351, 34);
+            panel2.TabIndex = 8;
             // 
             // btnContinueSession
             // 
             btnContinueSession.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnContinueSession.Location = new Point(351, 11);
+            btnContinueSession.Location = new Point(223, 5);
             btnContinueSession.Margin = new Padding(3, 2, 3, 2);
             btnContinueSession.Name = "btnContinueSession";
-            btnContinueSession.Size = new Size(136, 32);
+            btnContinueSession.Size = new Size(112, 25);
             btnContinueSession.TabIndex = 1;
             btnContinueSession.Text = "Continue Session";
             btnContinueSession.UseVisualStyleBackColor = true;
@@ -116,56 +104,64 @@
             // btnLogout
             // 
             btnLogout.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnLogout.Location = new Point(239, 11);
+            btnLogout.Location = new Point(145, 5);
             btnLogout.Margin = new Padding(3, 2, 3, 2);
             btnLogout.Name = "btnLogout";
-            btnLogout.Size = new Size(107, 32);
+            btnLogout.Size = new Size(72, 25);
             btnLogout.TabIndex = 0;
             btnLogout.Text = "Log Out";
             btnLogout.UseVisualStyleBackColor = true;
             btnLogout.Click += btnLogout_Click;
+            // 
+            // label2
+            // 
+            label2.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label2.ForeColor = Color.FromArgb(51, 51, 51);
+            label2.Location = new Point(9, 57);
+            label2.Name = "label2";
+            label2.Size = new Size(332, 50);
+            label2.TabIndex = 7;
+            label2.Text = "Your session has timed out, Please enter your password to continue.";
+            label2.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // txtPassword
+            // 
+            txtPassword.Font = new Font("Segoe UI", 12.2F);
+            txtPassword.Location = new Point(9, 137);
+            txtPassword.Margin = new Padding(3, 2, 3, 2);
+            txtPassword.Name = "txtPassword";
+            txtPassword.PasswordChar = '*';
+            txtPassword.PlaceholderText = "Enter your password";
+            txtPassword.Size = new Size(332, 29);
+            txtPassword.TabIndex = 10;
+            txtPassword.UseSystemPasswordChar = true;
             // 
             // label3
             // 
             label3.AutoSize = true;
             label3.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold);
             label3.ForeColor = Color.FromArgb(51, 51, 51);
-            label3.Location = new Point(20, 128);
+            label3.Location = new Point(9, 114);
             label3.Name = "label3";
             label3.Size = new Size(79, 21);
-            label3.TabIndex = 4;
+            label3.TabIndex = 9;
             label3.Text = "Password";
             label3.TextAlign = ContentAlignment.MiddleCenter;
-            // 
-            // txtPassword
-            // 
-            txtPassword.Font = new Font("Segoe UI", 16.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            txtPassword.Location = new Point(20, 151);
-            txtPassword.Margin = new Padding(3, 2, 3, 2);
-            txtPassword.Name = "txtPassword";
-            txtPassword.PasswordChar = '*';
-            txtPassword.PlaceholderText = "Enter your password";
-            txtPassword.Size = new Size(468, 36);
-            txtPassword.TabIndex = 5;
-            txtPassword.UseSystemPasswordChar = true;
             // 
             // ReAuthForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(508, 272);
-            Controls.Add(txtPassword);
-            Controls.Add(label3);
+            ClientSize = new Size(351, 223);
+            Controls.Add(panel1);
             Controls.Add(panel2);
             Controls.Add(label2);
-            Controls.Add(panel1);
+            Controls.Add(txtPassword);
+            Controls.Add(label3);
             FormBorderStyle = FormBorderStyle.None;
-            Icon = (Icon)resources.GetObject("$this.Icon");
-            Margin = new Padding(3, 2, 3, 2);
             Name = "ReAuthForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "ReAuthForm";
-            Load += ReAuthForm_Load;
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
@@ -179,11 +175,11 @@
         private Panel panel1;
         private PictureBox pictureBox1;
         private Label label1;
-        private Label label2;
         private Panel panel2;
         private Button btnContinueSession;
         private Button btnLogout;
-        private Label label3;
+        private Label label2;
         private TextBox txtPassword;
+        private Label label3;
     }
 }

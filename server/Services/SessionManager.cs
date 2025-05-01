@@ -1,5 +1,6 @@
 ﻿using client.Helpers;
 using MySql.Data.MySqlClient;
+using server.Controllers;
 using server.Database;
 using server.Forms;
 using System;
@@ -16,7 +17,9 @@ namespace server.Services
         private static SessionManager? _instance;
         private string? _currentSessionToken;
         private System.Timers.Timer? _heartbeatTimer;
+        private int _currentUserId;
         private string? _currentUsername;
+        private int _isLockScreenEnabled = 0;
 
         public static event Action? ForceLogoutUser;
 
@@ -36,6 +39,15 @@ namespace server.Services
                 {
                     StopHeartbeat();
                 }
+            }
+        }
+
+        public int CurrentUserId
+        {
+            get => _currentUserId;
+            set
+            {
+                _currentUserId = value;
             }
         }
 
@@ -90,6 +102,8 @@ namespace server.Services
                 }
             }
             _currentSessionToken = null;
+            _currentUsername = null;
+            _currentUserId = 0;
             StopHeartbeat();
         }
 
@@ -102,7 +116,7 @@ namespace server.Services
                 _heartbeatTimer.Dispose();
             }
 
-            _heartbeatTimer = new System.Timers.Timer(180000); // 3 minutes in milliseconds
+            _heartbeatTimer = new System.Timers.Timer(10000); // 180000 = 3 minutes in milliseconds
             _heartbeatTimer.Elapsed += OnHeartbeatElapsed;
             _heartbeatTimer.Start();
         }
@@ -134,32 +148,53 @@ namespace server.Services
                         }
                         else
                         {
-                            Logger.Write("SESSION_HEARTBEAT", $"No active session found for session token: {sessionToken}");
-                            StopHeartbeat();
-
-                            // Lock screen instead of force logout.
-                            if (ForceLogoutUser != null && ForceLogoutUser.GetInvocationList().Length > 0)
+                            if (_isLockScreenEnabled == 0)
                             {
-                                foreach (var handler in ForceLogoutUser.GetInvocationList())
+                                Logger.Write("SESSION_HEARTBEAT", $"Session expired. You need to re-authenticate.");
+
+                                using (var reauthfrm = new ReAuthForm())
                                 {
-                                    try
+                                    var result = reauthfrm.ShowDialog();
+
+                                    if (result == DialogResult.OK)
                                     {
-                                        if (handler.Target is Control control && control.InvokeRequired)
+                                        string newSessionToken = Guid.NewGuid().ToString();
+                                        using (var newSessionConn = new MySqlConnection(ServerDatabaseManager.Instance.ServerConnectionString))
                                         {
-                                            control.Invoke(handler);
+                                            newSessionConn.Open();
+                                            using (var insertCmd = new MySqlCommand(
+                                                @"UPDATE user_sessions
+                                                SET session_token = @sessionToken,
+                                                    expires_at = DATE_ADD(NOW(), INTERVAL 30 SECOND),
+                                                    last_activity = NOW()
+                                                WHERE user_id = @userId", newSessionConn))
+                                            {
+                                                insertCmd.Parameters.AddWithValue("@sessionToken", newSessionToken);
+                                                insertCmd.Parameters.AddWithValue("@userId", Instance.CurrentUserId);
+                                                insertCmd.ExecuteNonQuery();
+                                            }
                                         }
-                                        else
-                                        {
-                                            handler.DynamicInvoke();
-                                        }
+
+                                        Instance.CurrentSessionToken = newSessionToken;
+                                        Logger.Write("SESSION_HEARTBEAT", $"New session created after re-authentication.");
+
+                                        _isLockScreenEnabled = 0;
                                     }
-                                    catch (Exception ex)
+                                    else if (result == DialogResult.Cancel)
                                     {
-                                        Logger.Write("SESSION_ERROR", $"Handler invocation failed: {ex.Message}");
+                                        Logger.Write("SESSION_HEARTBEAT", "Re-authentication canceled by user. Logging out.");
+                                        Instance.StopHeartbeat();
+                                        ForceLogoutUser?.Invoke();
+                                    }
+                                    else
+                                    {
+                                        Logger.Write("SESSION_HEARTBEAT", "Re-authentication canceled or failed.");
+                                        _isLockScreenEnabled = 1;
                                     }
                                 }
                             }
                         }
+
                     }
                 }
             }
@@ -170,13 +205,14 @@ namespace server.Services
         }
 
         // Stop the heartbeat timer when the session is invalidated or logged out
-        private void StopHeartbeat()
+        public void StopHeartbeat()
         {
             if (_heartbeatTimer != null)
             {
                 _heartbeatTimer.Stop();
                 _heartbeatTimer.Dispose();
                 _heartbeatTimer = null;
+                _isLockScreenEnabled = 0;
             }
         }
     }

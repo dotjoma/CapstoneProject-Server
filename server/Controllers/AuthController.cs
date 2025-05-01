@@ -682,6 +682,8 @@ namespace server.Controllers
                                 userId = Convert.ToInt32(result);
                             }
 
+                            SessionManager.Instance.CurrentUserId = userId;
+
                             string sessionTokenFromDb = string.Empty;
                             int sessionTimeDiff = -1;
 
@@ -731,7 +733,7 @@ namespace server.Controllers
                             using (var sessionCommand = new MySqlCommand(
                                 @"INSERT INTO user_sessions 
                                 (user_id, session_token, created_at, expires_at, last_activity, is_active) 
-                                VALUES (@userId, @sessionToken, NOW(), DATE_ADD(NOW(), INTERVAL 24 HOUR), NOW(), TRUE)",
+                                VALUES (@userId, @sessionToken, NOW(), DATE_ADD(NOW(), INTERVAL 10 SECOND), NOW(), TRUE)",
                                 connection, transaction))
                             {
                                 sessionCommand.Parameters.AddWithValue("@userId", userId);
@@ -756,6 +758,37 @@ namespace server.Controllers
             {
                 MessageBox.Show($"Failed to login: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
+            }
+        }
+
+        public bool ReauthUser(string? password)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(ServerDatabaseManager.Instance.ServerConnectionString))
+                {
+                    connection.Open();
+
+                    string sessionToken = Guid.NewGuid().ToString();
+                    using (var sessionCommand = new MySqlCommand(
+                    @"UPDATE user_sessions
+                    SET session_token = @sessionToken,
+                        expires_at = DATE_ADD(NOW(), INTERVAL 10 SECOND),
+                        last_activity = NOW()
+                    WHERE user_id = @userId", connection))
+                    {
+                        sessionCommand.Parameters.AddWithValue("@sessionToken", sessionToken);
+                        sessionCommand.Parameters.AddWithValue("@userId", SessionManager.Instance.CurrentUserId);
+                        sessionCommand.ExecuteNonQuery();
+                    }
+
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error occurred: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
             }
         }
 
@@ -863,7 +896,7 @@ namespace server.Controllers
         }
 
         public void RedirectTo(Form newForm)
-        {
+        { 
             foreach (Form openForm in System.Windows.Forms.Application.OpenForms)
             {
                 if (openForm != newForm)

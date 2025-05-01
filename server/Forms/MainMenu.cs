@@ -32,6 +32,7 @@ namespace server.Forms
 {
     public partial class MainMenu : Form
     {
+        private static MainMenu? _instance;
         private TcpListener? listener;
         private bool isServerRunning;
         private int serverPort = 8888;
@@ -49,6 +50,8 @@ namespace server.Forms
         public static event Action? OnServerStarted;
         public static event Action? OnServerStopped;
         public static event Action? OnLogOut;
+
+        public static MainMenu Instance => _instance ??= new MainMenu();
 
         public MainMenu()
         {
@@ -73,27 +76,22 @@ namespace server.Forms
         {
             if (this.InvokeRequired)
             {
-                this.Invoke((MethodInvoker)delegate {
-                    //OnLogOut?.Invoke();
-                    //Logout();
-                    using (var reauthfrm = new ReAuthForm()) // re-used the forcelogout function
-                    {
-                        reauthfrm.StartPosition = FormStartPosition.Manual;
-                        reauthfrm.StartPosition = FormStartPosition.CenterParent;
-                        reauthfrm.ShowDialog();
-                    }
+                this.Invoke((MethodInvoker)delegate
+                {
+                    OnLogOut?.Invoke();
+                    ForceStopServer();
+                    Logger.ClearLogs();
+                    this.Hide();
+                    new LoginForm().Show();
                 });
             }
             else
             {
-                //OnLogOut?.Invoke();
-                //Logout();
-                using (var reauthfrm = new ReAuthForm())
-                {
-                    reauthfrm.StartPosition = FormStartPosition.Manual;
-                    reauthfrm.StartPosition = FormStartPosition.CenterParent;
-                    reauthfrm.ShowDialog();
-                }
+                OnLogOut?.Invoke();
+                ForceStopServer();
+                Logger.ClearLogs();
+                this.Hide();
+                new LoginForm().Show();
             }
         }
 
@@ -819,7 +817,6 @@ namespace server.Forms
 
             if (!isSessionValid)
             {
-                OnLogOut?.Invoke();
                 ForceStopServer();
                 await Task.Delay(100);
                 isServerRunning = false;
@@ -832,6 +829,8 @@ namespace server.Forms
             listener?.Stop();
             listener = null;
 
+            Logger.ClearLogs();
+
             bool success = _authController.ServerLogout(sessionToken);
             if (success)
             {
@@ -839,6 +838,52 @@ namespace server.Forms
                 _authController.RedirectTo(new LoginForm());
             }
         }
+
+        public void ReauthFailedOrCancelled()
+        {
+            OnLogOut?.Invoke();
+            Logout();
+        }
+
+        public void RedirectToForm(Form newForm)
+        {
+            if (newForm == null) return;
+
+            void SafeRedirect()
+            {
+                newForm.StartPosition = FormStartPosition.CenterScreen;
+
+                newForm.Shown += (s, e) =>
+                {
+                    foreach (Form openForm in System.Windows.Forms.Application.OpenForms.Cast<Form>().ToList())
+                    {
+                        if (openForm != newForm)
+                        {
+                            openForm.Hide();
+                        }
+                    }
+                };
+
+                newForm.Show();
+            }
+
+            if (System.Windows.Forms.Application.MessageLoop)
+            {
+                if (System.Windows.Forms.Application.OpenForms.Count > 0 && System.Windows.Forms.Application.OpenForms[0]!.InvokeRequired)
+                {
+                    System.Windows.Forms.Application.OpenForms[0]!.Invoke((Action)SafeRedirect);
+                }
+                else
+                {
+                    SafeRedirect();
+                }
+            }
+            else
+            {
+                System.Windows.Forms.Application.Run(newForm);
+            }
+        }
+
 
         private void fileToolStripMenuItem_Click(object sender, EventArgs e)
         {
