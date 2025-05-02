@@ -60,6 +60,7 @@ namespace server.Forms
 
             LoginForm.StartServerOnLogin += StartServerOnLogin;
             SessionManager.ForceLogoutUser += ForceLogoutRequest;
+            SessionManager.SessionExpired += ProcessSessionExpiration;
         }
 
         private void SetupForm()
@@ -72,6 +73,50 @@ namespace server.Forms
             await StartServer();
         }
 
+        private void ProcessSessionExpiration()
+        {
+            using (var reauthfrm = new ReAuthForm())
+            {
+                var result = reauthfrm.ShowDialog();
+
+                if (result == DialogResult.OK)
+                {
+                    string newSessionToken = Guid.NewGuid().ToString();
+                    using (var newSessionConn = new MySqlConnection(ServerDatabaseManager.Instance.ServerConnectionString))
+                    {
+                        newSessionConn.Open();
+                        using (var insertCmd = new MySqlCommand(
+                            @"UPDATE user_sessions
+                                                SET session_token = @sessionToken,
+                                                    expires_at = DATE_ADD(NOW(), INTERVAL 30 SECOND),
+                                                    last_activity = NOW()
+                                                WHERE user_id = @userId", newSessionConn))
+                        {
+                            insertCmd.Parameters.AddWithValue("@sessionToken", newSessionToken);
+                            insertCmd.Parameters.AddWithValue("@userId", SessionManager.Instance.CurrentUserId);
+                            insertCmd.ExecuteNonQuery();
+                        }
+                    }
+
+                    SessionManager.Instance.CurrentSessionToken = newSessionToken;
+                    Logger.Write("SESSION_HEARTBEAT", $"New session created after re-authentication.");
+                    SessionManager.Instance.IsLockScreenEnabled = 0;
+                }
+                else if (result == DialogResult.Cancel)
+                {
+                    Logger.Write("SESSION_HEARTBEAT", "Re-authentication canceled by user. Logging out.");
+                    SessionManager.Instance.StopHeartbeat();
+                    Logout();
+                }
+                else
+                {
+                    Logger.Write("SESSION_HEARTBEAT", "Re-authentication canceled or failed.");
+                    SessionManager.Instance.IsLockScreenEnabled = 1;
+                    Logout();
+                }
+            }
+        }
+
         private void ForceLogoutRequest()
         {
             if (this.InvokeRequired)
@@ -80,18 +125,18 @@ namespace server.Forms
                 {
                     OnLogOut?.Invoke();
                     ForceStopServer();
-                    Logger.ClearLogs();
-                    this.Hide();
-                    new LoginForm().Show();
+                    this.Dispose();
+                    var loginForm = new LoginForm();
+                    loginForm.Show();
                 });
             }
             else
             {
                 OnLogOut?.Invoke();
                 ForceStopServer();
-                Logger.ClearLogs();
-                this.Hide();
-                new LoginForm().Show();
+                this.Dispose();
+                var loginForm = new LoginForm();
+                loginForm.Show();
             }
         }
 
@@ -104,8 +149,6 @@ namespace server.Forms
         {
             if (isServerRunning)
             {
-                MessageBox.Show("Server is already running", "Server Status",
-                               MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
@@ -603,6 +646,10 @@ namespace server.Forms
                     return inventoryController.CreateInventoryItem(request);
                 case PacketType.CreateInventoryItemResponse:
                     return inventoryController.CreateInventoryItem(request);
+                case PacketType.UpdateInventoryItem:
+                    return inventoryController.UpdateInventoryItem(request);
+                case PacketType.UpdateInventoryItemResponse:
+                    return inventoryController.UpdateInventoryItem(request);
                 case PacketType.GetInventoryItem:
                     return inventoryController.GetInventoryItems(request);
                 case PacketType.GetInventoryItemResponse:
@@ -806,11 +853,12 @@ namespace server.Forms
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 OnLogOut?.Invoke();
+                ForceStopServer();
                 Logout();
             }
         }
 
-        private async void Logout()
+        private void Logout()
         {
             string? sessionToken = SessionManager.Instance.CurrentSessionToken ?? "";
             bool isSessionValid = _authController.ValidateSession(sessionToken);
@@ -818,7 +866,6 @@ namespace server.Forms
             if (!isSessionValid)
             {
                 ForceStopServer();
-                await Task.Delay(100);
                 isServerRunning = false;
                 listener?.Stop();
                 listener = null;
@@ -829,12 +876,10 @@ namespace server.Forms
             listener?.Stop();
             listener = null;
 
-            Logger.ClearLogs();
-
+            ClearAllLogs();
             bool success = _authController.ServerLogout(sessionToken);
             if (success)
             {
-                await Task.Delay(100);
                 _authController.RedirectTo(new LoginForm());
             }
         }
@@ -906,12 +951,18 @@ namespace server.Forms
                     return;
                 }
 
-                ForceStopServer();
+                Logout();
                 Logger.Write("SERVER STOPPED", "Server stopped by user request");
             }
 
             Logger.Write("APPLICATION CLOSING", $"Application closing: {e.CloseReason}");
 
+            Environment.Exit(0);
+        }
+
+        private void tsExit_Click(object sender, EventArgs e)
+        {
+            Logout();
             Environment.Exit(0);
         }
     }

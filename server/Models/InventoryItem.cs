@@ -16,6 +16,7 @@ namespace server.Models
         public int ReorderPoint { get; set; }
         public int LeadTimeDays { get; set; }
         public int TargetTurnoverDays { get; set; }
+        public int ExpiryWarningDays { get; set; }
         public bool EnableLowStockAlert { get; set; }
 
         public string? CategoryName { get; set; }

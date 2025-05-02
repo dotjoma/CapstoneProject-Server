@@ -139,21 +139,22 @@
             // txSettings
             // 
             txSettings.Name = "txSettings";
-            txSettings.Size = new Size(129, 24);
+            txSettings.Size = new Size(180, 24);
             txSettings.Text = "Settings";
             // 
             // tsLogout
             // 
             tsLogout.Name = "tsLogout";
-            tsLogout.Size = new Size(129, 24);
+            tsLogout.Size = new Size(180, 24);
             tsLogout.Text = "Logout";
             tsLogout.Click += tsLogout_Click;
             // 
             // tsExit
             // 
             tsExit.Name = "tsExit";
-            tsExit.Size = new Size(129, 24);
+            tsExit.Size = new Size(180, 24);
             tsExit.Text = "Exit";
+            tsExit.Click += tsExit_Click;
             // 
             // monitorToolStripMenuItem
             // 

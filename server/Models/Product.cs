@@ -25,5 +25,6 @@ namespace server.Models
         public int? isVatable { get; set; }
 
         public int isActive { get; set; }
+        public List<ProductIngredient> Ingredients { get; set; } = new();
     }
 }

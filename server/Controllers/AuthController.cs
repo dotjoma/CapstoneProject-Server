@@ -733,7 +733,7 @@ namespace server.Controllers
                             using (var sessionCommand = new MySqlCommand(
                                 @"INSERT INTO user_sessions 
                                 (user_id, session_token, created_at, expires_at, last_activity, is_active) 
-                                VALUES (@userId, @sessionToken, NOW(), DATE_ADD(NOW(), INTERVAL 10 SECOND), NOW(), TRUE)",
+                                VALUES (@userId, @sessionToken, NOW(), DATE_ADD(NOW(), INTERVAL 9999 HOUR), NOW(), TRUE)",
                                 connection, transaction))
                             {
                                 sessionCommand.Parameters.AddWithValue("@userId", userId);

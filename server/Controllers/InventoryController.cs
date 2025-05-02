@@ -132,6 +132,128 @@ namespace server.Controllers
             }
         }
 
+        public Packet UpdateInventoryItem(Packet packet)
+        {
+            using (var connection = new MySqlConnection(DatabaseManager.Instance.ConnectionString))
+            {
+                connection.Open();
+                using (var transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        string itemId = packet.Data["itemId"];
+                        string itemName = packet.Data["itemName"];
+                        string categoryId = packet.Data["categoryId"];
+                        string subcategoryId = packet.Data["subcategoryId"];
+                        string batchNumber = packet.Data["batchNumber"];
+                        string purchaseDate = packet.Data["purchaseDate"];
+                        string expirationDate = packet.Data["expirationDate"];
+                        string batchQuantity = packet.Data["batchQuantity"];
+                        string currentBatchQuantity = packet.Data["currentQuantity"];
+                        string unitTypeId = packet.Data["unitTypeId"];
+                        string unitMeasureId = packet.Data["unitMeasureId"];
+                        string minStock = packet.Data["minStock"];
+                        string maxStock = packet.Data["maxStock"];
+                        string reorderPoint = packet.Data["reorderPoint"];
+                        string leadTime = packet.Data["leadTime"];
+                        string turnOver = packet.Data["turnOver"];
+                        string unitCost = packet.Data["unitCost"];
+                        string? supplierId = packet.Data["supplierId"];
+                        string enableLowStockAlert = packet.Data.ContainsKey("enableLowStockAlert") ? packet.Data["enableLowStockAlert"] : "0";
+
+                        string updateItemQuery = @"
+                        UPDATE inventory_items
+                        SET
+                            item_name = @itemName,
+                            category_id = @categoryId,
+                            subcategory_id = @subcategoryId,
+                            unit_type_id = @unitTypeId,
+                            unit_measure_id = @unitMeasureId,
+                            min_stock_level = @minStock,
+                            max_stock_level = @maxStock,
+                            reorder_point = @reorderPoint,
+                            lead_time_days = @leadTime,
+                            target_turnover_days = @turnOver,
+                            enable_low_stock_alert = @enableLowStockAlert
+                        WHERE item_id = @itemId;";
+
+                        using (var updateItemCmd = new MySqlCommand(updateItemQuery, connection, transaction))
+                        {
+                            updateItemCmd.Parameters.AddWithValue("@itemId", itemId);
+                            updateItemCmd.Parameters.AddWithValue("@itemName", itemName);
+                            updateItemCmd.Parameters.AddWithValue("@categoryId", categoryId);
+                            updateItemCmd.Parameters.AddWithValue("@subcategoryId", subcategoryId);
+                            updateItemCmd.Parameters.AddWithValue("@unitTypeId", unitTypeId);
+                            updateItemCmd.Parameters.AddWithValue("@unitMeasureId", unitMeasureId);
+                            updateItemCmd.Parameters.AddWithValue("@minStock", minStock);
+                            updateItemCmd.Parameters.AddWithValue("@maxStock", maxStock);
+                            updateItemCmd.Parameters.AddWithValue("@reorderPoint", reorderPoint);
+                            updateItemCmd.Parameters.AddWithValue("@leadTime", leadTime);
+                            updateItemCmd.Parameters.AddWithValue("@turnOver", turnOver);
+                            updateItemCmd.Parameters.AddWithValue("@enableLowStockAlert", enableLowStockAlert);
+                            updateItemCmd.ExecuteNonQuery();
+                        }
+
+                        string updateBatchQuery = @"
+                        UPDATE inventory_batches
+                        SET
+                            batch_number = @batchNumber,
+                            purchase_date = @purchaseDate,
+                            expiration_date = @expirationDate,
+                            initial_quantity = @quantity,
+                            current_quantity = @currentQuantity,
+                            unit_cost = @unitCost,
+                            supplier_id = @supplierId
+                        WHERE item_id = @itemId AND is_active = 1;";
+
+                        using (var updateBatchCmd = new MySqlCommand(updateBatchQuery, connection, transaction))
+                        {
+                            updateBatchCmd.Parameters.AddWithValue("@itemId", itemId);
+                            updateBatchCmd.Parameters.AddWithValue("@batchNumber", batchNumber);
+                            updateBatchCmd.Parameters.AddWithValue("@purchaseDate", purchaseDate);
+                            updateBatchCmd.Parameters.AddWithValue("@expirationDate", expirationDate);
+                            updateBatchCmd.Parameters.AddWithValue("@quantity", batchQuantity);
+                            updateBatchCmd.Parameters.AddWithValue("@currentQuantity", currentBatchQuantity);
+                            updateBatchCmd.Parameters.AddWithValue("@unitCost", unitCost);
+                            updateBatchCmd.Parameters.AddWithValue("@supplierId", string.IsNullOrWhiteSpace(supplierId) ? DBNull.Value : supplierId);
+                            updateBatchCmd.ExecuteNonQuery();
+                        }
+
+                        transaction.Commit();
+
+                        return new Packet
+                        {
+                            Type = PacketType.UpdateInventoryItemResponse,
+                            Success = true,
+                            Message = "Inventory item and batch updated successfully",
+                            Data = new Dictionary<string, string>
+                            {
+                                { "success", "true" },
+                                { "message", "Inventory item and batch updated successfully" }
+                            }
+                        };
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        Logger.Write("INVENTORY", $"Update transaction failed: {ex.Message}");
+
+                        return new Packet
+                        {
+                            Type = PacketType.UpdateInventoryItemResponse,
+                            Success = false,
+                            Message = "Error updating inventory item",
+                            Data = new Dictionary<string, string>
+                            {
+                                { "success", "false" },
+                                { "message", "Internal server error" }
+                            }
+                        };
+                    }
+                }
+            }
+        }
+
         public Packet GetInventoryItems(Packet request)
         {
             try
@@ -146,6 +268,7 @@ namespace server.Controllers
                         i.reorder_point,
                         i.lead_time_days,
                         i.target_turnover_days,
+                        i.expiry_warning_days,
                         i.enable_low_stock_alert,
 
                         c.category_name,
@@ -200,6 +323,7 @@ namespace server.Controllers
                                     ReorderPoint = reader.GetInt32("reorder_point"),
                                     LeadTimeDays = reader.GetInt32("lead_time_days"),
                                     TargetTurnoverDays = reader.GetInt32("target_turnover_days"),
+                                    ExpiryWarningDays = reader.GetInt32("expiry_warning_days"),
                                     EnableLowStockAlert = reader.GetBoolean("enable_low_stock_alert"),
 
                                     CategoryName = reader.GetString("category_name"),

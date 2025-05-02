@@ -121,5 +121,8 @@ namespace server.Core.Network
         DeleteBatchResponse = 87,
         GetBatch = 88,
         GetBatchResponse = 89,
+
+        UpdateInventoryItem = 90,
+        UpdateInventoryItemResponse = 91,
     }
 }

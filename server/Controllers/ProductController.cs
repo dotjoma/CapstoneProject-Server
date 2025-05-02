@@ -39,14 +39,48 @@ namespace server.Controllers
                     return validationResult;
                 }
 
+                Dictionary<string, ProductIngredient>? ingredients = null;
+
+                if (request.Data.ContainsKey("ingredients"))
+                {
+                    try
+                    {
+                        var ingredientsList = JsonConvert.DeserializeObject<List<ProductIngredient>>(request.Data["ingredients"]);
+
+                        ingredients = ingredientsList?.ToDictionary(
+                            x => x.InventoryItemId.ToString(),
+                            x => x
+                        );
+
+                        Logger.Write("PRODUCT CREATION", $"Parsed ingredients: {ingredients?.Count} items found");
+                        Logger.Write("PRODUCT CREATION", $"Parsed ingredients: {JsonConvert.SerializeObject(ingredients)}");
+                    }
+                    catch (Newtonsoft.Json.JsonException ex)
+                    {
+                        Logger.Write("PRODUCT CREATION", $"Failed to parse ingredients: {ex.Message}");
+                        return new Packet
+                        {
+                            Type = PacketType.CreateProductResponse,
+                            Success = false,
+                            Message = "Invalid ingredients format",
+                            Data = new Dictionary<string, string>
+                            {
+                                { "success", "false" },
+                                { "message", "Invalid ingredients data" }
+                            }
+                        };
+                    }
+                }
+
                 string query = @"
-                    INSERT INTO product (catId, scId, pName, unitId, unitPrice, image, isActive)
-                    VALUES (@catId, @scId, @pName, @unitId, @unitPrice, @image, @isActive)";
+                INSERT INTO product (catId, scId, pName, unitId, unitPrice, image, isActive)
+                VALUES (@catId, @scId, @pName, @unitId, @unitPrice, @image, @isActive);
+                SELECT LAST_INSERT_ID();";
 
                 using (var connection = new MySqlConnection(DatabaseManager.Instance.ConnectionString))
                 {
                     connection.Open();
-                    Logger.Write("REGISTRATION", "Database connection opened");
+                    Logger.Write("PRODUCT CREATION", "Database connection opened");
 
                     string checkScIdQuery = "SELECT COUNT(*) FROM subcategory WHERE scId = @scId";
                     using (var checkCommand = new MySqlCommand(checkScIdQuery, connection))
@@ -57,7 +91,6 @@ namespace server.Controllers
                         if (count == 0)
                         {
                             Logger.Write("PRODUCT CREATION", $"Invalid scId: {scId} does not exist in subcategory table");
-
                             return new Packet
                             {
                                 Type = PacketType.CreateProductResponse,
@@ -72,6 +105,7 @@ namespace server.Controllers
                         }
                     }
 
+                    int productId;
                     using (var command = new MySqlCommand(query, connection))
                     {
                         command.Parameters.Add("@catId", MySqlDbType.VarChar).Value = catId;
@@ -82,10 +116,43 @@ namespace server.Controllers
                         command.Parameters.Add("@image", MySqlDbType.VarChar).Value = image;
                         command.Parameters.Add("@isActive", MySqlDbType.VarChar).Value = isActive;
 
-                        command.ExecuteNonQuery();
+                        productId = Convert.ToInt32(command.ExecuteScalar());
                     }
 
-                    Logger.Write("PRODUCT CREATION", $"Successfully created new product: {pName}");
+                    if (ingredients != null && ingredients.Any())
+                    {
+                        string ingredientsQuery = @"
+                        INSERT INTO product_ingredients 
+                            (product_id, item_id, quantity, unit)
+                        VALUES (@productId, @inventoryItemId, @quantity, @measureSymbol)";
+
+                        foreach (var entry in ingredients)
+                        {
+                            if (!int.TryParse(entry.Key, out int inventoryItemId))
+                            {
+                                Logger.Write("PRODUCT CREATION", $"Invalid inventoryItemId: {entry.Key}");
+                                continue;
+                            }
+
+                            dynamic ingredient = entry.Value;
+                            decimal quantity = Convert.ToDecimal(ingredient.Quantity);
+                            string? measureSymbol = ingredient.MeasureSymbol?.ToString();
+
+                            using (var ingredientCommand = new MySqlCommand(ingredientsQuery, connection))
+                            {
+                                ingredientCommand.Parameters.Add("@productId", MySqlDbType.Int32).Value = productId;
+                                ingredientCommand.Parameters.Add("@inventoryItemId", MySqlDbType.Int32).Value = inventoryItemId;
+                                ingredientCommand.Parameters.Add("@quantity", MySqlDbType.Decimal).Value = quantity;
+                                ingredientCommand.Parameters.Add("@measureSymbol", MySqlDbType.VarChar).Value =
+                                    string.IsNullOrEmpty(measureSymbol) ? (object)DBNull.Value : measureSymbol;
+
+                                ingredientCommand.ExecuteNonQuery();
+                            }
+                        }
+                        Logger.Write("PRODUCT CREATION", $"Added {ingredients.Count} ingredients for product {productId}");
+                    }
+
+                    Logger.Write("PRODUCT CREATION", $"Successfully created new product: {pName} (ID: {productId})");
 
                     return new Packet
                     {
@@ -95,7 +162,8 @@ namespace server.Controllers
                         Data = new Dictionary<string, string>
                         {
                             { "success", "true" },
-                            { "message", "Create product successful" }
+                            { "message", "Create product successful" },
+                            { "productId", productId.ToString() }
                         }
                     };
                 }
@@ -103,7 +171,6 @@ namespace server.Controllers
             catch (Exception ex)
             {
                 Logger.Write("PRODUCT CREATION", $"Product creation error: {ex.Message}");
-
                 return new Packet
                 {
                     Type = PacketType.CreateProductResponse,
@@ -339,30 +406,56 @@ namespace server.Controllers
         {
             try
             {
-                string query = @"SELECT pId, catId, scId, pName, unitId, unitPrice,
-                image, isVatable, isActive FROM product WHERE isDeleted=0";
+                string productQuery = @"SELECT pId, catId, scId, pName, unitId, unitPrice,
+                                image, isVatable, isActive FROM product WHERE isDeleted=0";
+
+                string ingredientQuery = @"SELECT product_id, item_id, quantity, unit
+                                   FROM product_ingredients";
 
                 using (var connection = new MySqlConnection(DatabaseManager.Instance.ConnectionString))
                 {
                     connection.Open();
                     Logger.Write("GET PRODUCT", "Database connection opened");
 
+                    var ingredients = new Dictionary<int, List<ProductIngredient>>();
+
+                    using (var ingredientCmd = new MySqlCommand(ingredientQuery, connection))
+                    using (var ingReader = ingredientCmd.ExecuteReader())
+                    {
+                        while (ingReader.Read())
+                        {
+                            int productId = ingReader.GetInt32("product_id");
+
+                            var ingredient = new ProductIngredient
+                            {
+                                InventoryItemId = ingReader.GetInt32("item_id"),
+                                Quantity = ingReader.GetDecimal("quantity"),
+                                MeasureSymbol = ingReader.GetString("unit")
+                            };
+
+                            if (!ingredients.ContainsKey(productId))
+                                ingredients[productId] = new List<ProductIngredient>();
+
+                            ingredients[productId].Add(ingredient);
+                        }
+                    }
+
                     var productsList = new List<Product>();
 
-                    using (var command = new MySqlCommand(query, connection))
+                    using (var command = new MySqlCommand(productQuery, connection))
                     using (var reader = command.ExecuteReader())
                     {
                         while (reader.Read())
                         {
                             string? imageBase64 = null;
                             if (!reader.IsDBNull(reader.GetOrdinal("image")))
-                            {
                                 imageBase64 = reader.GetString("image");
-                            }
+
+                            int productId = reader.GetInt32("pId");
 
                             var product = new Product
                             {
-                                productId = reader.GetInt32("pId"),
+                                productId = productId,
                                 categoryId = reader.GetInt32("catId"),
                                 subcategoryId = reader.GetInt32("scId"),
                                 productName = reader.GetString("pName"),
@@ -370,8 +463,12 @@ namespace server.Controllers
                                 productPrice = reader.GetDecimal("unitPrice"),
                                 productImage = imageBase64,
                                 isVatable = reader.GetInt32("isVatable"),
-                                isActive = reader.GetInt32("isActive")
+                                isActive = reader.GetInt32("isActive"),
+                                Ingredients = ingredients.ContainsKey(productId)
+                                    ? ingredients[productId]
+                                    : new List<ProductIngredient>()
                             };
+
                             productsList.Add(product);
                         }
                     }

@@ -19,11 +19,18 @@ namespace server.Services
         private System.Timers.Timer? _heartbeatTimer;
         private int _currentUserId;
         private string? _currentUsername;
-        private int _isLockScreenEnabled = 0;
+        private int _isLockScreenEnabled;
 
         public static event Action? ForceLogoutUser;
+        public static event Action? SessionExpired;
 
         public static SessionManager Instance => _instance ??= new SessionManager();
+
+        public int IsLockScreenEnabled
+        {
+            get => Interlocked.CompareExchange(ref _isLockScreenEnabled, 0, 0);
+            set => Interlocked.Exchange(ref _isLockScreenEnabled, value);
+        }
 
         public string? CurrentSessionToken
         {
@@ -116,7 +123,7 @@ namespace server.Services
                 _heartbeatTimer.Dispose();
             }
 
-            _heartbeatTimer = new System.Timers.Timer(10000); // 180000 = 3 minutes in milliseconds
+            _heartbeatTimer = new System.Timers.Timer(180000); // 180000 = 3 minutes in milliseconds
             _heartbeatTimer.Elapsed += OnHeartbeatElapsed;
             _heartbeatTimer.Start();
         }
@@ -148,53 +155,14 @@ namespace server.Services
                         }
                         else
                         {
-                            if (_isLockScreenEnabled == 0)
-                            {
-                                Logger.Write("SESSION_HEARTBEAT", $"Session expired. You need to re-authenticate.");
-
-                                using (var reauthfrm = new ReAuthForm())
-                                {
-                                    var result = reauthfrm.ShowDialog();
-
-                                    if (result == DialogResult.OK)
-                                    {
-                                        string newSessionToken = Guid.NewGuid().ToString();
-                                        using (var newSessionConn = new MySqlConnection(ServerDatabaseManager.Instance.ServerConnectionString))
-                                        {
-                                            newSessionConn.Open();
-                                            using (var insertCmd = new MySqlCommand(
-                                                @"UPDATE user_sessions
-                                                SET session_token = @sessionToken,
-                                                    expires_at = DATE_ADD(NOW(), INTERVAL 30 SECOND),
-                                                    last_activity = NOW()
-                                                WHERE user_id = @userId", newSessionConn))
-                                            {
-                                                insertCmd.Parameters.AddWithValue("@sessionToken", newSessionToken);
-                                                insertCmd.Parameters.AddWithValue("@userId", Instance.CurrentUserId);
-                                                insertCmd.ExecuteNonQuery();
-                                            }
-                                        }
-
-                                        Instance.CurrentSessionToken = newSessionToken;
-                                        Logger.Write("SESSION_HEARTBEAT", $"New session created after re-authentication.");
-
-                                        _isLockScreenEnabled = 0;
-                                    }
-                                    else if (result == DialogResult.Cancel)
-                                    {
-                                        Logger.Write("SESSION_HEARTBEAT", "Re-authentication canceled by user. Logging out.");
-                                        Instance.StopHeartbeat();
-                                        ForceLogoutUser?.Invoke();
-                                    }
-                                    else
-                                    {
-                                        Logger.Write("SESSION_HEARTBEAT", "Re-authentication canceled or failed.");
-                                        _isLockScreenEnabled = 1;
-                                    }
-                                }
-                            }
+                            Logger.Write("SESSION_HEARTBEAT", $"Session {sessionToken} expired. You need to re-authenticate.");
+                            
+                            //if (Interlocked.CompareExchange(ref _isLockScreenEnabled, 1, 0) == 0)
+                            //{
+                            //    Logger.Write("SESSION_HEARTBEAT", "Session expired. You need to re-authenticate.");
+                            //    SessionExpired?.Invoke();
+                            //}
                         }
-
                     }
                 }
             }

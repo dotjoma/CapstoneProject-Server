@@ -48,45 +48,42 @@ namespace server.Forms
             {
                 string? sessionToken = _authController.ServerLogin(username, password);
 
-                switch (sessionToken)
+                if (sessionToken == null)
                 {
-                    case null:
-                        MessageBox.Show("Invalid username or password.", "Login Failed",
-                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return;
+                    MessageBox.Show("Invalid username or password.", "Login Failed",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+                else if (sessionToken == "ALREADY_LOGGED_IN")
+                {
+                    MessageBox.Show("This account has an active session. Please wait 3 minutes.", "Login Denied",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+                else
+                {
+                    SessionManager.Instance.CurrentSessionToken = sessionToken;
+                    SessionManager.Instance.CurrentUsername = username;
 
-                    case "ALREADY_LOGGED_IN":
-                        MessageBox.Show("This account has an active session. Please wait 3 minutes.", "Login Denied",
-                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return;
+                    this.Hide();
+                    new MainMenu().Show();
 
-                    default:
-                        SessionManager.Instance.CurrentSessionToken = sessionToken;
-                        SessionManager.Instance.CurrentUsername = username;
-
-                        var mainfrm = new MainMenu();
-                        mainfrm.Show();
-
-                        if (cbStartServerOnLogin.Checked)
-                            StartServerOnLogin?.Invoke();
-
-                        this.Hide();
-                        break;
+                    if (cbStartServerOnLogin.Checked)
+                        StartServerOnLogin?.Invoke();
                 }
             }
             catch (InvalidOperationException ex)
             {
-                // Handle specific error when login fails due to invalid username/password or other errors
                 MessageBox.Show($"Login failed: {ex.Message}", "Login Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (Exception ex)
             {
-                // Handle other exceptions (e.g., network issues)
                 MessageBox.Show($"An unexpected error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
                 isSigningIn = false;
+                GC.Collect();
             }
         }
 
